@@ -1,0 +1,41 @@
+{% extends "dst/base.html" %}
+
+{% block grid %}
+
+<table border="1" cellspacing="0" cellpadding="2">
+    <tr>
+        <th>Technical and environmental factors</th>
+        <th colspan={{colspan}}>
+            Please select the answers that apply in your specific situation.
+            You can select more than one answer in each row. Right-click on a
+            factor or answer for more information or to comment on it
+        </th>
+    {% for factor in factors %}
+    <tr>
+        <td><a href="{% url grid_help 'factor' factor.id %}">?</a> {{factor.factor}}</td>
+        {% for answer in factor.answers.all %}
+            <td>
+                <a href="{% url grid_help 'answer' answer.id %}">?</a>
+                <label for="answer_{{answer.id}}" style="cursor:hand;">{{answer.answer}}</label>
+                <input type="checkbox" name="answer_{{answer.id}}"  id="answer_{{answer.id}}" />
+            </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+ 
+{% endblock grid %}
+
+{% block help %}
+
+{% if help_item %}
+    
+    <h3>Item info</h3>
+    
+    <p style="font-weight:bold">{{help_item.info_heading}}</p>
+    
+    <p>{{help_item.info_text}}</p>
+
+{% endif %}
+
+{% endblock help %}
