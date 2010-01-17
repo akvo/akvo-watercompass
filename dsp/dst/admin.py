@@ -14,3 +14,21 @@ class FactorAdmin(admin.ModelAdmin):
     inlines = [AnswerInLine, ]
 
 admin.site.register(get_model('dst', 'Factor'), FactorAdmin)
+
+
+class RelevancyInLine(admin.TabularInline):
+    model = get_model('dst', 'Relevancy')
+    extra = 0
+
+class TechnologyAdmin(admin.ModelAdmin):
+    model = get_model('dst', 'Technology')
+    inlines = [RelevancyInLine, ]
+
+admin.site.register(get_model('dst', 'Technology'), TechnologyAdmin)
+
+class NoteAdmin(admin.ModelAdmin):
+    model = get_model('dst', 'Note')
+
+admin.site.register(get_model('dst', 'Note'), NoteAdmin)
+
+
