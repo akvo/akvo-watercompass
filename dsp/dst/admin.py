@@ -29,12 +29,18 @@ class TechnologyAdminForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(TechnologyAdminForm, self).__init__(*args, **kwargs)
-        input_groups = TechGroup.objects.filter(order__lt=self.instance.group.order)
-        if len(input_groups):
-            self.fields['input'].queryset = Technology.objects.filter(group__order__exact=input_groups.reverse()[0].order)
-        else:
-            self.fields['input'].queryset = Technology.objects.filter(pk=0) #Empty QS
-        output_groups = TechGroup.objects.filter(order__gt=self.instance.group.order)
+        #try:
+        #    input_groups = TechGroup.objects.filter(order__lt=self.instance.group.order)
+        #except TechGroup.DoesNotExist:
+        #    input_groups = []
+        #if len(input_groups):
+        #    self.fields['input'].queryset = Technology.objects.filter(group__order__exact=input_groups.reverse()[0].order)
+        #else:
+        #    self.fields['input'].queryset = Technology.objects.filter(pk=0) #Empty QS
+        try:
+            output_groups = TechGroup.objects.filter(order__gt=self.instance.group.order)
+        except TechGroup.DoesNotExist:
+            output_groups = []
         if len(output_groups):
             self.fields['output'].queryset = Technology.objects.filter(group__order__exact=output_groups[0].order)
         else:

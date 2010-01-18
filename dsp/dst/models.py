@@ -51,8 +51,8 @@ class Technology(models.Model):
     group       = models.ForeignKey(TechGroup)
     name        = models.CharField(_(u'name'), max_length=50)
     descripton  = models.TextField(_(u'descripton'),)
-    input       = models.ManyToManyField('self', blank=True, related_name='input', )
-    output      = models.ManyToManyField('self', blank=True, related_name='output', )
+    #input       = models.ManyToManyField('self', blank=True, related_name='output', symmetrical=False, )
+    output      = models.ManyToManyField('self', blank=True, related_name='input', symmetrical=False, )
 
     def __unicode__(self):
         return self.name
