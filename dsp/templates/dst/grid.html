@@ -6,12 +6,27 @@
 
 <table border="1" cellspacing="0" cellpadding="2">
     <tr>
-        <th>Technical and environmental factors</th>
-        <th colspan={{colspan}}>
+        <th style="background-color:#EAEBEB">Technical and environmental factors</th>
+        <th colspan={{colspan}} style="background-color:#EAEBEB">
             Please select the answers that apply in your specific situation.
             You can select more than one answer in each row. Right-click on a
             factor or answer for more information or to comment on it
         </th>
+	{% for factor in factors %}
+	<tr>
+        <td style="background-color:#B0DFEC">
+			<a href="{% url grid_help 'factor' factor.id %}">{{factor.factor}}</a>
+		</td>
+        {% for answer in factor.answers.all %}
+            <td>
+				<input type="checkbox" name="answer_{{answer.id}}"  id="answer_{{answer.id}}" />
+                <a class="small" href="{% url grid_help 'answer' answer.id %}">{{answer.answer}}</a>
+            </td>
+        {% endfor %}
+    </tr>
+	
+	{% endfor %}
+	{% comment %}
     {% for factor in factors %}
     <tr>
         <td><a href="{% url grid_help 'factor' factor.id %}">?</a> {{factor.factor}}</td>
@@ -24,6 +39,7 @@
         {% endfor %}
     </tr>
     {% endfor %}
+	{% endcomment %}
 </table>
  
 {% endblock grid %}
