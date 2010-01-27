@@ -56,3 +56,13 @@ def factor_help(request, model=None, id=None):
     else:
         help_item = None
     return {'help_item': help_item}
+
+@render_to('dst/technologies.html')
+def technologies(request, model=None, id=None):
+   
+    return {}
+
+@render_to('dst/solution.html')
+def solution(request, model=None, id=None):
+
+    return {}
