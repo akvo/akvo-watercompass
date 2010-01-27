@@ -10,36 +10,58 @@
 	<link rel="stylesheet" href="{{MEDIA_URL}}css/src/style.css" type="text/css" media="screen" title="main">
 	<!--[if IE 6]>
 	<link rel="stylesheet" href="{{MEDIA_URL}}css/ie6.css" type="text/css" media="screen, projection">
-	<![endif]-->	
-	<style type="text/css" media="screen">{% block inline_styles %}
-	<!--
-	    label:hover {
-	        cursor:pointer;
-	    }
-	-->
-	{% endblock inline_styles %}</style>
+	<![endif]-->
+	
+	<style type="text/css" media="screen">
+		<!--
+		{% block inline_styles %}
+		body {
+			background-color:#F4F4F4;
+		}
+		
+		#maincontainer {
+			background-color:#fff;
+		}
+
+		{% endblock inline_styles %}
+		-->
+	</style>
 	
 </head>
 <body>
 	<div id="maincontainer" class="container">
-	{% block content %}
+		{% block content %}
 	
-	{% endblock content %}
+		{% endblock content %}
+		<hr />
+		<div class="push-1 span-17 first last">
+			<p class="tiny grey">
+				<a id="grid_toggle">toggle grid</a> (only for development)
+			</p>
+		</div>
 	</div>
-
-{% comment %}
 	
-{% block grid %}
-
-{% endblock grid %}
-
-{% block help %}
-
-{% endblock help %}
-{% endcomment %}
-
 {% block js %}
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript">
+	if (typeof jQuery == 'undefined') {
+		document.write('<script type="text/javascript" src="{{MEDIA_URL}}js/jquery.js"><'); document.write('/script>');
+	}
+</script>
 {% endblock js %}
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+	$('#grid_toggle').click(function () {
+		$('#maincontainer').toggleClass('showgrid');
+	});
+
+	{% block jquery_ready %}{% endblock jquery_ready %}	
+
+});
+</script>
 
 </body>
 </html>

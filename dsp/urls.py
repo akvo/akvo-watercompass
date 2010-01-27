@@ -7,7 +7,9 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Example:
+    
+    url(r'^$', 'dsp.dst.views.start', name='start'),
+    
     (r'^dst/', include('dst.urls')),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 

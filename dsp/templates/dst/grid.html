@@ -2,59 +2,52 @@
 
 {% block content %}
 
-{% block grid %}
+<h1>The Sanitaiton Decision Support Tool</h1>
+<div class="span-18 first last">
+	<p>
+		The first step in using the Sanitation Decision Support tool is to provide answers on nine questions in the table below, which together provide information on your specific situation. You can select more than one answer in each row. You can Right-click on an anwer to get more information, or to provide comments. If you are ready, click ‘Next‘ to go to the next step. You can later go back to revise your choices.<br><br>
+		<a href="#">Why use the tool?</a><br>
+		<a href="#">Demostration</a>
+	</p>
+</div>
+<div class="span-18">
+	<table border="1" cellspacing="0" cellpadding="2">
+	    <tr>
+	        <th style="background-color:#EAEBEB">Technical and environmental factors</th>
+	        <th colspan={{colspan}} style="background-color:#EAEBEB">
+	            Please select the answers that apply in your specific situation.
+	            You can select more than one answer in each row. Right-click on a
+	            factor or answer for more information or to comment on it
+	        </th>
+		{% for factor in factors %}
+		<tr>
+	        <td style="background-color:#B0DFEC">
+				{% comment %}
+				<a href="{% url grid_help 'factor' factor.id %}">{{factor.factor}}</a>					
+				{% endcomment %}
+				<a href="{% url factor_help 'factor' factor.id %}" target="_blank">{{factor.factor}}</a>
+			</td>
+	        {% for answer in factor.answers.all %}
+	            <td>
+					<input type="checkbox" name="answer_{{answer.id}}"  id="answer_{{answer.id}}" />
+	                <a class="small" href="{% url factor_help 'answer' answer.id %}" target="_blank">{{answer.answer}}</a>
+	            </td>
+	        {% endfor %}
+	    </tr>
+		{% endfor %}
+	</table>
 
-<table border="1" cellspacing="0" cellpadding="2">
-    <tr>
-        <th style="background-color:#EAEBEB">Technical and environmental factors</th>
-        <th colspan={{colspan}} style="background-color:#EAEBEB">
-            Please select the answers that apply in your specific situation.
-            You can select more than one answer in each row. Right-click on a
-            factor or answer for more information or to comment on it
-        </th>
-	{% for factor in factors %}
-	<tr>
-        <td style="background-color:#B0DFEC">
-			<a href="{% url grid_help 'factor' factor.id %}">{{factor.factor}}</a>
-		</td>
-        {% for answer in factor.answers.all %}
-            <td>
-				<input type="checkbox" name="answer_{{answer.id}}"  id="answer_{{answer.id}}" />
-                <a class="small" href="{% url grid_help 'answer' answer.id %}">{{answer.answer}}</a>
-            </td>
-        {% endfor %}
-    </tr>
+	{% if help_item %}
+
+	    <h3>Item info</h3>
+
+	    <p style="font-weight:bold">{{help_item.info_heading}}</p>
+
+	    <p>{{help_item.info_text}}</p>
+
+	{% endif %}
 	
-	{% endfor %}
-	{% comment %}
-    {% for factor in factors %}
-    <tr>
-        <td><a href="{% url grid_help 'factor' factor.id %}">?</a> {{factor.factor}}</td>
-        {% for answer in factor.answers.all %}
-            <td>
-                <a href="{% url grid_help 'answer' answer.id %}">?</a>
-                <label for="answer_{{answer.id}}" style="cursor:hand;">{{answer.answer}}</label>
-                <input type="checkbox" name="answer_{{answer.id}}"  id="answer_{{answer.id}}" />
-            </td>
-        {% endfor %}
-    </tr>
-    {% endfor %}
-	{% endcomment %}
-</table>
- 
-{% endblock grid %}
+</div>
 
-{% block help %}
 
-{% if help_item %}
-    
-    <h3>Item info</h3>
-    
-    <p style="font-weight:bold">{{help_item.info_heading}}</p>
-    
-    <p>{{help_item.info_text}}</p>
-
-{% endif %}
-
-{% endblock help %}
 {% endblock content %}
