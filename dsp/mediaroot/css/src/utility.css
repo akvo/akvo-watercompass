@@ -1,6 +1,8 @@
 .hide { display: none; }
 .grey { color: #888; }
 .red {color: #E60113;}
+.black {color: #000;}
+.highlight {color:#00ABFA;}
 .hl {color:#1DAAFB;}
 .bold {font-weight: bold;}
 .round {

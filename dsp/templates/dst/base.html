@@ -12,6 +12,8 @@
 	<link rel="stylesheet" href="{{MEDIA_URL}}css/ie6.css" type="text/css" media="screen, projection">
 	<![endif]-->
 	
+	<link rel="stylesheet" href="{{MEDIA_URL}}fancybox/fancybox.css" type="text/css" media="screen" title="main">
+	
 	<style type="text/css" media="screen">
 		<!--
 		{% block inline_styles %}
@@ -30,6 +32,12 @@
 </head>
 <body>
 	<div id="maincontainer" class="container">
+		<div class="push-1 span-16 append-1 first last">
+			<h1>The Sanitaiton Decision Support Tool</h1>
+			<p class="small grey">
+				<a class="highlight" href="{% url grid %}">Factor selection</a> > Appropriate technologies > Build a system
+			</p>
+		</div>
 		{% block content %}
 	
 		{% endblock content %}
