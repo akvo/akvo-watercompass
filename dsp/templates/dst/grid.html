@@ -15,22 +15,22 @@
 		<form action="{% url technologies %}" method="get" accept-charset="utf-8">
 		{% for factor in factors %}
 			<h2><a href="{% url factor_help 'factor' factor.id %}" class="fancy">{{factor.factor}}</a></h2>
-			<ul>
+			<ul style="list-style-type:none; ">
 			{% for answer in factor.answers.all %}
 				<li>
-					<input type="checkbox" name="answer_{{answer.id}}"  id="answer_{{answer.id}}" />
+					<input type="radio" name="{{factor.id}}" value="answer_{{answer.id}}"  id="answer_{{answer.id}}" />
 		            <a class="small fancy" href="{% url factor_help 'answer' answer.id %}" target="_blank">{{answer.answer}}</a>
 				</li>
 		    {% endfor %}
 			</ul>
 		{% endfor %}
-		<p><input type="submit" value="Continue &rarr;"></p>
+			<p><input type="submit" value="Continue &rarr;"></p>
 		</form>
 		
 	</div>
 	<div class="push-1 span-8 last">
 		<h2>Help</h2>
-		- <a href="{% url help %}" class="fancy">Why use the tool?</a><br>
+		- <a href="{% url help %}" class="fancy">Why use the tool?</a><br><br />
 		- <a href="{% url demo %}" class="fancy">Demonstration</a>
 	</p>
 	</div>
