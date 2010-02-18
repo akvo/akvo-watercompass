@@ -21,27 +21,42 @@
 		<p style="font-weight:bold;display:block;height:50px;">{{ techgroup }}</p>
 		{% ifequal techgroup.id 1  %}
 			{% for tech in conveyance_technologies %}
-				<p>{{ tech }}</p>
+				<p>
+					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
+					<a href="#">{{ tech }}</a>
+				</p>
 			{% endfor %}
 		{% endifequal %}
 		{% ifequal techgroup.id 2  %}
 			{% for tech in collection_technologies %}
-				<p>{{ tech }}</p>
+				<p>
+					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
+					<a href="#">{{ tech }}</a>
+				</p>
 			{% endfor %}
 		{% endifequal %}
 		{% ifequal techgroup.id 3  %}
 			{% for tech in user_interface_technologies %}
-				<p>{{ tech }}</p>
+				<p>
+					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />					
+					<a href="#">{{ tech }}</a>
+				</p>
 			{% endfor %}
 		{% endifequal %}
 		{% ifequal techgroup.id 4  %}
 			{% for tech in centralized_technologies %}
-				<p>{{ tech }}</p>
+				<p>
+					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />						
+					<a href="#">{{ tech }}</a>
+				</p>
 			{% endfor %}
 		{% endifequal %}
 		{% ifequal techgroup.id 5  %}
 			{% for tech in disposal_technologies %}
-				<p>{{ tech }}</p>
+				<p>
+					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />						
+					<a href="#">{{ tech }}</a>
+				</p>
 			{% endfor %}
 		{% endifequal %}
 	</div>

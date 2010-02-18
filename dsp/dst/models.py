@@ -53,9 +53,8 @@ class Technology(models.Model):
     descripton  = models.TextField(_(u'descripton'),)
     #input       = models.ManyToManyField('self', blank=True, related_name='output', symmetrical=False, )
     output      = models.ManyToManyField('self', blank=True, related_name='input', symmetrical=False, )
-    #image       = models.ImageField(upload_to = upload_to('uploads/technologies/', 'name'))
-    image       = models.ImageField(upload_to('technologies/')
-
+    image       = models.ImageField(upload_to='/technologies')
+    
     def __unicode__(self):
         return self.name
     
