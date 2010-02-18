@@ -13,6 +13,16 @@
 	</div>
 </div>
 <hr />
+<div style="text-align:center;">
+	<p>
+	Toggle:
+	<a id="toggle_ok">Appropriate</a> | 
+	<a id="toggle_maybe">Maybe</a> |
+	<a id="toggle_no" >Not appropriate</a>
+	</p>
+	
+</div>
+<hr >
 
 <div class="push-1 span-15 append-2 first last" style="margin-bottom:0">
 {% for techgroup in techgroups %}
@@ -21,7 +31,7 @@
 		<p style="font-weight:bold;display:block;height:50px;">{{ techgroup }}</p>
 		{% ifequal techgroup.id 1  %}
 			{% for tech in conveyance_technologies %}
-				<p>
+				<p class="{% cycle 'ok' 'maybe' 'no' %}">
 					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
 					<a href="#">{{ tech }}</a>
 				</p>
@@ -29,7 +39,7 @@
 		{% endifequal %}
 		{% ifequal techgroup.id 2  %}
 			{% for tech in collection_technologies %}
-				<p>
+				<p class="{% cycle 'ok' 'maybe' 'no' %}">
 					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
 					<a href="#">{{ tech }}</a>
 				</p>
@@ -37,7 +47,7 @@
 		{% endifequal %}
 		{% ifequal techgroup.id 3  %}
 			{% for tech in user_interface_technologies %}
-				<p>
+				<p class="{% cycle 'maybe' 'ok' 'no' %}">
 					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />					
 					<a href="#">{{ tech }}</a>
 				</p>
@@ -45,7 +55,7 @@
 		{% endifequal %}
 		{% ifequal techgroup.id 4  %}
 			{% for tech in centralized_technologies %}
-				<p>
+				<p class="{% cycle 'no' 'ok' 'maybe' %}">
 					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />						
 					<a href="#">{{ tech }}</a>
 				</p>
@@ -53,7 +63,7 @@
 		{% endifequal %}
 		{% ifequal techgroup.id 5  %}
 			{% for tech in disposal_technologies %}
-				<p>
+				<p class="{% cycle 'ok' 'maybe' 'no' %}">
 					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />						
 					<a href="#">{{ tech }}</a>
 				</p>
@@ -120,3 +130,20 @@
 </div>
 
 {% endblock content %}
+
+{% block jquery_ready %}
+
+$('#toggle_ok').click(function () {
+	$('.ok').toggle();
+});
+
+$('#toggle_maybe').click(function () {
+	$('.maybe').toggle();
+});
+
+$('#toggle_no').click(function () {
+	$('.no').toggle();
+	$('.maybe').hinty();
+});
+
+{% endblock jquery_ready %}	
