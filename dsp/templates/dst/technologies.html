@@ -12,7 +12,89 @@
 		</div>
 	</div>
 </div>
+<hr />
 
+<div class="push-1 span-15 append-2 first last" style="margin-bottom:0">
+{% for techgroup in techgroups %}
+	<div class="span-3 {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}"
+	style="background-color:#{% cycle 'f0f2f3' 'fff' %}; text-align:center;">
+		<p style="font-weight:bold;display:block;height:50px;">{{ techgroup }}</p>
+		{% ifequal techgroup.id 1  %}
+			{% for tech in conveyance_technologies %}
+				<p>
+					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
+					<a href="#">{{ tech }}</a>
+				</p>
+			{% endfor %}
+		{% endifequal %}
+		{% ifequal techgroup.id 2  %}
+			{% for tech in collection_technologies %}
+				<p>
+					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
+					<a href="#">{{ tech }}</a>
+				</p>
+			{% endfor %}
+		{% endifequal %}
+		{% ifequal techgroup.id 3  %}
+			{% for tech in user_interface_technologies %}
+				<p>
+					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />					
+					<a href="#">{{ tech }}</a>
+				</p>
+			{% endfor %}
+		{% endifequal %}
+		{% ifequal techgroup.id 4  %}
+			{% for tech in centralized_technologies %}
+				<p>
+					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />						
+					<a href="#">{{ tech }}</a>
+				</p>
+			{% endfor %}
+		{% endifequal %}
+		{% ifequal techgroup.id 5  %}
+			{% for tech in disposal_technologies %}
+				<p>
+					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />						
+					<a href="#">{{ tech }}</a>
+				</p>
+			{% endfor %}
+		{% endifequal %}
+	</div>
+{% endfor %}
+</div>
+
+{% comment %}
+	
+<div class="push-1 span-15 append-2 first last" style="margin-top:0">
+	<div class="span-3 first" style="background-color:#f0f2f3">
+	{% for tech in user_interface_technologies %}
+		<p>{{ tech }}</p>
+	{% endfor %}
+	</div>
+	<div class="span-3" style="background-color:#fff">
+	{% for tech in collection_technologies %}
+		<p>{{ tech }}</p>
+	{% endfor %}
+	</div>
+	<div class="span-3" style="background-color:#f0f2f3">
+	{% for tech in conveyance_technologies %}
+		<p>{{ tech }}</p>
+	{% endfor %}
+	</div>
+	<div class="span-3" style="background-color:#fff">
+	{% for tech in centralized_technologies %}
+		<p>{{ tech }}</p>
+	{% endfor %}
+	</div>
+	<div class="span-3 last" style="background-color:#f0f2f3">
+	{% for tech in disposal_technologies %}
+		<p>{{ tech }}</p>
+	{% endfor %}
+	</div>
+</div>
+{% endcomment %}
+<hr />
+{% comment %}
 <div class="push-1 span-15 append-2 first last">
 	<div class="span-3 first" style="background-color:#F0F2F3">
 		<p>User Interface</p>
@@ -30,7 +112,7 @@
 		<p>Use of products</p>
 	</div>	
 </div>
-
+{% endcomment %}
 <div class="push-1 span-16 append-1 first last">
 	<p>
 		<a href="{% url grid %}">&lt;- back</a> | <a href="{% url solution %}">Solution -&gt;</a>
