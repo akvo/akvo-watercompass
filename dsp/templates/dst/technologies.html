@@ -17,11 +17,39 @@
 <div class="push-1 span-15 append-2 first last" style="margin-bottom:0">
 {% for techgroup in techgroups %}
 	<div class="span-3 {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}"
-	style="background-color:#{% cycle 'f0f2f3' 'fff' %}">
-		<p>{{ techgroup }}</p>
+	style="background-color:#{% cycle 'f0f2f3' 'fff' %}; text-align:center;">
+		<p style="font-weight:bold;display:block;height:50px;">{{ techgroup }}</p>
+		{% ifequal techgroup.id 1  %}
+			{% for tech in conveyance_technologies %}
+				<p>{{ tech }}</p>
+			{% endfor %}
+		{% endifequal %}
+		{% ifequal techgroup.id 2  %}
+			{% for tech in collection_technologies %}
+				<p>{{ tech }}</p>
+			{% endfor %}
+		{% endifequal %}
+		{% ifequal techgroup.id 3  %}
+			{% for tech in user_interface_technologies %}
+				<p>{{ tech }}</p>
+			{% endfor %}
+		{% endifequal %}
+		{% ifequal techgroup.id 4  %}
+			{% for tech in centralized_technologies %}
+				<p>{{ tech }}</p>
+			{% endfor %}
+		{% endifequal %}
+		{% ifequal techgroup.id 5  %}
+			{% for tech in disposal_technologies %}
+				<p>{{ tech }}</p>
+			{% endfor %}
+		{% endifequal %}
 	</div>
 {% endfor %}
 </div>
+
+{% comment %}
+	
 <div class="push-1 span-15 append-2 first last" style="margin-top:0">
 	<div class="span-3 first" style="background-color:#f0f2f3">
 	{% for tech in user_interface_technologies %}
@@ -49,7 +77,7 @@
 	{% endfor %}
 	</div>
 </div>
-
+{% endcomment %}
 <hr />
 {% comment %}
 <div class="push-1 span-15 append-2 first last">
