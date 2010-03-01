@@ -15,7 +15,7 @@
 	<link rel="stylesheet" href="{{MEDIA_URL}}fancybox/fancybox.css" type="text/css" media="screen" title="main">
 	
 	<style type="text/css" media="screen">
-		<!--
+		
 		{% block inline_styles %}
 		body {
 			background-color:#F4F4F4;
@@ -24,9 +24,16 @@
 		#maincontainer {
 			background-color:#fff;
 		}
+		
+		.tech {
+			height:140px; 
+			margin-left:auto; 
+			margin-right:auto;
+			width:100px; 
+		}
 
 		{% endblock inline_styles %}
-		-->
+		
 	</style>
 	
 </head>
@@ -50,23 +57,23 @@
 	</div>
 	
 {% block js %}
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script type="text/javascript">
 	if (typeof jQuery == 'undefined') {
-		document.write('<script type="text/javascript" src="{{MEDIA_URL}}js/jquery.js"><'); document.write('/script>');
+		document.write('<script type="text/javascript" src="{{MEDIA_URL}}js/1.4.2.min.js"><'); document.write('/script>');
 	}
+	var $ = jQ = jQuery.noConflict();
 </script>
 {% endblock js %}
 
 <script type="text/javascript">
 
-$(document).ready(function(){
+jQ(document).ready(function(){
 
-	$('#grid_toggle').click(function () {
-		$('#maincontainer').toggleClass('showgrid');
+	jQ('#grid_toggle').click(function () {
+		jQ('#maincontainer').toggleClass('showgrid');
 	});
 	
-
 	{% block jquery_ready %}{% endblock jquery_ready %}	
 
 });

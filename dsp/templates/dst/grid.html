@@ -32,7 +32,6 @@
 		<h2>Help</h2>
 		- <a href="{% url help %}" class="fancy">Why use the tool?</a><br><br />
 		- <a href="{% url demo %}" class="fancy">Demonstration</a>
-	</p>
 	</div>
 	
 	{% comment %}
@@ -80,12 +79,11 @@
 {% block js %}
 {{block.super}}
 <script type="text/javascript" src="{{MEDIA_URL}}fancybox/fancybox.js"></script>
-
 {% endblock js %}
 
 {% block jquery_ready %}
 {{block.super}}
-$("a.fancy").fancybox();
+jQ("a.fancy").fancybox();
 
 {% endblock jquery_ready %}	
 
