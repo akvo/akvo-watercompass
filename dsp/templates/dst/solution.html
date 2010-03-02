@@ -1,4 +1,5 @@
 {% extends "dst/base.html" %}
+{% load i18n  %}
 
 {% block content %}
 
@@ -15,11 +16,9 @@
 
 <div class="push-1 span-16 append-1 first last">
 	<p>
-		<a href="{% url technologies %}">&lt;- back</a>
+		<a class="grey awesome" style="margin-right:10px;" href="{% url factors %}">{% trans 'Restart' %}</a>
 	</p>
 </div>
-
-
 
 
 {% endblock content %}

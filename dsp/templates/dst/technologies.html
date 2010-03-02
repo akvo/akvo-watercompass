@@ -1,10 +1,11 @@
 {% extends "dst/base.html" %}
+{% load i18n  %}
 
 {% block content %}
-<div class="push-1 span-12 append-5 first last">
+<div class="push-1 span-16 append-1 first last">
 	<div class="frame" style="background-color:#EEF8FA">
 		<div class="space15">
-			<p>
+			<p class="small">
 				Based on the information you have provided in Step 1, the table below indicates which technologies are appropriate for your situation. Red means not appropriate, Yellow means maybe appropriate, and green means appropriate. If you click on the icon of one of the options, you will see an explanation why the technology is appropriate or not. If you click on the name of the technology, a new window will open with the Akvopedia article on that technology.<br>
 				<br>
 				In this screen, you can explore the differerent technologies, and change the answers to the 9 questions by going back to the step 1. In the next step, only the green and yellow technologies are displayed, and you can start to build a system from these.
@@ -12,15 +13,13 @@
 		</div>
 	</div>
 </div>
-<hr />
 <div style="text-align:center;">
 	<p>
-	Toggle:
-	<a id="toggle_ok">Appropriate</a> | 
-	<a id="toggle_maybe">Maybe</a> |
-	<a id="toggle_no" >Not appropriate</a>
+		Toggle:
+		<a id="toggle_ok">Appropriate</a> | 
+		<a id="toggle_maybe">Maybe</a> |
+		<a id="toggle_no" >Not appropriate</a>
 	</p>
-	
 </div>
 <hr >
 
@@ -29,103 +28,67 @@
 	<div class="span-3 {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}"
 	style="background-color:#{% cycle 'f0f2f3' 'fff' %}; text-align:center;">
 		<p style="font-weight:bold;display:block;height:50px;">{{ techgroup }}</p>
-		{% ifequal techgroup.id 1  %}
+		{% ifequal techgroup.id 1 %}
 			{% for tech in conveyance_technologies %}
+			<div class="tech">
 				<p class="{% cycle 'ok' 'maybe' 'no' %}">
 					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
 					<a href="#">{{ tech }}</a>
 				</p>
+			</div>
 			{% endfor %}
 		{% endifequal %}
-		{% ifequal techgroup.id 2  %}
+		{% ifequal techgroup.id 2 %}
 			{% for tech in collection_technologies %}
+			<div class="tech">
 				<p class="{% cycle 'ok' 'maybe' 'no' %}">
 					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
 					<a href="#">{{ tech }}</a>
 				</p>
+			</div>
 			{% endfor %}
 		{% endifequal %}
-		{% ifequal techgroup.id 3  %}
+		{% ifequal techgroup.id 3 %}
 			{% for tech in user_interface_technologies %}
+			<div class="tech">
 				<p class="{% cycle 'maybe' 'ok' 'no' %}">
 					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />					
 					<a href="#">{{ tech }}</a>
 				</p>
+			</div>
 			{% endfor %}
 		{% endifequal %}
-		{% ifequal techgroup.id 4  %}
+		{% ifequal techgroup.id 4 %}
 			{% for tech in centralized_technologies %}
+			<div class="tech">
 				<p class="{% cycle 'no' 'ok' 'maybe' %}">
 					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />						
 					<a href="#">{{ tech }}</a>
 				</p>
+			</div>
 			{% endfor %}
 		{% endifequal %}
-		{% ifequal techgroup.id 5  %}
+		{% ifequal techgroup.id 5 %}
 			{% for tech in disposal_technologies %}
+			<div class="tech">
 				<p class="{% cycle 'ok' 'maybe' 'no' %}">
 					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />						
 					<a href="#">{{ tech }}</a>
 				</p>
+			</div>
 			{% endfor %}
 		{% endifequal %}
 	</div>
 {% endfor %}
 </div>
 
-{% comment %}
-	
-<div class="push-1 span-15 append-2 first last" style="margin-top:0">
-	<div class="span-3 first" style="background-color:#f0f2f3">
-	{% for tech in user_interface_technologies %}
-		<p>{{ tech }}</p>
-	{% endfor %}
-	</div>
-	<div class="span-3" style="background-color:#fff">
-	{% for tech in collection_technologies %}
-		<p>{{ tech }}</p>
-	{% endfor %}
-	</div>
-	<div class="span-3" style="background-color:#f0f2f3">
-	{% for tech in conveyance_technologies %}
-		<p>{{ tech }}</p>
-	{% endfor %}
-	</div>
-	<div class="span-3" style="background-color:#fff">
-	{% for tech in centralized_technologies %}
-		<p>{{ tech }}</p>
-	{% endfor %}
-	</div>
-	<div class="span-3 last" style="background-color:#f0f2f3">
-	{% for tech in disposal_technologies %}
-		<p>{{ tech }}</p>
-	{% endfor %}
-	</div>
-</div>
-{% endcomment %}
 <hr />
-{% comment %}
-<div class="push-1 span-15 append-2 first last">
-	<div class="span-3 first" style="background-color:#F0F2F3">
-		<p>User Interface</p>
-	</div>
-	<div class="span-3">
-		<p>Collection and local storage</p>
-	</div>
-	<div class="span-3" style="background-color:#F0F2F3">
-		<p>Conveyance</p>
-	</div>
-	<div class="span-3">
-		<p>Centralised Treatment</p>
-	</div>
-	<div class="span-3 last" style="background-color:#F0F2F3">
-		<p>Use of products</p>
-	</div>	
-</div>
-{% endcomment %}
 <div class="push-1 span-16 append-1 first last">
-	<p>
-		<a href="{% url grid %}">&lt;- back</a> | <a href="{% url solution %}">Solution -&gt;</a>
+	<p style="text-align:center;">
+		<a class="grey awesome" style="margin-right:10px;"
+			href="{% url factors %}">{% trans '&larr; Back' %}</a>
+		<a class="aqua awesome" href="{% url solution %}" 
+			onclick="this.blur();" style="margin-left:10px;">{% trans 'Continue &rarr;' %}</a>
 	</p>
 </div>
 
@@ -143,7 +106,6 @@ $('#toggle_maybe').click(function () {
 
 $('#toggle_no').click(function () {
 	$('.no').toggle();
-	$('.maybe').hinty();
 });
 
 {% endblock jquery_ready %}	

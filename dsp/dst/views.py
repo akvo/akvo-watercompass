@@ -38,8 +38,8 @@ def start(request):
     return {
     }
 
-@render_to('dst/grid.html')
-def grid(request, model=None, id=None):
+@render_to('dst/factors.html')
+def factors(request, model=None, id=None):
     factors = Factor.objects.all()
     if model:
         help_item = get_model('dst', model).objects.get(id=id)
