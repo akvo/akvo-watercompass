@@ -9,6 +9,8 @@ urlpatterns = patterns('',
     url(r'^(?P<model>\w+)_factorhelp/(?P<id>\d+)/$', 'dst.views.factor_help', name='factor_help'),
     
     url(r'^technologies$', 'dst.views.technologies', name='technologies'),
+    url(r'^technologies/(?P<id>\d+)/help/$', 'dst.views.technologies_help', name='technologies_help'),
+
     url(r'^solution$', 'dst.views.solution', name='solution'),
         
     url(r'^help$', direct_to_template, {'template': 'dst/help.html'}, name='help'),
