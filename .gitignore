@@ -3,4 +3,5 @@
 *.kpf
 dsp/data/*
 dsp/settings.py
-
+dsp/mediaroot/technologies
+dsp/datadir
