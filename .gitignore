@@ -1,7 +1,6 @@
 .DS_Store
 *.py[co]
 *.kpf
-dsp/data/*
 dsp/settings.py
-dsp/mediaroot/technologies
-dsp/datadir
+dsp/mediaroot/technologies/
+dsp/datadir/
