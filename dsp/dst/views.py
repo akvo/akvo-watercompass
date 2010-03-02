@@ -38,7 +38,7 @@ def start(request):
     return {
     }
 
-@render_to('dst/grid.html')
+@render_to('dst/factors.html')
 def grid(request, model=None, id=None):
     factors = Factor.objects.all()
     if model:

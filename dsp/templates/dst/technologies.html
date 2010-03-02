@@ -1,4 +1,5 @@
 {% extends "dst/base.html" %}
+{% load i18n  %}
 
 {% block content %}
 <div class="push-1 span-16 append-1 first last">
@@ -83,8 +84,11 @@
 
 <hr />
 <div class="push-1 span-16 append-1 first last">
-	<p>
-		<a href="{% url grid %}">&lt;- back</a> | <a href="{% url solution %}">Solution -&gt;</a>
+	<p style="text-align:center;">
+		<a class="grey awesome" style="margin-right:10px;"
+			href="{% url grid %}">{% trans '&larr; Back' %}</a>
+		<a class="aqua awesome" href="{% url solution %}" 
+			onclick="this.blur();" style="margin-left:10px;">{% trans 'Continue &rarr;' %}</a>
 	</p>
 </div>
 
