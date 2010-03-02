@@ -65,7 +65,7 @@
 					<div class="back_{% cycle 'ok' 'maybe' 'no' %}">
 						<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
 					</div>
-					<p style="margin-top:5px;"><a href="#">{{ tech }}</a></p>
+					<p style="margin-top:5px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech }}</a></p>
 				</div>
 			</div>
 			{% endfor %}
@@ -77,7 +77,7 @@
 					<div class="back_{% cycle 'maybe' 'ok' 'no' %}">
 						<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
 					</div>
-					<p style="margin-top:5px;"><a href="#">{{ tech }}</a></p>
+					<p style="margin-top:5px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech }}</a></p>
 				</div>
 			</div>
 			{% endfor %}
@@ -89,7 +89,7 @@
 					<div class="back_{% cycle 'no' 'ok' 'maybe' %}">
 						<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
 					</div>
-					<p style="margin-top:5px;"><a href="#">{{ tech }}</a></p>
+					<p style="margin-top:5px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech }}</a></p>
 				</div>
 			</div>
 			{% endfor %}
@@ -101,7 +101,7 @@
 					<div class="back_{% cycle 'ok' 'maybe' 'no' %}">
 						<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
 					</div>
-					<p style="margin-top:5px;"><a href="#">{{ tech }}</a></p>
+					<p style="margin-top:5px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech }}</a></p>
 				</div>
 			</div>
 			{% endfor %}
