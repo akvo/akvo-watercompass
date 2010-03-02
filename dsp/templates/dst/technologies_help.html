@@ -2,26 +2,28 @@
 {% load i18n  %}
 
 {% block maincontainer %}
-<h2>{{ technology }}</h2>
+<div style="width:600px; height:400px;">
+	<h2> {{ technology }}</h2>
 
-{{ technology.description }}
+	{{ technology.description }}
 
-{% if relevancy_objects %}
-	{% for object in relevancy_objects  %}
-		<h4>{{ object }}</h4>
-		<p>
-			Factor: {{ object }}<br />
-			Answer: {{ object.answer }}<br />
-			Applicability: {{ object.applicability }}<br />
-			{% if object.note %}
-			Note: {{ object.note }}<br />	
-			{% endif %}
-		</p>
-	{% endfor %}
-{% else %}
-	<p>{% trans 'There were no Appropriate answers to the' %} {{ technology }}.</p>
+	{% if relevancy_objects %}
+		{% for object in relevancy_objects  %}
+			<h4>{{ object }}</h4>
+			<p>
+				Factor: {{ object }}<br />
+				Answer: {{ object.answer }}<br />
+				Applicability: {{ object.applicability }}<br />
+				{% if object.note %}
+				Note: {{ object.note }}<br />	
+				{% endif %}
+			</p>
+		{% endfor %}
+	{% else %}
+		<p>{% trans 'There were no Appropriate answers to the' %} {{ technology }}.</p>
 
-{% endif %}
-
+	{% endif %}
+	
+</div>
 {% endblock maincontainer %}
 
