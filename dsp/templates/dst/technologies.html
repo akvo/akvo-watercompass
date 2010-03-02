@@ -1,5 +1,24 @@
 {% extends "dst/base.html" %}
 {% load i18n  %}
+{% block inline_styles %}
+{{ block.super }}
+
+.back_ok, #toggle_ok {
+	background-color:#DCEDD0;
+}
+.back_maybe, #toggle_maybe {
+	background-color:#FBF9CF;
+}
+.back_no, #toggle_no {
+	background-color:#F6C8AB;
+}
+
+#toggles > a {
+	padding:5px 10px;
+	margin: 10px;
+}
+
+{% endblock inline_styles %}
 
 {% block content %}
 <div class="push-1 span-16 append-1 first last">
@@ -14,11 +33,10 @@
 	</div>
 </div>
 <div style="text-align:center;">
-	<p>
-		Toggle:
-		<a id="toggle_ok">Appropriate</a> | 
-		<a id="toggle_maybe">Maybe</a> |
-		<a id="toggle_no" >Not appropriate</a>
+	<p id="toggles">
+		<a id="toggle_ok">Hide appropriate</a> 
+		<a id="toggle_maybe">Hide maybe</a> 
+		<a id="toggle_no" >Hide not appropriate</a>
 	</p>
 </div>
 <hr >
@@ -31,58 +49,69 @@
 		{% ifequal techgroup.id 1 %}
 			{% for tech in conveyance_technologies %}
 			<div class="tech">
-				<p class="{% cycle 'ok' 'maybe' 'no' %}">
-					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
-					<a href="#">{{ tech }}</a>
-				</p>
+				<div class="{% cycle 'ok' 'maybe' 'no' %}">
+					<div class="back_{% cycle 'ok' 'maybe' 'no' %}">
+						<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
+					</div>
+					<p style="margin-top:5px;"><a href="#">{{ tech }}</a></p>
+				</div>
 			</div>
 			{% endfor %}
 		{% endifequal %}
 		{% ifequal techgroup.id 2 %}
 			{% for tech in collection_technologies %}
 			<div class="tech">
-				<p class="{% cycle 'ok' 'maybe' 'no' %}">
-					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
-					<a href="#">{{ tech }}</a>
-				</p>
+				<div class="{% cycle 'ok' 'maybe' 'no' %}">
+					<div class="back_{% cycle 'ok' 'maybe' 'no' %}">
+						<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
+					</div>
+					<p style="margin-top:5px;"><a href="#">{{ tech }}</a></p>
+				</div>
 			</div>
 			{% endfor %}
 		{% endifequal %}
 		{% ifequal techgroup.id 3 %}
 			{% for tech in user_interface_technologies %}
 			<div class="tech">
-				<p class="{% cycle 'maybe' 'ok' 'no' %}">
-					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />					
-					<a href="#">{{ tech }}</a>
-				</p>
+				<div class="{% cycle 'maybe' 'ok' 'no' %}">
+					<div class="back_{% cycle 'maybe' 'ok' 'no' %}">
+						<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
+					</div>
+					<p style="margin-top:5px;"><a href="#">{{ tech }}</a></p>
+				</div>
 			</div>
 			{% endfor %}
 		{% endifequal %}
 		{% ifequal techgroup.id 4 %}
 			{% for tech in centralized_technologies %}
 			<div class="tech">
-				<p class="{% cycle 'no' 'ok' 'maybe' %}">
-					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />						
-					<a href="#">{{ tech }}</a>
-				</p>
+				<div class="{% cycle 'no' 'ok' 'maybe' %}">
+					<div class="back_{% cycle 'no' 'ok' 'maybe' %}">
+						<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
+					</div>
+					<p style="margin-top:5px;"><a href="#">{{ tech }}</a></p>
+				</div>
 			</div>
 			{% endfor %}
 		{% endifequal %}
 		{% ifequal techgroup.id 5 %}
 			{% for tech in disposal_technologies %}
 			<div class="tech">
-				<p class="{% cycle 'ok' 'maybe' 'no' %}">
-					<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />						
-					<a href="#">{{ tech }}</a>
-				</p>
+				<div class="{% cycle 'ok' 'maybe' 'no' %}">
+					<div class="back_{% cycle 'ok' 'maybe' 'no' %}">
+						<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
+					</div>
+					<p style="margin-top:5px;"><a href="#">{{ tech }}</a></p>
+				</div>
 			</div>
 			{% endfor %}
 		{% endifequal %}
 	</div>
 {% endfor %}
 </div>
+<div class="clear"></div>
+<hr style="margin-top:20px" />
 
-<hr />
 <div class="push-1 span-16 append-1 first last">
 	<p style="text-align:center;">
 		<a class="grey awesome" style="margin-right:10px;"
@@ -96,16 +125,19 @@
 
 {% block jquery_ready %}
 
-$('#toggle_ok').click(function () {
-	$('.ok').toggle();
+jQ('#toggle_ok').click(function () {
+	jQ(this).html( (jQ('.ok').is(":visible") ? 'Show' : 'Hide') + ' appropriate' );
+	jQ('.ok').toggle();
 });
 
-$('#toggle_maybe').click(function () {
-	$('.maybe').toggle();
+jQ('#toggle_maybe').click(function () {
+	jQ(this).html( (jQ('.maybe').is(":visible") ? 'Show' : 'Hide') + ' maybe' );
+	jQ('.maybe').toggle();
 });
 
-$('#toggle_no').click(function () {
-	$('.no').toggle();
+jQ('#toggle_no').click(function () {
+	jQ(this).html( (jQ('.no').is(":visible") ? 'Show' : 'Hide') + ' not appropriate');
+	jQ('.no').toggle();
 });
 
 {% endblock jquery_ready %}	
