@@ -53,7 +53,7 @@
 					<div class="back_{% cycle 'ok' 'maybe' 'no' %}">
 						<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
 					</div>
-					<p style="margin-top:5px;"><a href="#">{{ tech }}</a></p>
+					<p style="margin-top:5px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech }}</a></p>
 				</div>
 			</div>
 			{% endfor %}
@@ -123,7 +123,14 @@
 
 {% endblock content %}
 
+{% block js %}
+{{block.super}}
+<script type="text/javascript" src="{{MEDIA_URL}}fancybox/fancybox.js"></script>
+{% endblock js %}
+
+
 {% block jquery_ready %}
+{{block.super}}
 
 jQ('#toggle_ok').click(function () {
 	jQ(this).html( (jQ('.ok').is(":visible") ? 'Show' : 'Hide') + ' appropriate' );
@@ -140,4 +147,5 @@ jQ('#toggle_no').click(function () {
 	jQ('.no').toggle();
 });
 
+jQ("a.fancy").fancybox();
 {% endblock jquery_ready %}	

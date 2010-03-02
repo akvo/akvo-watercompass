@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from django.db.models import get_model
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
-from models import Factor, TechGroup, Technology
+from models import Factor, TechGroup, Technology, Relevancy
 
 def render_to(template):
     """
@@ -74,6 +74,17 @@ def technologies(request):
         'centralized_technologies': centralized_technologies,
         'disposal_technologies': disposal_technologies,
         }
+        
+@render_to('dst/technologies_help.html')
+def technologies_help(request,id=None):
+    
+    technology = get_object_or_404(Technology, pk=id)
+    relevancy_objects = Relevancy.objects.all().filter(technology__exact=id).exclude(applicability__exact='A')
+    
+    #relevancy_objects = Relevancy.objects.all().filter(technology__exact=id).filter(answer='fetched')
+    
+    return { 'technology': technology, 'relevancy_objects':relevancy_objects }
+
 
 @render_to('dst/solution.html')
 def solution(request):
