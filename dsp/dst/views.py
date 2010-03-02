@@ -39,7 +39,7 @@ def start(request):
     }
 
 @render_to('dst/factors.html')
-def grid(request, model=None, id=None):
+def factors(request, model=None, id=None):
     factors = Factor.objects.all()
     if model:
         help_item = get_model('dst', model).objects.get(id=id)

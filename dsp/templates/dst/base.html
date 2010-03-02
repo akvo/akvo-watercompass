@@ -38,11 +38,12 @@
 	
 </head>
 <body>
+	{% block maincontainer %}
 	<div id="maincontainer" class="container">
 		<div class="push-1 span-16 append-1 first last">
 			<h1>The Sanitaiton Decision Support Tool</h1>
 			<p class="small grey">
-				<a class="highlight" href="{% url factors %}">Factor selection</a> > Appropriate technologies > Build a system
+				Factor selection > Appropriate technologies > Build a system
 			</p>
 		</div>
 		{% block content %}
@@ -51,10 +52,11 @@
 		<hr />
 		<div class="push-1 span-17 first last">
 			<p class="tiny grey">
-				<a id="grid_toggle">toggle grid</a> (only for development)
+				<a id="grid_toggle">toggle grid</a>
 			</p>
 		</div>
 	</div>
+	{% endblock maincontainer %}
 	
 {% block js %}
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
