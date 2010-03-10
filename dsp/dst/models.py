@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.contrib.admin.models import LogEntry
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.utils.translation import ugettext, ugettext_lazy as _
@@ -49,6 +50,7 @@ class TechGroup(models.Model):
 
 class Technology(models.Model):
     group       = models.ForeignKey(TechGroup)
+    factors     = models.ManyToManyField(Factor, blank=True)
     name        = models.CharField(_(u'name'), max_length=50)
     descripton  = models.TextField(_(u'descripton'),)
     #input       = models.ManyToManyField('self', blank=True, related_name='output', symmetrical=False, )
@@ -89,14 +91,45 @@ class Relevancy(models.Model):
         verbose_name = _(u'Appropriatness')
         verbose_name_plural = _(u'Appropriatnesses')
 
-def create_relevancy_objects(sender, **kwargs):
+
+def create_relevancy_objects(technology):
     """
     create the "grid" of appropriateness for a certain Technology
     """
-    if kwargs['created']:
-        technology = kwargs['instance']
-        for factor in Factor.objects.all():
-            for answer in factor.answers.all():
+    #if kwargs['created']:
+    #technology = kwargs['instance']
+    for factor in Factor.objects.filter(pk__in=[pk for pk in technology.factors.all().values_list('pk', flat=True)]):
+        for answer in factor.answers.all():
+            try:
+                Relevancy.objects.get(technology=technology, answer=answer,)
+            except Relevancy.DoesNotExist:
                 Relevancy.objects.create(technology=technology, answer=answer,)
 
-post_save.connect(create_relevancy_objects, sender=Technology)
+from django.contrib.admin.models import ADDITION, CHANGE, DELETION
+from django.contrib.contenttypes.models import ContentType
+def act_on_log_entry(sender, **kwargs):
+    """
+    catch the LogEntry post_save to grab newly added Technology instances and create
+    relevancy objects for it
+    we do this at this time to be able to work with a fully populated Technology
+    instance
+    """
+    CRITERIA = [
+        {'app': 'dst', 'model': 'technology', 'action': ADDITION, 'call': create_relevancy_objects},
+        {'app': 'dst', 'model': 'technology', 'action': CHANGE,   'call': create_relevancy_objects},
+    ]
+    if kwargs.get('created', False):
+        log_entry = kwargs['instance']
+        content_type = ContentType.objects.get(pk=log_entry.content_type_id)
+        for criterion in CRITERIA:
+            if (
+                content_type.app_label == criterion['app']
+                and content_type.model == criterion['model']
+                and log_entry.action_flag == criterion['action']
+            ):
+                #user = User.objects.get(pk=log_entry.user_id)
+                object = content_type.get_object_for_this_type(pk=log_entry.object_id)
+                criterion['call'](object)
+       
+#post_save.connect(create_relevancy_objects, sender=Technology)
+post_save.connect(act_on_log_entry, sender=LogEntry)
