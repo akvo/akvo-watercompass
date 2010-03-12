@@ -3,4 +3,4 @@
 *.kpf
 dsp/settings.py
 dsp/mediaroot/technologies/
-dsp/datadir/
+dsp/data/dsp.sqlite3

@@ -15,13 +15,18 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+DOMAIN_NAME = 'localhost:8000'
+
 SITE_ID = 1
+
+# Absolute path to the directory that holds media.
+# Example: "/home/media/media.lawrence.com/"
+MEDIA_ROOT = '/Users/gabriel/git/waste-dst/dsp/mediaroot/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-#MEDIA_URL = '/media/'
-MEDIA_URL = 'http://0.0.0.0/~daniel/wastemedia/media/'
+MEDIA_URL = 'http://%s/media/' % DOMAIN_NAME
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '_x4m2#27c2dxz-8+s#4&qpx#15k-4ngulh8^^04-bgv!kcl)ui'

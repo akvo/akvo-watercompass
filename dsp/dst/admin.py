@@ -7,14 +7,20 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 
 from models import Technology, TechGroup
 
-class AnswerInLine(admin.TabularInline):
+class AnswerAdmin(admin.ModelAdmin):
     model = get_model('dst', 'Answer')
+
+admin.site.register(get_model('dst', 'Answer'), AnswerAdmin)
+
+
+class CriterionInLine(admin.TabularInline):
+    model = get_model('dst', 'Criterion')
     extra = 3
 
 class FactorAdmin(admin.ModelAdmin):
     model = get_model('dst', 'Factor')
-    list_display = ('factor', 'order', 'display_answers',)
-    inlines = [AnswerInLine, ]
+    list_display = ('factor', 'order', 'display_criteria',)
+    inlines = [CriterionInLine, ]
 
 admin.site.register(get_model('dst', 'Factor'), FactorAdmin)
 

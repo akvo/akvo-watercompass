@@ -2,7 +2,8 @@
 {% load i18n  %}
 {% block content %}
 
-<form name="factorform" action="{% url technologies %}" method="get" accept-charset="utf-8">
+<form name="factorform" method="post">
+{{ formset.management_form }}    
 <div class="span-18">
 	<div class="push-1 span-12 append-5">
 		<p>
@@ -11,7 +12,26 @@
 			group. You can click on an answer to get additional information. 
 		</p>
 	</div>
-	
+
+	<div class="push-1 span-8 first">
+        {% for form, factor, change in zipped_formlist %}
+            {% if change %}
+                {% if not forloop.first %}
+                </ul>
+                {% endif %}
+                <h2><a href="{% url factor_help 'factor' factor.id %}" class="fancy">{{factor.factor}}</a></h2>
+                <ul style="list-style-type:none; ">
+            {% endif %}
+
+			<li>
+                {{form.id}}{{form.criterion}}{{form.applicable}}
+                <a class="small fancy" href="{% url factor_help 'criterion' form.instance.criterion.id %}" target="_blank">{{form.instance.criterion}}</a>
+            </li>
+        {% endfor %}
+        </ul>
+	</div>
+    
+	{% comment %}
 	<div class="push-1 span-8 first">
 	{% for factor in factors %}
 		<h2><a href="{% url factor_help 'factor' factor.id %}" class="fancy">{{factor.factor}}</a></h2>
@@ -25,38 +45,15 @@
 	    {% endfor %}
 		</ul>
 	{% endfor %}
-			
 	</div>
+    {% endcomment %}
+    
 	<div class="push-1 span-8 last">
 		<h2>Help</h2>
 		- <a href="{% url help %}" class="fancy">Why use the tool?</a><br><br />
 		- <a href="{% url demo %}" class="fancy">Demonstration</a>
 	</div>
-	
-	{% comment %}
-	<table border="1" cellspacing="0" cellpadding="2">
-	    <tr>
-	        <th style="background-color:#EAEBEB">Technical and environmental factors</th>
-	        <th colspan={{colspan}} style="background-color:#EAEBEB">
-	            Please select the answers that apply in your specific situation.
-	            You can select more than one answer in each row. Right-click on a
-	            factor or answer for more information or to comment on it
-	        </th>
-		{% for factor in factors %}
-		<tr>
-	        <td style="background-color:#B0DFEC">
-				<a href="{% url factor_help 'factor' factor.id %}" target="_blank">{{factor.factor}}</a>
-			</td>
-	        {% for answer in factor.answers.all %}
-	            <td>
-					<input type="checkbox" name="answer_{{answer.id}}"  id="answer_{{answer.id}}" />
-	                <a class="small" href="{% url factor_help 'answer' answer.id %}" target="_blank">{{answer.answer}}</a>
-	            </td>
-	        {% endfor %}
-	    </tr>
-		{% endfor %}
-	</table>
-	{% endcomment %}
+
 	{% if help_item %}
 	    <h3>Item info</h3>
 	    <p style="font-weight:bold">{{help_item.info_heading}}</p>
@@ -64,6 +61,7 @@
 	{% endif %}
 	
 </div>
+</form>
 <div class="push-1 span-16 append-1 first last">
 	<p style="text-align:center;">
 		<a class="grey awesome" style="margin-right:10px;"
@@ -72,7 +70,6 @@
 			onclick="this.blur();" style="margin-left:10px;">{% trans 'Continue &rarr;' %}</a>
 	</p>
 </div>
-</form>
 {% endblock content %}
 {% block js %}
 {{block.super}}

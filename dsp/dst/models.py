@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.admin.models import LogEntry
+from django.contrib.sessions.models import Session
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.utils.translation import ugettext, ugettext_lazy as _
@@ -8,8 +9,8 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 class Factor(models.Model):
     factor          = models.CharField(_(u'factor'), max_length=50)
     order           = models.IntegerField(_(u'order'),)
-    info_heading    = models.CharField(_(u'info_heading'), max_length=50)
-    info_text       = models.TextField(_(u'info_text'),)
+    info_heading    = models.CharField(_(u'info heading'), max_length=50)
+    info_text       = models.TextField(_(u'info text'),)
 
     def __unicode__(self):
         return self.factor
@@ -17,23 +18,39 @@ class Factor(models.Model):
     class Meta:
         ordering = ['order']
 
-    def display_answers(self):
-        return "<br/>".join([a.answer for a in Answer.objects.filter(factor=self)])
-    display_answers.allow_tags = True
+    def display_criteria(self):
+        return "<br/>".join([a.criterion for a in Criterion.objects.filter(factor=self)])
+    display_criteria.allow_tags = True
 
 
-class Answer(models.Model):
-    factor          = models.ForeignKey(Factor, verbose_name=_(u'factor'), related_name='answers')
-    answer          = models.CharField(_(u'answer'), max_length=50)
+class Criterion(models.Model):
+    factor          = models.ForeignKey(Factor, verbose_name=_(u'factor'), related_name='criteria')
+    criterion       = models.CharField(_(u'criterion'), max_length=50)
     order           = models.IntegerField(_(u'order'),)
-    info_heading    = models.CharField(_(u'info_heading'), max_length=50)
-    info_text       = models.TextField(_(u'info_text'),)
+    info_heading    = models.CharField(_(u'info heading'), max_length=50)
+    info_text       = models.TextField(_(u'info text'),)
 
     def __unicode__(self):
-        return self.answer
+        return self.criterion
     
     class Meta:
         ordering = ['order']
+        verbose_name = _(u'criterion')
+        verbose_name_plural = _(u'criteria')
+
+
+class Answer(models.Model):
+    session     = models.ForeignKey(Session)
+    criterion   = models.ForeignKey(Criterion, verbose_name=_('criterion'))
+    applicable  = models.BooleanField(verbose_name=_('applicable'))
+
+    def __unicode__(self):
+        return "%s: %s" % (str(self.criterion), str(self.applicable))
+
+    class Meta:
+        verbose_name = _(u'answer')
+        verbose_name_plural = _(u'answers')
+        
 
 class TechGroup(models.Model):
     name        = models.CharField(_(u'name'), max_length=50)
@@ -64,9 +81,9 @@ class Technology(models.Model):
         verbose_name = _(u'technology')
         verbose_name_plural = _(u'technologies')
 
-    
+
 class Note(models.Model):
-    note        = models.CharField(_(u'note'), max_length=100)
+    note    = models.CharField(_(u'note'), max_length=100)
 
     def __unicode__(self):
         return self.note[:24]
@@ -80,12 +97,12 @@ class Relevancy(models.Model):
         ('M', _('Maybe')),    
     )        
     technology      = models.ForeignKey(Technology, verbose_name=_(u'technology'),)
-    answer          = models.ForeignKey(Answer, verbose_name=_(u'answer'),)
+    criterion       = models.ForeignKey(Criterion, verbose_name=_(u'criterion'),)
     applicability   = models.CharField(_('applicability'), max_length=1, choices=CHOICES_APPLICABILITY, default='A',)
     note            = models.ForeignKey(Note, verbose_name=_(u'note'), blank=True, null=True)
 
     def __unicode__(self):
-        return self.answer.factor.factor
+        return self.criterion.factor.factor
 
     class Meta:
         verbose_name = _(u'Appropriatness')
@@ -99,11 +116,11 @@ def create_relevancy_objects(technology):
     #if kwargs['created']:
     #technology = kwargs['instance']
     for factor in Factor.objects.filter(pk__in=[pk for pk in technology.factors.all().values_list('pk', flat=True)]):
-        for answer in factor.answers.all():
+        for criterion in factor.criteria.all():
             try:
-                Relevancy.objects.get(technology=technology, answer=answer,)
+                Relevancy.objects.get(technology=technology, criterion=criterion,)
             except Relevancy.DoesNotExist:
-                Relevancy.objects.create(technology=technology, answer=answer,)
+                Relevancy.objects.create(technology=technology, criterion=criterion,)
 
 from django.contrib.admin.models import ADDITION, CHANGE, DELETION
 from django.contrib.contenttypes.models import ContentType
