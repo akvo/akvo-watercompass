@@ -43,6 +43,7 @@ def render_to(template):
 
 @render_to('dst/start.html')
 def start(request):
+    request.session['init'] = 'init'
     return {
     }
 
