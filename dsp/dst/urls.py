@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     
     url(r'^technologies$', 'dst.views.technologies', name='technologies'),
     url(r'^technologies/(?P<id>\d+)/help/$', 'dst.views.technologies_help', name='technologies_help'),
+    url(r'^choice/(?P<tech_id>\d+)/$', 'dst.views.tech_choice', name='tech_choice'),
 
     url(r'^solution$', 'dst.views.solution', name='solution'),
         

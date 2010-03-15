@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.sessions.models import Session
+from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.forms import ModelForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
-from models import Factor, TechGroup, Technology, Relevancy, Answer, Criterion
 
+from models import Factor, TechGroup, Technology, Relevancy, Answer, Criterion, TechChoice
+
+def get_session(request):
+    return Session.objects.get(pk=request.session.session_key)
+    
 def render_to(template):
     """
     Decorator for Django views that sends returned dict to render_to_response function
@@ -42,7 +47,6 @@ def start(request):
     }
 
 def get_or_create_answers(session):
-    session = Session.objects.get(pk=session)
     answers = Answer.objects.filter(session=session)
     if not answers.count():
         criteria = Criterion.objects.all()
@@ -83,9 +87,9 @@ def factors(request, model=None, id=None):
         formset = AnswerFormSet(request.POST, request.FILES)
         if formset.is_valid():
             formset.save()
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect(reverse('technologies'))
     else:
-        qs = get_or_create_answers(request.session.session_key)
+        qs = get_or_create_answers(get_session(request))
         formset = AnswerFormSet(queryset=qs)
         form_list = [form for form in formset.forms]
         change_list = []
@@ -117,21 +121,27 @@ def factor_help(request, model=None, id=None):
 
 @render_to('dst/technologies.html')
 def technologies(request):
-    techgroups = TechGroup.objects.all()
-    user_interface_technologies = Technology.objects.all().filter(group__id__exact=3)
-    collection_technologies = Technology.objects.all().filter(group__id__exact=2)
-    conveyance_technologies = Technology.objects.all().filter(group__id__exact=1)
-    centralized_technologies = Technology.objects.all().filter(group__id__exact=4)
-    disposal_technologies = Technology.objects.all().filter(group__id__exact=5)
-    
+    groups = TechGroup.objects.all()
+    group_techs = []
+    for group in groups:
+        techs = Technology.objects.filter(group=group)
+        for tech in techs:
+            tech.usable = tech.usability(get_session(request))
+        group_techs.append(techs)
+    # if we want to transpose the data:
+    #all_techs = map(None, *group_techs)
+    all_techs = zip(groups, group_techs)
     return {
-        'techgroups': techgroups,
-        'user_interface_technologies': user_interface_technologies, 
-        'collection_technologies': collection_technologies,
-        'conveyance_technologies': conveyance_technologies,
-        'centralized_technologies': centralized_technologies,
-        'disposal_technologies': disposal_technologies,
-        }
+        'techgroups'    : groups,
+        'all_techs'     : all_techs,
+    }
+
+
+def tech_choice(request, tech_id):
+    choice, created = TechChoice.objects.get_or_create(session=get_session(request), technology=Technology.objects.get(pk=tech_id))
+    if not created:
+        choice.delete()
+    return HttpResponseRedirect(reverse('technologies'))
 
 
 @render_to('dst/technologies_help.html')

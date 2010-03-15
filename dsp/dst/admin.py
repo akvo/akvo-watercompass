@@ -30,19 +30,12 @@ class RelevancyInLine(admin.TabularInline):
     extra = 0
 
 class TechnologyAdminForm(ModelForm):
+    
     class Meta:
         model = Technology
 
     def __init__(self, *args, **kwargs):
         super(TechnologyAdminForm, self).__init__(*args, **kwargs)
-        #try:
-        #    input_groups = TechGroup.objects.filter(order__lt=self.instance.group.order)
-        #except TechGroup.DoesNotExist:
-        #    input_groups = []
-        #if len(input_groups):
-        #    self.fields['input'].queryset = Technology.objects.filter(group__order__exact=input_groups.reverse()[0].order)
-        #else:
-        #    self.fields['input'].queryset = Technology.objects.filter(pk=0) #Empty QS
         try:
             output_groups = TechGroup.objects.filter(order__gt=self.instance.group.order)
         except TechGroup.DoesNotExist:
@@ -54,6 +47,8 @@ class TechnologyAdminForm(ModelForm):
 
 class TechnologyAdmin(admin.ModelAdmin):
     model = get_model('dst', 'Technology')
+    list_display = ('__unicode__', 'group', 'display_output',  'display_input', )
+    ordering = ['group__order']
     inlines = [RelevancyInLine, ]
     form = TechnologyAdminForm
 

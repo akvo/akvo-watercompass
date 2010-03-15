@@ -3,6 +3,7 @@
 from django.contrib.admin.models import LogEntry
 from django.contrib.sessions.models import Session
 from django.db import models
+from django.db.models.query import QuerySet
 from django.db.models.signals import post_save, post_delete
 from django.utils.translation import ugettext, ugettext_lazy as _
 
@@ -40,8 +41,8 @@ class Criterion(models.Model):
 
 
 class Answer(models.Model):
-    session     = models.ForeignKey(Session)
-    criterion   = models.ForeignKey(Criterion, verbose_name=_('criterion'))
+    session     = models.ForeignKey(Session, verbose_name=_('session'))
+    criterion   = models.OneToOneField(Criterion, verbose_name=_('criterion'))
     applicable  = models.BooleanField(verbose_name=_('applicable'))
 
     def __unicode__(self):
@@ -64,10 +65,25 @@ class TechGroup(models.Model):
         verbose_name = _(u'technology group')
         verbose_name_plural = _(u'technology groups')
 
+#Custom manager
+#based on http://www.djangosnippets.org/snippets/562/ and
+#http://simonwillison.net/2008/May/1/orm/
+class QuerySetManager(models.Manager):
+    def get_query_set(self):
+        return self.model.QuerySet(self.model)
+
+    def __getattr__(self, attr, *args):
+        try:
+            return getattr(self.__class__, attr, *args)
+        except AttributeError:
+            return getattr(self.get_query_set(), attr, *args)
 
 class Technology(models.Model):
-    group       = models.ForeignKey(TechGroup)
-    factors     = models.ManyToManyField(Factor, blank=True)
+    TECH_USE_NO, TECH_USE_MAYBE, TECH_USE_YES, TECH_USE_NA, TECH_USE_UNLINKED = (
+        'no', 'maybe', 'yes', 'na', 'grey',
+    )
+    group       = models.ForeignKey(TechGroup, verbose_name=_('technology group'))
+    factors     = models.ManyToManyField(Factor, verbose_name=_('factors'), blank=True)
     name        = models.CharField(_(u'name'), max_length=50)
     descripton  = models.TextField(_(u'descripton'),)
     #input       = models.ManyToManyField('self', blank=True, related_name='output', symmetrical=False, )
@@ -81,28 +97,109 @@ class Technology(models.Model):
         verbose_name = _(u'technology')
         verbose_name_plural = _(u'technologies')
 
+    # cutom manager
+    objects     = QuerySetManager()
+    
+    class QuerySet(QuerySet):
+        def input(self):
+            return Technology.objects.filter(output__in=self)
+    
+        def output(self):
+            return Technology.objects.filter(input__in=self)
+        
+        def all_output(self):
+            return (
+                self.output() |
+                self.output().output() |
+                self.output().output().output() |
+                self.output().output().output().output()
+            )
+    
+        def all_input(self):
+            return (
+                self.input() |
+                self.input().input() |
+                self.input().input().input() |
+                self.input().input().input().input()
+            )
+
+        def all_linked_techs(self):
+            #return (self.all_output() | self.all_input())
+            return (self.all_output() | self.all_input())
+
+    def display_output(self):
+        return "<br/>".join([tech.name for tech in Technology.objects.filter(input=self)])
+    display_output.allow_tags = True
+            
+    def display_input(self):
+        return "<br/>".join([tech.name for tech in Technology.objects.filter(output=self)])
+    display_output.allow_tags = True
+            
+    def usability(self, session):
+        """
+        figure out how I'm usable given a set of Answers objects
+        """
+        
+        # find the criteria that apply, i.e. get answers where applicable = True
+        answers = Answer.objects.filter(session=session, applicable__exact=True)
+        # given the answers, get the corresponding criteria
+        criteria = Criterion.objects.filter(answer__in=answers)
+        # now try to find one or more instances of Relevancy.applicability = CHOICE_NO
+        if len(self.relevancies.filter(applicability=Relevancy.CHOICE_NO, criterion__in=criteria)):
+            return self.TECH_USE_NO
+        # if we found no CHOICE_NO relevanciew try for CHOICE_MAYBE
+        elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_MAYBE, criterion__in=criteria)):
+            return self.TECH_USE_MAYBE
+        # if we found no CHOICE_MAYBE relevanciew try for CHOICE_YES
+        elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_YES, criterion__in=criteria)):
+            print self
+            return self.TECH_USE_YES
+        # this thech was not affected by the environmental factors
+        return self.TECH_USE_NA
+
+    def availability(self, other_tech):
+        """
+        figure out if I am connected to other_tech via output or input
+        """
+        return self in other_tech.output.all() or other_tech in self.output.all()
+
+
+class TechChoice(models.Model):
+    session     = models.ForeignKey(Session, verbose_name=_('session'))
+    technology  = models.OneToOneField(Technology, verbose_name=_('technology'))
+    
+    class Meta:
+        verbose_name = _(u'technology choice')
+        verbose_name_plural = _(u'technology choices')
+
+    def __unicode__(self):
+        return str(self.technology)
 
 class Note(models.Model):
     note    = models.CharField(_(u'note'), max_length=100)
 
     def __unicode__(self):
         return self.note[:24]
-    
+
 
 class Relevancy(models.Model):
+    CHOICE_NA       = 'A'
+    CHOICE_YES      = 'Y'
+    CHOICE_NO       = 'N'
+    CHOICE_MAYBE    = 'M'
     CHOICES_APPLICABILITY = (
-        ('A', _('Not applicable')),    
-        ('Y', _('Yes')),
-        ('N', _('No')),
-        ('M', _('Maybe')),    
-    )        
-    technology      = models.ForeignKey(Technology, verbose_name=_(u'technology'),)
-    criterion       = models.ForeignKey(Criterion, verbose_name=_(u'criterion'),)
+        (CHOICE_NA,     _('Not applicable')),
+        (CHOICE_YES,    _('Yes')),
+        (CHOICE_NO,     _('No')),
+        (CHOICE_MAYBE,  _('Maybe')),
+    )
+    technology      = models.ForeignKey(Technology, related_name='relevancies', verbose_name=_(u'technology'),)
+    criterion       = models.ForeignKey(Criterion, related_name='relevancies', verbose_name=_(u'criterion'),)
     applicability   = models.CharField(_('applicability'), max_length=1, choices=CHOICES_APPLICABILITY, default='A',)
     note            = models.ForeignKey(Note, verbose_name=_(u'note'), blank=True, null=True)
 
     def __unicode__(self):
-        return self.criterion.factor.factor
+        return "%s:%s" % (self.criterion.factor, self.criterion)
 
     class Meta:
         verbose_name = _(u'Appropriatness')

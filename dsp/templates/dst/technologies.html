@@ -11,7 +11,7 @@
 }
 
 
-.back_ok, #toggle_ok {
+.back_yes, #toggle_yes {
 	background-color:#DCEDD0;
 }
 .back_maybe, #toggle_maybe {
@@ -42,13 +42,38 @@
 </div>
 <div style="text-align:center;">
 	<p id="toggles">
-		<a id="toggle_ok">Hide appropriate</a> 
+		<a id="toggle_yes">Hide appropriate</a> 
 		<a id="toggle_maybe">Hide maybe</a> 
 		<a id="toggle_no" >Hide not appropriate</a>
 	</p>
 </div>
 <hr >
+    
+<div class="push-1 span-15 append-2 first last" style="margin-bottom:0">
+    {% for techgroup, techs in all_techs %}
+        <div
+            class="span-3 {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}"
+            style="text-align:center;"
+        >
+            <p style="font-weight:bold;display:block;height:50px;">{{ techgroup }}</p>
+        {% for tech in techs %}
+            <div class="tech">
+                <div class="{{tech.usable}}">
+                    <a href="{% url tech_choice tech.id %}">{% trans 'Choose' %}</a>
+                    <div class="back_{{tech.usable}}">
+                        <img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
+                    </div>
+                    <p style="margin-top:5px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech }}</a></p>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% endfor %}
 
+</div>
+
+
+{% comment %}
 <div class="push-1 span-15 append-2 first last" style="margin-bottom:0">
 {% for techgroup in techgroups %}
 	<div class="span-3 {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}"
@@ -117,6 +142,8 @@
 	</div>
 {% endfor %}
 </div>
+{% endcomment %}
+
 <div class="clear"></div>
 <hr style="margin-top:20px" />
 
@@ -140,9 +167,9 @@
 {% block jquery_ready %}
 {{block.super}}
 
-jQ('#toggle_ok').click(function () {
-	jQ(this).html( (jQ('.ok').is(":visible") ? 'Show' : 'Hide') + ' appropriate' );
-	jQ('.ok').toggle();
+jQ('#toggle_yes').click(function () {
+	jQ(this).html( (jQ('.yes').is(":visible") ? 'Show' : 'Hide') + ' appropriate' );
+	jQ('.yes').toggle();
 });
 
 jQ('#toggle_maybe').click(function () {
