@@ -42,7 +42,7 @@ class Criterion(models.Model):
 
 class Answer(models.Model):
     session     = models.ForeignKey(Session, verbose_name=_('session'))
-    criterion   = models.OneToOneField(Criterion, verbose_name=_('criterion'))
+    criterion   = models.ForeignKey(Criterion, verbose_name=_('criterion'))
     applicable  = models.BooleanField(verbose_name=_('applicable'))
 
     def __unicode__(self):
