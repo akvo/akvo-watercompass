@@ -32,5 +32,15 @@ MEDIA_URL = 'http://%s/media/' % DOMAIN_NAME
 SECRET_KEY = '_x4m2#27c2dxz-8+s#4&qpx#15k-4ngulh8^^04-bgv!kcl)ui'
 
 
+# Makes it possible to override with local settings e.g. DOMAIN_NAME, MEDIA_ROOT, MEDIA_URL
+try:
+    from settings_local import *
+except:
+    pass
+
+
+
+
+
 
 

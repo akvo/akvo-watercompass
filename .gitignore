@@ -1,5 +1,5 @@
 .DS_Store
 *.py[co]
 *.kpf
-dsp/settings.py
-dsp/mediaroot/technologies/
+dsp/settings_local.py
+dsp/data
