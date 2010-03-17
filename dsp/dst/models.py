@@ -7,6 +7,8 @@ from django.db.models.query import QuerySet
 from django.db.models.signals import post_save, post_delete
 from django.utils.translation import ugettext, ugettext_lazy as _
 
+import itertools
+
 class Factor(models.Model):
     factor          = models.CharField(_(u'factor'), max_length=50)
     order           = models.IntegerField(_(u'order'),)
@@ -79,8 +81,8 @@ class QuerySetManager(models.Manager):
             return getattr(self.get_query_set(), attr, *args)
 
 class Technology(models.Model):
-    TECH_USE_NO, TECH_USE_MAYBE, TECH_USE_YES, TECH_USE_NA, TECH_USE_UNLINKED = (
-        'no', 'maybe', 'yes', 'na', 'grey',
+    TECH_USE_NO, TECH_USE_MAYBE, TECH_USE_YES, TECH_USE_NA, TECH_USE_NOT_ALLOWED, TECH_USE_CHOSEN = (
+        'no', 'maybe', 'yes', 'na', 'hide', 'chosen',
     )
     group       = models.ForeignKey(TechGroup, verbose_name=_('technology group'))
     factors     = models.ManyToManyField(Factor, verbose_name=_('factors'), blank=True)
@@ -102,30 +104,44 @@ class Technology(models.Model):
     
     class QuerySet(QuerySet):
         def input(self):
+            "find all techs that have self as output"
             return Technology.objects.filter(output__in=self)
     
         def output(self):
+            "find all techs that have self as input"
             return Technology.objects.filter(input__in=self)
         
         def all_output(self):
+            "find all techs that have self as input recursively"
             return (
                 self.output() |
                 self.output().output() |
                 self.output().output().output() |
-                self.output().output().output().output()
+                self.output().output().output().output() |
+                self.output().output().output().output().output() |
+                self.output().output().output().output().output().output()
+                
             )
     
         def all_input(self):
+            "find all techs that have self as output recursively"
             return (
                 self.input() |
                 self.input().input() |
                 self.input().input().input() |
-                self.input().input().input().input()
+                self.input().input().input().input() |
+                self.input().input().input().input().input() |
+                self.input().input().input().input().input().input()
             )
 
         def all_linked_techs(self):
-            #return (self.all_output() | self.all_input())
-            return (self.all_output() | self.all_input())
+            """
+            find all techs linked to self
+            the reason for itertools is that when I do
+            (self.all_input() | self.all_output()) the result is not
+            the expected union of all_input and all_output
+            """
+            return itertools.chain(self.all_input(), self.all_output())
 
     def display_output(self):
         return "<br/>".join([tech.name for tech in Technology.objects.filter(input=self)])
@@ -133,13 +149,37 @@ class Technology(models.Model):
             
     def display_input(self):
         return "<br/>".join([tech.name for tech in Technology.objects.filter(output=self)])
-    display_output.allow_tags = True
+    display_input.allow_tags = True
             
+    def availability(self, session):
+        """
+        figure out if I am "available" that is can be used given choices of techs already made
+        """
+        chosen_techs = Technology.objects.filter(techchoice__session=session)
+        if self in chosen_techs:
+            return self.TECH_USE_CHOSEN
+        if self.group in [t.group for t in chosen_techs]:
+            return self.TECH_USE_NOT_ALLOWED
+        if self in chosen_techs.all_linked_techs():
+            return True
+        return False
+
     def usability(self, session):
         """
-        figure out how I'm usable given a set of Answers objects
+        figure out "usability" status based on Answers and TechChoices
         """
-        
+        # first figure if self is usable based on choices already made
+        chosen_techs = Technology.objects.filter(techchoice__session=session)
+        if chosen_techs:
+            if self in chosen_techs:
+                # among the chosen; return with the good news
+                return self.TECH_USE_CHOSEN
+            if self.group in [t.group for t in chosen_techs]:
+                # self is in a group where the choice is already made and we're not the one
+                return self.TECH_USE_NOT_ALLOWED
+            linked = [t for t in chosen_techs.all_linked_techs()]
+            if not self in linked:
+                return self.TECH_USE_NOT_ALLOWED
         # find the criteria that apply, i.e. get answers where applicable = True
         answers = Answer.objects.filter(session=session, applicable__exact=True)
         # given the answers, get the corresponding criteria
@@ -157,12 +197,6 @@ class Technology(models.Model):
         # this thech was not affected by the environmental factors
         return self.TECH_USE_NA
 
-    def availability(self, other_tech):
-        """
-        figure out if I am connected to other_tech via output or input
-        """
-        return self in other_tech.output.all() or other_tech in self.output.all()
-
 
 class TechChoice(models.Model):
     session     = models.ForeignKey(Session, verbose_name=_('session'))
@@ -174,6 +208,7 @@ class TechChoice(models.Model):
 
     def __unicode__(self):
         return str(self.technology)
+
 
 class Note(models.Model):
     note    = models.CharField(_(u'note'), max_length=100)

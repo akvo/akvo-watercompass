@@ -21,6 +21,14 @@
 	background-color:#F6C8AB;
 }
 
+.back_hide, #toggle_hide {
+	background-color:#DDDDDD;
+}
+
+.back_chosen, #toggle_chosen {
+	background-color:#FF4400;
+}
+
 #toggles > a {
 	padding:5px 10px;
 	margin: 10px;
@@ -61,7 +69,7 @@
                 <div class="{{tech.usable}}">
                     <a href="{% url tech_choice tech.id %}">{% trans 'Choose' %}</a>
                     <div class="back_{{tech.usable}}">
-                        <img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
+                        <img src="{{ MEDIA_URL}}{{ tech.image }}" width="100px" height="100px" /><br />
                     </div>
                     <p style="margin-top:5px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech }}</a></p>
                 </div>

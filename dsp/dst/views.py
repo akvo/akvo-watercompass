@@ -128,6 +128,7 @@ def technologies(request):
         techs = Technology.objects.filter(group=group)
         for tech in techs:
             tech.usable = tech.usability(get_session(request))
+            tech.available = tech.availability(get_session(request))
         group_techs.append(techs)
     # if we want to transpose the data:
     #all_techs = map(None, *group_techs)
