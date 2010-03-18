@@ -4,29 +4,45 @@
 {{ block.super }}
 
 .tech {
-	height:150px; 
+	height:220px; 
 	margin-left:auto; 
 	margin-right:auto;
-	width:100px; 
+	width:100px;
+	border-bottom:1px dotted #ccc; 
 }
-
 
 .back_yes, #toggle_yes {
 	background-color:#DCEDD0;
 }
-.back_maybe, #toggle_maybe {
+
+
+.back_maybe_img, #toggle_maybe {
 	background-color:#FBF9CF;
 }
-.back_no, #toggle_no {
+
+.back_no_img, #toggle_no {
 	background-color:#F6C8AB;
 }
 
-.back_hide, #toggle_hide {
-	display: none;
+.back_na_img, #toggle_na {
+	background-color:#C9C299;
 }
 
-.back_chosen, #toggle_chosen {
+.back_hide, #toggle_hide {
+	/*display: none;*/
+}
+
+.back_hide_img {
+	filter:alpha(opacity=20);
+	-moz-opacity:0.2;
+	-khtml-opacity: 0.2;
+	opacity: 0.2;
+}
+
+.back_chosen_img, #toggle_chosen {
 	background-color:#FF4400;
+	background-color:#86A8E3;
+	background-color:#EAF2F5
 }
 
 #toggles > a {
@@ -53,27 +69,33 @@
 		<a id="toggle_yes">Hide appropriate</a> 
 		<a id="toggle_maybe">Hide maybe</a> 
 		<a id="toggle_no" >Hide not appropriate</a>
+		<a id="toggle_na" >Hide not applicable</a>
 	</p>
 </div>
-<hr >
+<hr />
     
 <div class="span-18 first last" style="margin-bottom:0">
     {% for techgroup, techs in all_techs %}
-        <div
-            class="span-3 {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}"
-            style="text-align:center;"
-        >
+        <div class="span-3 {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center;">
             <p style="font-weight:bold;display:block;height:50px;">{{ techgroup }}</p>
         {% for tech in techs %}
             <div class="tech">
                 <div class="back_{{tech.usable}}">
-                    {% ifnotequal tech.usable 'no' %}
-                        <a href="{% url tech_choice tech.id %}">{% trans 'Choose' %}</a>
-                    {% endifnotequal %}
-                    <div class="back_{{tech.usable}}">
-                        <img src="{{ MEDIA_URL}}{{ tech.image }}" width="100px" height="100px" /><br />
+					<p style="margin-top:5px;display:block; height:25px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech }}</a></p>
+                    <div class="back_{{tech.usable}}_img" style="margin-bottom:15px;">
+						<a class="fancy" href="{% url technologies_help tech.id %}">
+                        	<img src="{{ MEDIA_URL}}{{ tech.image }}" width="100px" height="100px" />
+						</a>
+						<br />
                     </div>
-                    <p style="margin-top:5px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech }}</a></p>
+                    {% ifnotequal tech.usable 'no' %}
+						{% ifnotequal tech.usable 'hide' %}
+							<a class="aqua awesome small" href="{% url tech_choice tech.id %}">{% trans 'Select' %}</a>
+						{% endifnotequal %}
+					{% endifnotequal %}
+					{% comment %}
+					<a class="grey awesome small" href="#">{% trans 'Select' %}</a>						
+					{% endcomment %}
                 </div>
             </div>
         {% endfor %}
@@ -83,86 +105,13 @@
 </div>
 
 
-{% comment %}
-<div class="push-1 span-15 append-2 first last" style="margin-bottom:0">
-{% for techgroup in techgroups %}
-	<div class="span-3 {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}"
-	style="background-color:#{% cycle 'f0f2f3' 'fff' %}; text-align:center;">
-		<p style="font-weight:bold;display:block;height:50px;">{{ techgroup }}</p>
-		{% ifequal techgroup.id 1 %}
-			{% for tech in conveyance_technologies %}
-			<div class="tech">
-				<div class="{% cycle 'ok' 'maybe' 'no' %}">
-					<div class="back_{% cycle 'ok' 'maybe' 'no' %}">
-						<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
-					</div>
-					<p style="margin-top:5px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech }}</a></p>
-				</div>
-			</div>
-			{% endfor %}
-		{% endifequal %}
-		{% ifequal techgroup.id 2 %}
-			{% for tech in collection_technologies %}
-			<div class="tech">
-				<div class="{% cycle 'ok' 'maybe' 'no' %}">
-					<div class="back_{% cycle 'ok' 'maybe' 'no' %}">
-						<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
-					</div>
-					<p style="margin-top:5px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech }}</a></p>
-				</div>
-			</div>
-			{% endfor %}
-		{% endifequal %}
-		{% ifequal techgroup.id 3 %}
-			{% for tech in user_interface_technologies %}
-			<div class="tech">
-				<div class="{% cycle 'maybe' 'ok' 'no' %}">
-					<div class="back_{% cycle 'maybe' 'ok' 'no' %}">
-						<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
-					</div>
-					<p style="margin-top:5px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech }}</a></p>
-				</div>
-			</div>
-			{% endfor %}
-		{% endifequal %}
-		{% ifequal techgroup.id 4 %}
-			{% for tech in centralized_technologies %}
-			<div class="tech">
-				<div class="{% cycle 'no' 'ok' 'maybe' %}">
-					<div class="back_{% cycle 'no' 'ok' 'maybe' %}">
-						<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
-					</div>
-					<p style="margin-top:5px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech }}</a></p>
-				</div>
-			</div>
-			{% endfor %}
-		{% endifequal %}
-		{% ifequal techgroup.id 5 %}
-			{% for tech in disposal_technologies %}
-			<div class="tech">
-				<div class="{% cycle 'ok' 'maybe' 'no' %}">
-					<div class="back_{% cycle 'ok' 'maybe' 'no' %}">
-						<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" width="100px" height="100px" /><br />
-					</div>
-					<p style="margin-top:5px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech }}</a></p>
-				</div>
-			</div>
-			{% endfor %}
-		{% endifequal %}
-	</div>
-{% endfor %}
-</div>
-{% endcomment %}
-
 <div class="clear"></div>
 <hr style="margin-top:20px" />
 
 <div class="push-1 span-16 append-1 first last">
 	<p style="text-align:center;">
-		<a class="grey awesome" style="margin-right:10px;"
-			href="{% url factors %}">{% trans '&larr; Back' %}</a>
-		<a class="aqua awesome" href="{% url solution %}" 
-			onclick="this.blur();" style="margin-left:10px;">{% trans 'Continue &rarr;' %}</a>
+		<a class="grey awesome" style="margin-right:10px;" href="{% url factors %}">{% trans '&larr; Back' %}</a>
+		<a class="aqua awesome" href="{% url solution %}" onclick="this.blur();" style="margin-left:10px;">{% trans 'Continue &rarr;' %}</a>
 	</p>
 </div>
 
@@ -177,20 +126,30 @@
 {% block jquery_ready %}
 {{block.super}}
 
+// jQ('.back_hide_img').fadeTo("slow", 0.3);
+// jQ('.hide_select').attr ('href', '#').click(function() { return false; }).fadeTo("slow", 0.3);
+
+
 jQ('#toggle_yes').click(function () {
-	jQ(this).html( (jQ('.yes').is(":visible") ? 'Show' : 'Hide') + ' appropriate' );
-	jQ('.yes').toggle();
+	jQ(this).html( (jQ('.back_yes').is(":visible") ? 'Show' : 'Hide') + ' appropriate');
+	jQ('.back_yes').is(":visible") ? jQ('.back_yes').fadeOut("slow") : jQ('.back_yes').fadeIn("slow");
 });
 
 jQ('#toggle_maybe').click(function () {
-	jQ(this).html( (jQ('.maybe').is(":visible") ? 'Show' : 'Hide') + ' maybe' );
-	jQ('.maybe').toggle();
+	jQ(this).html( (jQ('.back_maybe').is(":visible") ? 'Show' : 'Hide') + ' maybe');
+	jQ('.back_maybe').is(":visible") ? jQ('.back_maybe').fadeOut("slow") : jQ('.back_maybe').fadeIn("slow");
 });
 
 jQ('#toggle_no').click(function () {
-	jQ(this).html( (jQ('.no').is(":visible") ? 'Show' : 'Hide') + ' not appropriate');
-	jQ('.no').toggle();
+	jQ(this).html( (jQ('.back_no').is(":visible") ? 'Show' : 'Hide') + ' not appropriate');
+	jQ('.back_no').is(":visible") ? jQ('.back_no').fadeOut("slow") : jQ('.back_no').fadeIn("slow");
 });
+
+jQ('#toggle_na').click(function () {
+	jQ(this).html( (jQ('.back_na').is(":visible") ? 'Show' : 'Hide') + ' not applicable');
+	jQ('.back_na').is(":visible") ? jQ('.back_na').fadeOut("slow") : jQ('.back_na').fadeIn("slow");	
+});
+
 
 jQ("a.fancy").fancybox();
 {% endblock jquery_ready %}	
