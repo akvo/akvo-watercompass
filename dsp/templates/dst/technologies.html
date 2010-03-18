@@ -22,7 +22,7 @@
 }
 
 .back_hide, #toggle_hide {
-	background-color:#DDDDDD;
+	display: none;
 }
 
 .back_chosen, #toggle_chosen {
@@ -57,7 +57,7 @@
 </div>
 <hr >
     
-<div class="push-1 span-15 append-2 first last" style="margin-bottom:0">
+<div class="span-18 first last" style="margin-bottom:0">
     {% for techgroup, techs in all_techs %}
         <div
             class="span-3 {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}"
@@ -66,8 +66,10 @@
             <p style="font-weight:bold;display:block;height:50px;">{{ techgroup }}</p>
         {% for tech in techs %}
             <div class="tech">
-                <div class="{{tech.usable}}">
-                    <a href="{% url tech_choice tech.id %}">{% trans 'Choose' %}</a>
+                <div class="back_{{tech.usable}}">
+                    {% ifnotequal tech.usable 'no' %}
+                        <a href="{% url tech_choice tech.id %}">{% trans 'Choose' %}</a>
+                    {% endifnotequal %}
                     <div class="back_{{tech.usable}}">
                         <img src="{{ MEDIA_URL}}{{ tech.image }}" width="100px" height="100px" /><br />
                     </div>

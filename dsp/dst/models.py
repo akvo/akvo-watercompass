@@ -118,9 +118,7 @@ class Technology(models.Model):
                 self.output().output() |
                 self.output().output().output() |
                 self.output().output().output().output() |
-                self.output().output().output().output().output() |
-                self.output().output().output().output().output().output()
-                
+                self.output().output().output().output().output()
             )
     
         def all_input(self):
@@ -130,8 +128,7 @@ class Technology(models.Model):
                 self.input().input() |
                 self.input().input().input() |
                 self.input().input().input().input() |
-                self.input().input().input().input().input() |
-                self.input().input().input().input().input().input()
+                self.input().input().input().input().input()
             )
 
         def all_linked_techs(self):
