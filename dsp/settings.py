@@ -15,13 +15,13 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-DOMAIN_NAME = 'localhost:8000'
+DOMAIN_NAME = 'waste-dev.akvo.org'
 
 SITE_ID = 1
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = '/Users/gabriel/git/waste-dst/dsp/mediaroot/'
+MEDIA_ROOT = '/var/dev/waste/waste-dst/dsp/mediaroot/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
