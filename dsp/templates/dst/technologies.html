@@ -7,9 +7,9 @@
 	height:220px; 
 	margin-left:auto; 
 	margin-right:auto;
-	width:100px; 
+	width:100px;
+	border-bottom:1px dotted #ccc; 
 }
-
 
 .back_yes, #toggle_yes {
 	background-color:#DCEDD0;
@@ -29,7 +29,14 @@
 }
 
 .back_hide, #toggle_hide {
-	display: none;
+	/*display: none;*/
+}
+
+.back_hide_img {
+	filter:alpha(opacity=20);
+	-moz-opacity:0.2;
+	-khtml-opacity: 0.2;
+	opacity: 0.2;
 }
 
 .back_chosen_img, #toggle_chosen {
@@ -82,8 +89,13 @@
 						<br />
                     </div>
                     {% ifnotequal tech.usable 'no' %}
-					<a class="aqua awesome small" href="{% url tech_choice tech.id %}">{% trans 'Select' %}</a>
-                    {% endifnotequal %}
+						{% ifnotequal tech.usable 'hide' %}
+							<a class="aqua awesome small" href="{% url tech_choice tech.id %}">{% trans 'Select' %}</a>
+						{% endifnotequal %}
+					{% endifnotequal %}
+					{% comment %}
+					<a class="grey awesome small" href="#">{% trans 'Select' %}</a>						
+					{% endcomment %}
                 </div>
             </div>
         {% endfor %}
@@ -113,6 +125,10 @@
 
 {% block jquery_ready %}
 {{block.super}}
+
+// jQ('.back_hide_img').fadeTo("slow", 0.3);
+// jQ('.hide_select').attr ('href', '#').click(function() { return false; }).fadeTo("slow", 0.3);
+
 
 jQ('#toggle_yes').click(function () {
 	jQ(this).html( (jQ('.back_yes').is(":visible") ? 'Show' : 'Hide') + ' appropriate');
