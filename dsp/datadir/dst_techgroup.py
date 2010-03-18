@@ -8,4 +8,5 @@ records = [
 [3, u'Toilet facilites', 10]
 [4, u'(Semi-) Centralized treatment', 40]
 [5, u'Use of products / Disposal', 50]
+[6, u'Tereatment 2', 45]
 ]
