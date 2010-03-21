@@ -21,9 +21,13 @@
 		{% endfor %}
 	{% else %}
 		<p>{% trans 'There were no Appropriate answers to the' %} {{ technology }}.</p>
-
 	{% endif %}
-	
+	<br><br>
+	<b>Session:</b><br>
+	{% for item in items  %}
+		{{item.session_key}}<br>
+	{% endfor %}
+	<br><br>
 </div>
 {% endblock maincontainer %}
 

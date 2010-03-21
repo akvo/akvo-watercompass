@@ -148,13 +148,21 @@ def tech_choice(request, tech_id):
 
 @render_to('dst/technologies_help.html')
 def technologies_help(request,id=None):
+    # Needs to be refined to filter on selection
+    #
+    
+    #user_id = request.session['auth_user_id']
+    s = request.session
+    answers = Answer.objects.all().filter(session=s)
+    #items = s.keys()
     
     technology = get_object_or_404(Technology, pk=id)
     relevancy_objects = Relevancy.objects.all().filter(technology__exact=id).exclude(applicability__exact='A')
-    
     #relevancy_objects = Relevancy.objects.all().filter(technology__exact=id).filter(criterion='fetched')
+    sessions = Session.objects.all()
+
     
-    return { 'technology': technology, 'relevancy_objects':relevancy_objects }
+    return { 'technology': technology, 'relevancy_objects':relevancy_objects, 'answers':answers, 'items': sessions, }
 
 
 @render_to('dst/solution.html')
