@@ -91,6 +91,8 @@ class Technology(models.Model):
     #input       = models.ManyToManyField('self', blank=True, related_name='output', symmetrical=False, )
     output      = models.ManyToManyField('self', blank=True, related_name='input', symmetrical=False, )
     image       = models.ImageField(upload_to='technologies')
+    url         = models.URLField(blank=True, verify_exists = False, help_text=_('Enter the url to the corresponding Akvopedia entry, beginning with http://.'))
+
     
     def __unicode__(self):
         return self.name

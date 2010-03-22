@@ -6,6 +6,12 @@
 	<h2> {{ technology }}</h2>
 
 	{{ technology.description }}
+	
+	{% if  technology.url %}
+	<br>
+	Akvopedia article: <a href="{{technology.url}}" target="_blank">{{technology}}</a>
+	<br><br><br>
+	{% endif %}
 
 	{% if relevancy_objects %}
 		{% for object in relevancy_objects  %}

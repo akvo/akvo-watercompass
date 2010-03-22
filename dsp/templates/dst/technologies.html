@@ -82,7 +82,7 @@
 <div class="span-18 first last" style="margin-bottom:0">
     {% for techgroup, techs in all_techs %}
         <div class="span-3 {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center;">
-			<div id="name" style="border-bottom:1px solid #F4F4F4; margin-bottom:40px; ">
+			<div style="border-bottom:1px solid #F4F4F4; margin-bottom:40px; ">
             	<p style="font-weight:bold;display:block;height:40px;">{{ techgroup }}</p>				
 			</div>
 
@@ -92,7 +92,7 @@
 					<p style="margin-top:5px;display:block; height:25px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech }}</a></p>
                     <div class="back_{{tech.usable}}_img" style="margin-bottom:15px;">
 						<a class="fancy" href="{% url technologies_help tech.id %}">
-                        	<img src="{{ MEDIA_URL}}{{ tech.image }}" width="100px" height="100px" />
+                        	<img src="{{ MEDIA_URL}}{{ tech.image }}" />
 						</a>
 						<br />
                     </div>
