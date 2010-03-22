@@ -111,4 +111,6 @@ records = [
 [106, '2010-03-17 11:28:13', 1, 11, u'4', u'Collection and Storage 2', 2, u'Changed output.']
 [107, '2010-03-17 11:29:17', 1, 11, u'7', u'Centralized treatment 1', 2, u'Changed output.']
 [108, '2010-03-17 11:30:11', 1, 11, u'1', u'Toilet facility 1', 2, u'Changed applicability for Appropriatness "Water supply:none". Changed applicability for Appropriatness "Water supply:fetched". Changed applicability for Appropriatness "Water supply:handpump". Changed applicability for Appropriatness "Water supply:standpipe". Changed applicability for Appropriatness "Water supply:tanker". Changed applicability for Appropriatness "Water supply:connection". Changed applicability for Appropriatness "Flood prone:not affected". Changed applicability for Appropriatness "Flood prone:low-laying area". Changed applicability for Appropriatness "Flood prone:below 1:50 year".']
+[109, '2010-03-22 05:12:47', 2, 11, u'9', u'Application of Urine', 2, u'Changed name and url.']
+[110, '2010-03-22 05:13:30', 2, 11, u'10', u'Aquaculture Ponds', 2, u'Changed name and url.']
 ]
