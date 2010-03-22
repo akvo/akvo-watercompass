@@ -94,13 +94,18 @@
 						<a class="fancy" href="{% url technologies_help tech.id %}">
                         	<img src="{{ MEDIA_URL}}{{ tech.image }}" />
 						</a>
-						<br />
                     </div>
-                    {% ifnotequal tech.usable 'no' %}
-						{% ifnotequal tech.usable 'hide' %}
-							<a class="aqua awesome small" href="{% url tech_choice tech.id %}">{% trans 'Select' %}</a>
+					{% ifequal tech.usable 'chosen'  %}
+						<a class="aqua awesome small" href="{% url tech_choice tech.id %}">{% trans 'Deselect' %}</a>
+					{% else %}
+						{% ifnotequal tech.usable 'no' %}
+							{% ifnotequal tech.usable 'hide' %}
+								<a class="aqua awesome small" href="{% url tech_choice tech.id %}">{% trans 'Select' %}</a>
+							{% endifnotequal %}
 						{% endifnotequal %}
-					{% endifnotequal %}
+					{% endifequal %}
+					
+                    
 					{% comment %}
 					<a class="grey awesome small" href="#">{% trans 'Select' %}</a>						
 					{% endcomment %}
