@@ -199,7 +199,7 @@ class Technology(models.Model):
 
 class TechChoice(models.Model):
     session     = models.ForeignKey(Session, verbose_name=_('session'))
-    technology  = models.OneToOneField(Technology, verbose_name=_('technology'))
+    technology  = models.ForeignKey(Technology, verbose_name=_('technology'))
     
     class Meta:
         verbose_name = _(u'technology choice')
