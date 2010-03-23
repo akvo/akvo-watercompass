@@ -168,6 +168,28 @@ class Technology(models.Model):
         if self in chosen_techs.all_linked_techs():
             return True
         return False
+    
+    def applicable(self, session):
+        """
+        figure out if I'm applicable given the current environmental factors
+        """
+        # find the criteria that apply, i.e. get answers where applicable = True
+        answers = Answer.objects.filter(session=session, applicable__exact=True)
+        # given the answers, get the corresponding criteria
+        criteria = Criterion.objects.filter(answer__in=answers)
+        # now try to find one or more instances of Relevancy.applicability = CHOICE_NO
+        if len(self.relevancies.filter(applicability=Relevancy.CHOICE_NO, criterion__in=criteria)):
+            return self.TECH_USE_NO
+        # if we found no CHOICE_NO relevanciew try for CHOICE_MAYBE
+        elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_MAYBE, criterion__in=criteria)):
+            return self.TECH_USE_MAYBE
+        # if we found no CHOICE_MAYBE relevanciew try for CHOICE_YES
+        elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_YES, criterion__in=criteria)):
+            print self
+            return self.TECH_USE_YES
+        # this thech was not affected by the environmental factors
+        return self.TECH_USE_YES       
+        
 
     def usability(self, session):
         """
@@ -185,22 +207,7 @@ class Technology(models.Model):
             linked = [t for t in chosen_techs.all_linked_techs()]
             if not self in linked:
                 return self.TECH_USE_NOT_ALLOWED
-        # find the criteria that apply, i.e. get answers where applicable = True
-        answers = Answer.objects.filter(session=session, applicable__exact=True)
-        # given the answers, get the corresponding criteria
-        criteria = Criterion.objects.filter(answer__in=answers)
-        # now try to find one or more instances of Relevancy.applicability = CHOICE_NO
-        if len(self.relevancies.filter(applicability=Relevancy.CHOICE_NO, criterion__in=criteria)):
-            return self.TECH_USE_NO
-        # if we found no CHOICE_NO relevanciew try for CHOICE_MAYBE
-        elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_MAYBE, criterion__in=criteria)):
-            return self.TECH_USE_MAYBE
-        # if we found no CHOICE_MAYBE relevanciew try for CHOICE_YES
-        elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_YES, criterion__in=criteria)):
-            print self
-            return self.TECH_USE_YES
-        # this thech was not affected by the environmental factors
-        return self.TECH_USE_YES       
+        return self.applicable(session)
 
     def maybe_relevant(self, session):
         # find the criteria that apply, i.e. get answers where applicable = True

@@ -165,13 +165,13 @@ def technologies_help(request,id=None):
     session = get_session(request)
         
     technology = get_object_or_404(Technology, pk=id)
-    usability = technology.usability(session)
+    applicable = technology.applicable(session)
     relevancy_objects = []
     
-    if usability == technology.TECH_USE_MAYBE:
+    if applicable == technology.TECH_USE_MAYBE:
         relevancy_objects = technology.maybe_relevant(session)
 
-    elif usability == technology.TECH_USE_NO:
+    elif applicable == technology.TECH_USE_NO:
         relevancy_objects = technology.not_relevant(session)
     
     return { 'technology': technology, 'relevancy_objects':relevancy_objects,}
