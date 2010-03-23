@@ -9,6 +9,8 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 
 import itertools
 
+from utils import pretty_name
+
 class Factor(models.Model):
     factor          = models.CharField(_(u'factor'), max_length=50)
     order           = models.IntegerField(_(u'order'),)
@@ -142,6 +144,9 @@ class Technology(models.Model):
             """
             return itertools.chain(self.all_input(), self.all_output())
 
+        def all_chosen(self, session):
+            return self.filter(tech_choices__session=session).order_by('group__order')
+
     def display_output(self):
         return "<br/>".join([tech.name for tech in Technology.objects.filter(input=self)])
     display_output.allow_tags = True
@@ -154,7 +159,7 @@ class Technology(models.Model):
         """
         figure out if I am "available" that is can be used given choices of techs already made
         """
-        chosen_techs = Technology.objects.filter(techchoice__session=session)
+        chosen_techs = Technology.objects.filter(tech_choices__session=session)
         if self in chosen_techs:
             return self.TECH_USE_CHOSEN
         if self.group in [t.group for t in chosen_techs]:
@@ -168,7 +173,7 @@ class Technology(models.Model):
         figure out "usability" status based on Answers and TechChoices
         """
         # first figure if self is usable based on choices already made
-        chosen_techs = Technology.objects.filter(techchoice__session=session)
+        chosen_techs = Technology.objects.filter(tech_choices__session=session)
         if chosen_techs:
             if self in chosen_techs:
                 # among the chosen; return with the good news
@@ -194,12 +199,35 @@ class Technology(models.Model):
             print self
             return self.TECH_USE_YES
         # this thech was not affected by the environmental factors
-        return self.TECH_USE_NA
+        return self.TECH_USE_NA            
 
+    def maybe_relevant(self, session):
+        # find the criteria that apply, i.e. get answers where applicable = True
+        answers = Answer.objects.filter(session=session, applicable__exact=True)
+        # given the answers, get the corresponding criteria
+        criteria = Criterion.objects.filter(answer__in=answers)
+        # return the relevancy objects that maybe are applicable
+        return Relevancy.objects.filter(technology=self, applicability=Relevancy.CHOICE_MAYBE, criterion__in=criteria)
+
+    def not_relevant(self, session):
+        # find the criteria that apply, i.e. get answers where applicable = True
+        answers = Answer.objects.filter(session=session, applicable__exact=True)
+        # given the answers, get the corresponding criteria
+        criteria = Criterion.objects.filter(answer__in=answers)
+        # return the relevancy objects that indicate the tech is not applicable
+        return Relevancy.objects.filter(technology=self, applicability=Relevancy.CHOICE_NO, criterion__in=criteria)
+
+    def maybe_notes(self, session):
+        "return the notes for the maybe relevant techs"
+        return [rel.note for rel in self.maybe_relevant(session)]
+
+    def no_notes(self, session):
+        "return the notes for the not relevant techs"
+        return [rel.note for rel in self.not_relevant(session)]
 
 class TechChoice(models.Model):
     session     = models.ForeignKey(Session, verbose_name=_('session'))
-    technology  = models.ForeignKey(Technology, verbose_name=_('technology'))
+    technology  = models.ForeignKey(Technology, verbose_name=_('technology'), related_name='tech_choices' )
     
     class Meta:
         verbose_name = _(u'technology choice')
@@ -233,7 +261,10 @@ class Relevancy(models.Model):
     note            = models.ForeignKey(Note, verbose_name=_(u'note'), blank=True, null=True)
 
     def __unicode__(self):
-        return "%s:%s" % (self.criterion.factor, self.criterion)
+        return pretty_name(str(self.criterion.factor))
+    
+    def show_criterion(self):
+        return pretty_name(str(self.criterion))
 
     class Meta:
         verbose_name = _(u'Appropriatness')

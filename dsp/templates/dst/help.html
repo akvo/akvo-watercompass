@@ -1,8 +1,10 @@
-{% load webdesign %}
+{% extends "dst/base_panel.html" %}
+{% load i18n webdesign %}
 
-<div style="min-width:600px; min-height:400px; ">
-<h3>Help</h3>
+{% block panel_title %}Help{% endblock panel_title %}</h2>
+{% block panel_content %}
 <p>
+	Help text..<br />
 	{% lorem 80 w random %}
 </p>
-</div>
+{% endblock panel_content %}

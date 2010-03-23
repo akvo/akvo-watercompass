@@ -1,30 +1,12 @@
-{% extends "dst/base.html" %}
+{% extends "dst/base_panel.html" %}
 {% load i18n webdesign %}
 
-{% block inline_styles %}
-{{ block.super }}
-#demo {
-	width:600px;
-	min-width:600px;
-	max-width:600px;
-	
-	height:400px;
-	min-height:400px;
-	max-height:400px;
-	
-	overflow:auto;
-}
-
-{% endblock inline_styles %}
-
-{% block maincontainer %}
-<div id="demo">
-	<h2>Demo</h2>
-	<p>
-		{% lorem 80 w random %}
-	</p>
-</div>
-{% endblock maincontainer %}
-
+{% block panel_title %}Demo{% endblock panel_title %}</h2>
+{% block panel_content %}
+<p>
+	A demo...<br />
+	{% lorem 80 w random %}
+</p>
+{% endblock panel_content %}
 
 

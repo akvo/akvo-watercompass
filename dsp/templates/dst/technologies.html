@@ -1,57 +1,5 @@
 {% extends "dst/base.html" %}
 {% load i18n  %}
-{% block inline_styles %}
-{{ block.super }}
-
-.tech {
-	height:200px; 
-	margin-left:auto; 
-	margin-right:auto;
-	width:100px;
-	/*border-bottom:1px solid #ccc; */
-	margin-bottom:30px;
-}
-
-.back_yes_img, #toggle_yes {
-	background-color:#DCEDD0;
-}
-
-
-.back_maybe_img, #toggle_maybe {
-	background-color:#FBF9CF;
-}
-
-.back_no_img, #toggle_no {
-	background-color:#F6C8AB;
-}
-
-.back_na_img, #toggle_na {
-	background-color:#C9C299;
-}
-
-.back_hide, #toggle_hide {
-	/*display: none;*/
-}
-
-.back_hide_img {
-	filter:alpha(opacity=20);
-	-moz-opacity:0.2;
-	-khtml-opacity: 0.2;
-	opacity: 0.2;
-}
-
-.back_chosen_img, #toggle_chosen {
-	background-color:#FF4400;
-	background-color:#86A8E3;
-	background-color:#EAF2F5
-}
-
-#toggles > a {
-	padding:5px 10px;
-	margin: 10px;
-}
-
-{% endblock inline_styles %}
 
 {% block content %}
 <div class="span-18" style="margin-bottom:30px;">
@@ -89,7 +37,7 @@
         {% for tech in techs %}
             <div class="tech">
                 <div class="back_{{tech.usable}}">
-					<p style="margin-top:5px;display:block; height:25px;"><a class="fancy" href="{% url technologies_help tech.id %}">{{ tech|capfirst }}</a></p>
+					<p style="margin-top:5px;display:block; height:25px;"><a class="fancy" href="{% url technologies_help tech.id %}" alt="{{tech.usable}}">{{ tech|capfirst }}</a></p>
                     <div class="back_{{tech.usable}}_img" style="margin-bottom:15px;">
 						<a class="fancy" href="{% url technologies_help tech.id %}">
                         	<img src="{{ MEDIA_URL}}{{ tech.image }}" />

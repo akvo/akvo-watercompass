@@ -10,6 +10,7 @@ from django.template import RequestContext
 
 
 from models import Factor, TechGroup, Technology, Relevancy, Answer, Criterion, TechChoice
+from utils import pretty_name
 
 def get_session(request):
     return Session.objects.get(pk=request.session.session_key)
@@ -43,7 +44,6 @@ def render_to(template):
 
 @render_to('dst/start.html')
 def start(request):
-    request.session['init'] = 'init'
     return {
     }
 
@@ -55,10 +55,6 @@ def get_or_create_answers(session):
             Answer.objects.create(session=session, criterion=criterion, applicable=False)
     return Answer.objects.filter(session=session).order_by('criterion__factor__order', 'criterion__order')
 
-def pretty_name(name):
-    "Converts 'first_name' to 'First name'"
-    name = name[0].upper() + name[1:]
-    return name.replace('_', ' ')
     
 from django.forms.models import modelformset_factory
 from django.forms.widgets import HiddenInput, CheckboxInput
@@ -78,6 +74,7 @@ class AnswerForm(ModelForm):
 
 @render_to('dst/factors.html')
 def factors(request, model=None, id=None):
+    request.session['init'] = 'init'
     AnswerFormSet = modelformset_factory(
         Answer,
         form = AnswerForm,
@@ -152,20 +149,36 @@ def technologies_help(request,id=None):
     #
     
     #user_id = request.session['auth_user_id']
-    s = request.session
-    answers = Answer.objects.all().filter(session=s)
-    #items = s.keys()
-    
+    session = get_session(request)
+        
     technology = get_object_or_404(Technology, pk=id)
-    relevancy_objects = Relevancy.objects.all().filter(technology__exact=id).exclude(applicability__exact='A')
-    #relevancy_objects = Relevancy.objects.all().filter(technology__exact=id).filter(criterion='fetched')
-    sessions = Session.objects.all()
-
+    usability = technology.usability(session)
+    relevancy_objects = []
     
-    return { 'technology': technology, 'relevancy_objects':relevancy_objects, 'answers':answers, 'items': sessions, }
+    if usability == technology.TECH_USE_MAYBE:
+        relevancy_objects = technology.maybe_relevant(session)
+
+    elif usability == technology.TECH_USE_NO:
+        relevancy_objects = technology.not_relevant(session)
+    
+    return { 'technology': technology, 'relevancy_objects':relevancy_objects,}
 
 
 @render_to('dst/solution.html')
 def solution(request):
-
-    return {}
+    groups = TechGroup.objects.all()
+    group_techs = []
+    for group in groups:
+        chosen_techs = Technology.objects.filter(group=group).filter(techchoice__session=get_session(request))
+        for tech in chosen_techs:
+            tech.usable = tech.usability(get_session(request))
+            tech.available = tech.availability(get_session(request))
+        group_techs.append(chosen_techs)
+    
+    # if we want to transpose the data:
+    #all_techs = map(None, *group_techs)
+    all_techs = zip(groups, group_techs)
+    return {
+        'techgroups'    : groups,
+        'all_techs'     : all_techs,
+    }
