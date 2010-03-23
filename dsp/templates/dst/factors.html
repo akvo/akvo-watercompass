@@ -19,13 +19,13 @@
                 {% if not forloop.first %}
                 </ul>
                 {% endif %}
-                <h2><a href="{% url factor_help 'factor' factor.id %}" class="fancy">{{factor.factor}}</a></h2>
+                <h2><a href="{% url factor_help 'factor' factor.id %}" class="fancy">{{factor.factor|capfirst}}</a></h2>
                 <ul style="list-style-type:none; ">
             {% endif %}
 
 			<li>
                 {{form.id}}{{form.criterion}}{{form.applicable}}
-                <a class="small fancy" href="{% url factor_help 'criterion' form.instance.criterion.id %}" target="_blank">{{form.instance.criterion}}</a>
+                <a class="small fancy" href="{% url factor_help 'criterion' form.instance.criterion.id %}" target="_blank">{{form.instance.criterion|capfirst}}</a>
             </li>
         {% endfor %}
         </ul>
@@ -64,10 +64,10 @@
 </form>
 <div class="push-1 span-16 append-1 first last">
 	<p style="text-align:center;">
-		<a class="grey awesome" style="margin-right:10px;"
+		<a class="grey awesome" style="margin-right:10px; float:left;"
 			href="{% url start %}">{% trans '&larr; Back' %}</a>
 		<a class="aqua awesome" href="javascript:document.factorform.submit();" 
-			onclick="this.blur();" style="margin-left:10px;">{% trans 'Continue &rarr;' %}</a>
+			onclick="this.blur();" style="margin-left:10px; float:right;">{% trans 'Continue &rarr;' %}</a>
 	</p>
 </div>
 {% endblock content %}

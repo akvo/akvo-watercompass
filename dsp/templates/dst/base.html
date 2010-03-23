@@ -34,17 +34,23 @@
 	{% block maincontainer %}
 	<div id="maincontainer" class="container">
 		<div class="push-1 span-16 append-1 first last">
-			<h1>The Sanitation Decision Support Tool</h1>
+			<h1>The Decision Support Tool</h1>
 			{#<p class="small grey">Factor selection > Appropriate technologies > Build a system</p> #}
 		</div>
 		{% block content %}
 	
 		{% endblock content %}
-		<hr />
-		<div class="push-1 span-17 first last">
-			<p class="tiny grey">
-				<a id="grid_toggle">toggle grid</a>
+		<div class="span-18" style="border-top:1px solid #ccc; padding-top:10px;">
+			<p class="small grey" style="margin-right:10px; float:right;">
+				<a id="grid_toggle">Toggle grid</a>
+				
+				{#<a id="grid_toggle">toggle grid</a>#}
 			</p>
+			<p class="small grey" style="margin-left:10px;">
+				{% trans 'Funded by' %} <a href="#">Funder.org</a> <span style="color:#ccc;margin-left:3px;margin-right:3px">|</span>
+ 				{% trans 'Powered by' %} <a href="http://akvo.org">Akvo.org</a>
+			</p>
+			
 		</div>
 	</div>
 	{% endblock maincontainer %}
