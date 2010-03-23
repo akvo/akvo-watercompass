@@ -146,9 +146,14 @@ def tech_choice(request, tech_id):
     return HttpResponseRedirect(reverse('technologies'))
 
 
-def reset(request):
+def reset_all(request):
     request.session.flush()
     return HttpResponseRedirect(reverse('start'))
+
+
+def reset_techs(request):
+    TechChoice.objects.filter(session=get_session(request)).delete()
+    return HttpResponseRedirect(reverse('technologies'))
 
 
 @render_to('dst/technologies_help.html')
