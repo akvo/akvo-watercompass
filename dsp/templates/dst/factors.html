@@ -20,7 +20,7 @@
                 </ul>
                 {% endif %}
                 <h2><a href="{% url factor_help 'factor' factor.id %}" class="fancy">{{factor.factor|capfirst}}</a></h2>
-                <ul style="list-style-type:none; ">
+                <ul style="list-style-type:none;">
             {% endif %}
 
 			<li>
@@ -30,23 +30,6 @@
         {% endfor %}
         </ul>
 	</div>
-    
-	{% comment %}
-	<div class="push-1 span-8 first">
-	{% for factor in factors %}
-		<h2><a href="{% url factor_help 'factor' factor.id %}" class="fancy">{{factor.factor}}</a></h2>
-		<ul style="list-style-type:none; ">
-		{% for answer in factor.answers.all %}
-			<li>
-				<input type="radio" name="{{factor.id}}" value="answer_{{answer.id}}"  id="answer_{{answer.id}}" 
-				{% if forloop.first %} checked=checked{% endif %} />
-	            <a class="small fancy" href="{% url factor_help 'answer' answer.id %}" target="_blank">{{answer.answer}}</a>
-			</li>
-	    {% endfor %}
-		</ul>
-	{% endfor %}
-	</div>
-    {% endcomment %}
     
 	<div class="push-1 span-8 last">
 		<h2>Help</h2>
