@@ -200,7 +200,7 @@ class Technology(models.Model):
             print self
             return self.TECH_USE_YES
         # this thech was not affected by the environmental factors
-        return self.TECH_USE_NA            
+        return self.TECH_USE_YES       
 
     def maybe_relevant(self, session):
         # find the criteria that apply, i.e. get answers where applicable = True

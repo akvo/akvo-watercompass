@@ -20,12 +20,25 @@
 		</div>
 	</div>
 </div>
+
+<div class="push-1 span-16 append-1 first last">
+	<p style="text-align:center;">
+		<a class="red awesome" style="margin-right:10px; float:left;"
+			href="{% url reset_all %}">{% trans 'Reset' %}</a>
+		<a class="green awesome" style="margin-right:10px; float:left;"
+			href="{% url reset_techs %}">{% trans 'Deselct all technologies' %}</a>
+		<a class="grey awesome" style="margin-right:10px; float:left;" href="{% url factors %}">{% trans '&larr; Back' %}</a>
+		<a class="aqua awesome" href="{% url solution %}" onclick="this.blur();" style="margin-left:10px; float:right;">{% trans 'Continue &rarr;' %}</a>
+	</p>
+</div>
+<hr style="margin-top:20px" />
+
 <div style="text-align:center;">
 	<p class="small" id="toggles">
 		<a id="toggle_yes">Hide appropriate</a> 
 		<a id="toggle_maybe">Hide maybe</a>
 		<a id="toggle_no" >Hide not appropriate</a>
-		<a id="toggle_na" >Hide not applicable</a>
+		<!--<a id="toggle_na" >Hide not affected</a>-->
 	</p>
 </div>
 <hr />
