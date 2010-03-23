@@ -8,6 +8,11 @@
 @import url("tech.css");
 
 
+h1 {
+    color:#1DAAFB;
+    text-shadow: #ddd 1px 1px 0px;
+}
+
 .sliding_box_header {
     background: #e1e1e5 url(../../../base/img/sliding_box_header_background.png) repeat-x;
     border-bottom: 1px solid #ccc;

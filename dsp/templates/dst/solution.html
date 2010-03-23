@@ -18,12 +18,12 @@
         {% for tech in techs %}
             <div class="tech">
                 <div class="back_{{tech.usable}}">
-					<p style="margin-top:5px;display:block; height:25px;"><a class="fancy" href="{% url technologies_help tech.id %}" alt="{{tech.usable}}">{{ tech|capfirst }}</a></p>
-                    <div class="back_{{tech.usable}}_img" style="margin-bottom:15px;">
-						<a class="fancy" href="{% url technologies_help tech.id %}">
-                        	<img src="{{ MEDIA_URL}}{{ tech.image }}" />
-						</a>
-                    </div>
+					<p class="small" style="margin-top:5px; display:block; height:35px; overflow:hidden; margin-bottom:5px;" <a class="fancy" href="{% url technologies_help tech.id %}" alt="{{tech.usable}}">{{ tech|capfirst }}</a></p>
+					<a class="fancy" href="{% url technologies_help tech.id %}">
+                    	<div class="back_{{tech.usable}}_img" style="margin-bottom:15px;">
+							<img src="{{ MEDIA_URL}}{{ tech.image }}" />
+                    	</div>
+					</a>
                 </div>
             </div>
         {% endfor %}
