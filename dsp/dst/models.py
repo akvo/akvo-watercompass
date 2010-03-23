@@ -102,6 +102,7 @@ class Technology(models.Model):
     class Meta:
         verbose_name = _(u'technology')
         verbose_name_plural = _(u'technologies')
+        ordering = [ 'name']
 
     # cutom manager
     objects     = QuerySetManager()
@@ -242,6 +243,9 @@ class Note(models.Model):
 
     def __unicode__(self):
         return self.note[:50]
+        
+    class Meta:
+        ordering = ['note']
 
 
 class Relevancy(models.Model):
