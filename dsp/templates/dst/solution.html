@@ -4,15 +4,34 @@
 {% block content %}
 
 <div class="push-1 span-12 append-5 first last">
-<h2>Solution</h2>
-<ul>
-	<li>Create system</li>
-	<li>Save system</li>
-	<li>Create printable version</li>
-	<li>Create pdf</li>
-	<li>Create work document</li>
-</ul>
+	<h2>Solution</h2>
 </div>
+
+
+<div class="span-18 first last" style="margin-bottom:0">
+    {% for techgroup, techs in all_techs %}
+        <div class="span-3 {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center;">
+			<div style="border-bottom:1px solid #F4F4F4; margin-bottom:40px; ">
+            	<p style="font-weight:bold;display:block;height:40px;">{{ techgroup|capfirst }}</p>				
+			</div>
+
+        {% for tech in techs %}
+            <div class="tech">
+                <div class="back_{{tech.usable}}">
+					<p style="margin-top:5px;display:block; height:25px;"><a class="fancy" href="{% url technologies_help tech.id %}" alt="{{tech.usable}}">{{ tech|capfirst }}</a></p>
+                    <div class="back_{{tech.usable}}_img" style="margin-bottom:15px;">
+						<a class="fancy" href="{% url technologies_help tech.id %}">
+                        	<img src="{{ MEDIA_URL}}{{ tech.image }}" />
+						</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% endfor %}
+
+</div>
+
 
 <div class="push-1 span-16 append-1 first last">
 	<p>
@@ -20,5 +39,21 @@
 	</p>
 </div>
 
+<hr />
+<ul class="small">
+	<li>Save system</li>
+	<li>Create printable version</li>
+	<li>Create pdf</li>
+	<li>Create work document</li>
+</ul>
 
 {% endblock content %}
+
+{% block js %}
+{{block.super}}
+<script type="text/javascript" src="{{MEDIA_URL}}fancybox/fancybox.js"></script>
+{% endblock js %}
+{% block jquery_ready %}
+{{block.super}}
+jQ("a.fancy").fancybox();
+{% endblock jquery_ready %}

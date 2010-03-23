@@ -167,5 +167,19 @@ def technologies_help(request,id=None):
 
 @render_to('dst/solution.html')
 def solution(request):
-
-    return {}
+    groups = TechGroup.objects.all()
+    group_techs = []
+    for group in groups:
+        chosen_techs = Technology.objects.filter(group=group).filter(techchoice__session=get_session(request))        
+        for tech in chosen_techs:
+            tech.usable = tech.usability(get_session(request))
+            tech.available = tech.availability(get_session(request))
+        group_techs.append(chosen_techs)
+    
+    # if we want to transpose the data:
+    #all_techs = map(None, *group_techs)
+    all_techs = zip(groups, group_techs)
+    return {
+        'techgroups'    : groups,
+        'all_techs'     : all_techs,
+    }
