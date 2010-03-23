@@ -169,7 +169,7 @@ def solution(request):
     groups = TechGroup.objects.all()
     group_techs = []
     for group in groups:
-        chosen_techs = Technology.objects.filter(group=group).filter(techchoice__session=get_session(request))
+        chosen_techs = Technology.objects.filter(group=group).filter(tech_choices__session=get_session(request))
         for tech in chosen_techs:
             tech.usable = tech.usability(get_session(request))
             tech.available = tech.availability(get_session(request))
