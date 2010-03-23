@@ -239,10 +239,10 @@ class TechChoice(models.Model):
 
 
 class Note(models.Model):
-    note    = models.CharField(_(u'note'), max_length=100)
+    note    = models.TextField(_(u'note'),)
 
     def __unicode__(self):
-        return self.note[:50]
+        return self.note[:100]
         
     class Meta:
         ordering = ['note']
