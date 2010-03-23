@@ -362,4 +362,5 @@ records = [
 [357, '2010-03-23 12:11:31', 6, 14, u'61', u'Attention to landslides.', 1, u'']
 [358, '2010-03-23 12:11:36', 6, 11, u'30', u'Aquaculture ponds', 2, u'Changed note for Appropriatness "Space availability". Changed note for Appropriatness "Space availability". Changed note for Appropriatness "Space availability". Changed applicability for Appropriatness "Terrain / Topography / Slope". Changed applicability for Appropriatness "Terrain / Topography / Slope". Changed note for Appropriatness "Terrain / Topography / Slope".']
 [359, '2010-03-23 12:12:18', 6, 11, u'30', u'Aquaculture ponds', 2, u'Changed note for Appropriatness "Terrain / Topography / Slope". Changed applicability for Appropriatness "Soil type". Changed applicability for Appropriatness "Soil type". Changed applicability for Appropriatness "Soil type". Changed applicability for Appropriatness "Soil type". Changed applicability and note for Appropriatness "Soil type".']
+[360, '2010-03-23 12:13:32', 6, 11, u'31', u'Floating plant (macrophyte) pond', 1, u'']
 ]
