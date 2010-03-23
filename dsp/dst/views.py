@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.conf import settings
 from django.contrib.sessions.models import Session
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
@@ -44,8 +45,10 @@ def render_to(template):
 
 @render_to('dst/start.html')
 def start(request):
-    return {
-    }
+    try:
+        return HttpResponseRedirect(settings.START_URL)
+    except:
+        return {}
 
 def get_or_create_answers(session):
     answers = Answer.objects.filter(session=session)
@@ -141,6 +144,11 @@ def tech_choice(request, tech_id):
     if not created:
         choice.delete()
     return HttpResponseRedirect(reverse('technologies'))
+
+
+def reset(request):
+    request.session.flush()
+    return HttpResponseRedirect(reverse('start'))
 
 
 @render_to('dst/technologies_help.html')

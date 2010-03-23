@@ -59,11 +59,13 @@
 	    <p style="font-weight:bold">{{help_item.info_heading}}</p>
 	    <p>{{help_item.info_text}}</p>
 	{% endif %}
-	
+
 </div>
 </form>
 <div class="push-1 span-16 append-1 first last">
 	<p style="text-align:center;">
+		<a class="red awesome" style="margin-right:10px; float:left;"
+			href="{% url reset %}">{% trans 'Reset' %}</a>
 		<a class="grey awesome" style="margin-right:10px; float:left;"
 			href="{% url start %}">{% trans '&larr; Back' %}</a>
 		<a class="aqua awesome" href="javascript:document.factorform.submit();" 

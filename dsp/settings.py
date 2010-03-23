@@ -31,7 +31,7 @@ MEDIA_URL = 'http://%s/media/' % DOMAIN_NAME
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '_x4m2#27c2dxz-8+s#4&qpx#15k-4ngulh8^^04-bgv!kcl)ui'
 
-
+START_URL = 'http://www.akvo.org/'
 # Makes it possible to override with local settings e.g. DOMAIN_NAME, MEDIA_ROOT, MEDIA_URL
 try:
     from settings_local import *

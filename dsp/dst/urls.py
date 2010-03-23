@@ -16,4 +16,5 @@ urlpatterns = patterns('',
         
     url(r'^help$', direct_to_template, {'template': 'dst/help.html'}, name='help'),
     url(r'^demo$', direct_to_template, {'template': 'dst/demo.html'}, name='demo'),
+    url(r'^reset$', 'dst.views.reset', name='reset'),
 )
