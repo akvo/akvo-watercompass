@@ -213,7 +213,7 @@ class Note(models.Model):
     note    = models.CharField(_(u'note'), max_length=100)
 
     def __unicode__(self):
-        return self.note[:24]
+        return self.note[:50]
 
 
 class Relevancy(models.Model):
