@@ -6,7 +6,7 @@
 {% block panel_content %}
 <p>{{ technology.description }}</p>
 
-{% if  technology.url %}
+{% if technology.url %}
 <br>
 Akvopedia article: <a href="{{technology.url}}" target="_blank">{{technology}}</a>
 <br><br><br>
@@ -14,66 +14,20 @@ Akvopedia article: <a href="{{technology.url}}" target="_blank">{{technology}}</
 
 {% if relevancy_objects %}
 	{% for object in relevancy_objects  %}
-		<h4>{{ object }}</h4>
-		<p>
-			Factor: {{ object }}<br />
-			Answer: {{ object.answer }}<br />
-			Applicability: {{ object.applicability }}<br />
-			{% if object.note %}
-			Note: {{ object.note }}<br />	
-			{% endif %}
-		</p>
+        {% if object.note %}
+            <h4>{{ object }}</h4>
+            <p>
+                Factor: {{ object }}<br />
+                Criterion: {{ object.show_criterion }}<br />
+                Applicability: {{ object.get_applicability_display }}<br />
+                Note: {{ object.note }}<br />	
+            </p>
+        {% endif %}
 	{% endfor %}
 {% else %}
-	<p>{% trans 'There were no Appropriate answers to the' %} {{ technology }}.</p>
+	<p>{% trans 'There were no environmental factor notes for ' %} {{ technology }}.</p>
 {% endif %}
 
 
 {% endblock panel_content %}
 
-
-
-
-
-{% comment %}
-	
-
-{% extends "dst/base.html" %}
-{% load i18n  %}
-
-{% block maincontainer %}
-<div style="width:600px; height:400px;">
-	<h2> {{ technology }}</h2>
-
-	{{ technology.description }}
-	
-	{% if  technology.url %}
-	<br>
-	Akvopedia article: <a href="{{technology.url}}" target="_blank">{{technology}}</a>
-	<br><br><br>
-	{% endif %}
-
-	{% if relevancy_objects %}
-		{% for object in relevancy_objects  %}
-			<h4>{{ object }}</h4>
-			<p>
-				Factor: {{ object }}<br />
-				Answer: {{ object.answer }}<br />
-				Applicability: {{ object.applicability }}<br />
-				{% if object.note %}
-				Note: {{ object.note }}<br />	
-				{% endif %}
-			</p>
-		{% endfor %}
-	{% else %}
-		<p>{% trans 'There were no Appropriate answers to the' %} {{ technology }}.</p>
-	{% endif %}
-	<br><br>
-	<b>Session:</b><br>
-	{% for item in items  %}
-		{{item.session_key}}<br>
-	{% endfor %}
-	<br><br>
-</div>
-{% endblock maincontainer %}
-{% endcomment %}
