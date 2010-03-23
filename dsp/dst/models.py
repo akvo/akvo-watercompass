@@ -89,7 +89,7 @@ class Technology(models.Model):
     group       = models.ForeignKey(TechGroup, verbose_name=_('technology group'))
     factors     = models.ManyToManyField(Factor, verbose_name=_('factors'), blank=True)
     name        = models.CharField(_(u'name'), max_length=50)
-    descripton  = models.TextField(_(u'descripton'),)
+    description  = models.TextField(_(u'description'),)
     #input       = models.ManyToManyField('self', blank=True, related_name='output', symmetrical=False, )
     output      = models.ManyToManyField('self', blank=True, related_name='input', symmetrical=False, )
     image       = models.ImageField(upload_to='technologies')

@@ -4,13 +4,13 @@
 
 {% block panel_title %} {{ technology|capfirst }}{% endblock panel_title %}
 {% block panel_content %}
-<p>{{ technology.description }}</p>
 
 {% if technology.url %}
-<br>
-Akvopedia article: <a href="{{technology.url}}" target="_blank">{{technology}}</a>
-<br><br><br>
+    <br>
+    Akvopedia article: <a href="{{technology.url}}" target="_blank">{{technology}}</a>
 {% endif %}
+<br>
+<p>{{ technology.description }}</p>
 
 {% if relevancy_objects %}
 	{% for object in relevancy_objects  %}
