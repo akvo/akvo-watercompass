@@ -17,4 +17,5 @@ records = [
 [12, u'Appropriatness', u'dst', u'relevancy']
 [13, u'technology group', u'dst', u'techgroup']
 [14, u'note', u'dst', u'note']
+[15, u'criterion', u'dst', u'criterion']
 ]
