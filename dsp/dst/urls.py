@@ -4,7 +4,8 @@ from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
 
 urlpatterns = patterns('',
-    url(r'^$', 'dst.views.factors', name='factors'),
+    url(r'^$', 'dst.views.index', name='index'),
+    url(r'^factors/$', 'dst.views.factors', name='factors'),
     url(r'^(?P<model>\w+)_help/(?P<id>\d+)/$', 'dst.views.factors', name='grid_help'),  
     url(r'^(?P<model>\w+)_factorhelp/(?P<id>\d+)/$', 'dst.views.factor_help', name='factor_help'),
     

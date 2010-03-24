@@ -43,8 +43,8 @@ def render_to(template):
     return renderer
 
 
-@render_to('dst/start.html')
-def start(request):
+@render_to('dst/index.html')
+def index(request):
     try:
         return HttpResponseRedirect(settings.START_URL)
     except:
@@ -148,7 +148,7 @@ def tech_choice(request, tech_id):
 
 def reset_all(request):
     request.session.flush()
-    return HttpResponseRedirect(reverse('start'))
+    return HttpResponseRedirect(reverse('index'))
 
 
 def reset_techs(request):

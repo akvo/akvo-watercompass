@@ -9,9 +9,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     
-    url(r'^$', 'dsp.dst.views.start', name='start'),
-    
-    (r'^dst/', include('dst.urls')),
+    (r'^', include('dst.urls')),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
