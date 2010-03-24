@@ -51,7 +51,7 @@
 			</div>
 
         {% for tech in techs %}
-            <div class="tech">
+            <div class="tech tech_{{tech.usable}}">
                 <div class="back_{{tech.usable}}">
 					<p class="small" style="margin-top:5px; display:block; height:35px; overflow:hidden; margin-bottom:5px;"><a class="fancy" href="{% url technologies_help tech.id %}" alt="{{tech.usable}}">{{ tech|capfirst|smart_truncate:25 }}</a></p>
 					<a class="fancy" href="{% url technologies_help tech.id %}">
@@ -114,21 +114,25 @@
 jQ('#toggle_yes').click(function () {
 	jQ(this).html( (jQ('.back_yes').is(":visible") ? 'Show' : 'Hide') + ' appropriate');
 	jQ('.back_yes').is(":visible") ? jQ('.back_yes').fadeOut("slow") : jQ('.back_yes').fadeIn("slow");
+	jQ('.tech_yes').is(":visible") ? jQ('.tech_yes').fadeOut("slow") : jQ('.tech_yes').fadeIn("slow");
 });
 
 jQ('#toggle_maybe').click(function () {
 	jQ(this).html( (jQ('.back_maybe').is(":visible") ? 'Show' : 'Hide') + ' maybe');
 	jQ('.back_maybe').is(":visible") ? jQ('.back_maybe').fadeOut("slow") : jQ('.back_maybe').fadeIn("slow");
+	jQ('.tech_maybe').is(":visible") ? jQ('.tech_maybe').fadeOut("slow") : jQ('.tech_maybe').fadeIn("slow");
 });
 
 jQ('#toggle_no').click(function () {
 	jQ(this).html( (jQ('.back_no').is(":visible") ? 'Show' : 'Hide') + ' not appropriate');
 	jQ('.back_no').is(":visible") ? jQ('.back_no').fadeOut("slow") : jQ('.back_no').fadeIn("slow");
+	jQ('.tech_no').is(":visible") ? jQ('.tech_no').fadeOut("slow") : jQ('.tech_no').fadeIn("slow");
 });
 
 jQ('#toggle_na').click(function () {
 	jQ(this).html( (jQ('.back_na').is(":visible") ? 'Show' : 'Hide') + ' not applicable');
 	jQ('.back_na').is(":visible") ? jQ('.back_na').fadeOut("slow") : jQ('.back_na').fadeIn("slow");	
+	jQ('.tech_na').is(":visible") ? jQ('.tech_na').fadeOut("slow") : jQ('.tech_na').fadeIn("slow");
 });
 
 jQ('#toggle_page_intro').click(function() {
