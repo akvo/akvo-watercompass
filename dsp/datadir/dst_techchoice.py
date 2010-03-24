@@ -3,7 +3,10 @@ fields = ['id', 'session_id', 'technology_id']
 #default item format: "fieldname":("type", "value")
 default = {}
 records = [
-[1, u'7a4fd225d3e754898842f772d317ebf3', 12]
-[2, u'7a4fd225d3e754898842f772d317ebf3', 7]
-[3, u'7a4fd225d3e754898842f772d317ebf3', 2]
+[8, u'50a65330970f2637f3c918b5ec7e8110', 2]
+[9, u'50a65330970f2637f3c918b5ec7e8110', 7]
+[10, u'50a65330970f2637f3c918b5ec7e8110', 12]
+[11, u'247a3060581f321e2a018681b9b5945b', 13]
+[12, u'247a3060581f321e2a018681b9b5945b', 4]
+[13, u'247a3060581f321e2a018681b9b5945b', 10]
 ]
