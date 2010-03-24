@@ -47,6 +47,22 @@
 	
 		{% endblock content %}
 		<div class="span-18" style="border-top:1px solid #ccc; padding-top:10px;">
+			<div class="span-10 first">
+				<div class="space10">
+					<p class="small">
+						Site under <a href="http://akvo.org/web/open_license">Open License</a> | 
+						<a href="http://akvo.org/web/terms_of_use">Terms of use</a>
+					</p>
+				</div>
+			</div>
+			<div class="span-8 last" style="text-align:right;">
+				<div class="space10">
+					<p class="small" >
+						<a href="https://akvo.tenderapp.com/">Help and Support</a> | 
+						<a href="http://akvo.org/web/contact_us">Contact Us</a>
+					</p>
+				</div>
+			</div>			
 			{% comment %}
 			<p class="small grey" style="margin-right:10px; float:right;">
 				<a id="grid_toggle">Toggle grid</a>
@@ -61,7 +77,6 @@
 		</div>
 	</div>
 	{% endblock maincontainer %}
-	
 {% block js %}
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script type="text/javascript">
@@ -73,15 +88,12 @@
 {% endblock js %}
 
 <script type="text/javascript">
-
 jQ(document).ready(function(){
-
 	jQ('#grid_toggle').click(function () {
 		jQ('#maincontainer').toggleClass('showgrid');
 	});
 	
 	{% block jquery_ready %}{% endblock jquery_ready %}	
-
 });
 </script>
 

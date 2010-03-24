@@ -7,18 +7,18 @@
 	margin-bottom:30px;
 }
 
-.back_yes_img, #toggle_yes {
+.back_yes_img, /*#toggle_yes*/ {
 	background-color:#DCEDD0;
 	background-color:#B2FFA1;
 }
 
 
-.back_maybe_img, #toggle_maybe {
+.back_maybe_img, /*#toggle_maybe*/ {
 	background-color:#FBF9CF;
 	background-color:#FEF49C;
 }
 
-.back_no_img, #toggle_no {
+.back_no_img, /*#toggle_no*/ {
 	background-color:#F6C8AB;
 	background-color:#FFC7C7;
 }

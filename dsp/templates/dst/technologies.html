@@ -27,10 +27,10 @@
 	</div>
 	<div class="span-10" style="text-align:center;">
 		{#<a class="grey awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Deselct all' %}</a>#}
-		<a id="toggle_yes" class="green awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Hide appropriate' %}</a>
-		<a id="toggle_maybe" class="yellow awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Hide maybe' %}</a>
-		<a id="toggle_no" class="red awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Hide not appropriate' %}</a>
-		<a id="toggle_hide" class="grey awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Hide hidden' %}</a>
+		<a id="toggle_yes" class="green awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide appropriate' %}</a>
+		<a id="toggle_maybe" class="yellow awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide maybe' %}</a>
+		<a id="toggle_no" class="red awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide not appropriate' %}</a>
+		<a id="toggle_hide" class="grey awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide hidden' %}</a>
 	</div>
 	<div class="span-3 append-1 last">
 		<a class="aqua awesome" href="{% url solution %}" onclick="this.blur();" style="margin-left:10px; float:right;">{% trans 'Continue &rarr;' %}</a>
