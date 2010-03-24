@@ -48,3 +48,13 @@ http://www.zurb.com/article/266/super-awesome-buttons-with-css3-and-rgba
 .aqua.awesome:hover	                        { background-color: #2D9CC4; }
 .grey.awesome, .grey.awesome:visited		{ background-color: #888; }
 .grey.awesome:hover	                        { background-color: #999; }
+
+.ok.awesome, .ok.awesome:visited		{ color:#111; background-color: #B2FFA1; text-shadow: none; }
+.ok.awesome:hover						{ background-color: #34FC53; }
+.maybe.awesome, .maybe.awesome:visited		{ color:#111; background-color: #FEF49C; text-shadow: none; }
+.maybe.awesome:hover						{ background-color: #FCFC39; }
+.no.awesome, .no.awesome:visited		{ color:#111; background-color: #FFC7C7; text-shadow: none; }
+.no.awesome:hover						{ background-color: #FF1314; }
+.hide.awesome, .hide.awesome:visited		{ color:#111; background-color: #DBDBDB; text-shadow: none; }
+.hide.awesome:hover						{ background-color: #888; }
+

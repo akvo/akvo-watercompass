@@ -27,10 +27,10 @@
 	</div>
 	<div class="span-10" style="text-align:center;">
 		{#<a class="grey awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Deselct all' %}</a>#}
-		<a id="toggle_yes" class="green awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide appropriate' %}</a>
-		<a id="toggle_maybe" class="yellow awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide maybe' %}</a>
-		<a id="toggle_no" class="red awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide not appropriate' %}</a>
-		<a id="toggle_hide" class="grey awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide hidden' %}</a>
+		<a id="toggle_yes" class="ok awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide appropriate' %}</a>
+		<a id="toggle_maybe" class="maybe awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide maybe' %}</a>
+		<a id="toggle_no" class="no awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide unsuitable' %}</a>
+		<a id="toggle_hide" class="hide awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide not usable' %}</a>
 	</div>
 	<div class="span-3 append-1 last">
 		<a class="aqua awesome" href="{% url solution %}" onclick="this.blur();" style="margin-left:10px; float:right;">{% trans 'Continue &rarr;' %}</a>
@@ -159,7 +159,7 @@ jQ('#toggle_maybe').click(function () {
 });
 
 jQ('#toggle_no').click(function () {
-	jQ(this).html( (jQ('.back_no').is(":visible") ? 'Show' : 'Hide') + ' not appropriate');
+	jQ(this).html( (jQ('.back_no').is(":visible") ? 'Show' : 'Hide') + ' unsuitable');
 	jQ('.back_no').is(":visible") ? jQ('.back_no').fadeOut("slow") : jQ('.back_no').fadeIn("slow");
 	jQ('.tech_no').is(":visible") ? jQ('.tech_no').fadeOut("slow") : jQ('.tech_no').fadeIn("slow");
 });
@@ -171,7 +171,7 @@ jQ('#toggle_na').click(function () {
 });
 
 jQ('#toggle_hide').click(function () {
-	jQ(this).html( (jQ('.back_na').is(":visible") ? 'Show' : 'Hide') + ' hidden');
+	jQ(this).html( (jQ('.back_hide').is(":visible") ? 'Show' : 'Hide') + ' not usable');
 	jQ('.back_hide').is(":visible") ? jQ('.back_hide').fadeOut("slow") : jQ('.back_hide').fadeIn("slow");	
 	jQ('.tech_hide').is(":visible") ? jQ('.tech_hide').fadeOut("slow") : jQ('.tech_hide').fadeIn("slow");
 });
