@@ -28,5 +28,14 @@
 	<p>{% trans 'There were no environmental factor notes for ' %} {{ technology }}.</p>
 {% endif %}
 
+{% if settings.DEBUG %}
+    <h5>DEBUG info; Linked techs:</h5>
+    <p>
+        {% for tech in technology.all_linked_techs %}
+            {{tech}}<br/>
+        {% endfor %}
+   </p>
+{% endif %}
+
 {% endblock panel_content %}
 

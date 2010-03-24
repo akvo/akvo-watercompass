@@ -174,7 +174,7 @@ def technologies_help(request,id=None):
     elif applicable == technology.TECH_USE_NO:
         relevancy_objects = technology.not_relevant(session)
     
-    return { 'technology': technology, 'relevancy_objects':relevancy_objects,}
+    return { 'technology': technology, 'relevancy_objects':relevancy_objects, 'settings': settings}
 
 
 @render_to('dst/solution.html')

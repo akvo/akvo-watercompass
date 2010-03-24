@@ -124,7 +124,7 @@ class Technology(models.Model):
                 self.output().output().output() |
                 self.output().output().output().output() |
                 self.output().output().output().output().output()
-            )
+            ).distinct()
     
         def all_input(self):
             "find all techs that have self as output recursively"
@@ -134,7 +134,7 @@ class Technology(models.Model):
                 self.input().input().input() |
                 self.input().input().input().input() |
                 self.input().input().input().input().input()
-            )
+            ).distinct()
 
         def all_linked_techs(self):
             """
@@ -147,6 +147,9 @@ class Technology(models.Model):
 
         def all_chosen(self, session):
             return self.filter(tech_choices__session=session).order_by('group__order')
+
+    def all_linked_techs(self):
+        return Technology.objects.filter(pk=self.pk).all_linked_techs()
 
     def display_output(self):
         return "<br/>".join([tech.name for tech in Technology.objects.filter(input=self)])
@@ -185,7 +188,6 @@ class Technology(models.Model):
             return self.TECH_USE_MAYBE
         # if we found no CHOICE_MAYBE relevanciew try for CHOICE_YES
         elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_YES, criterion__in=criteria)):
-            print self
             return self.TECH_USE_YES
         # this thech was not affected by the environmental factors
         return self.TECH_USE_YES       
