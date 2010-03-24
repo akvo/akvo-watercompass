@@ -6,10 +6,10 @@
 {% block panel_content %}
 
 {% if technology.url %}
-    <br>
-    Akvopedia article: <a href="{{technology.url}}" target="_blank">{{technology}}</a>
+	<p>
+    	Akvopedia {% trans 'article' %}: <a href="{{technology.url}}" target="_blank">{{technology}}</a>
+	</p>
 {% endif %}
-<br>
 <p>{{ technology.description }}</p>
 
 {% if relevancy_objects %}
@@ -20,14 +20,13 @@
                 Factor: {{ object }}<br />
                 Criterion: {{ object.show_criterion }}<br />
                 Applicability: {{ object.get_applicability_display }}<br />
-                Note: {{ object.note.note }}<br />	
+                Note: {{ object.note.note }}<br />
             </p>
         {% endif %}
 	{% endfor %}
 {% else %}
 	<p>{% trans 'There were no environmental factor notes for ' %} {{ technology }}.</p>
 {% endif %}
-
 
 {% endblock panel_content %}
 
