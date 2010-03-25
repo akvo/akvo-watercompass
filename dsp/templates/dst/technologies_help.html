@@ -30,10 +30,11 @@
 
 {% if settings.DEBUG %}
     <h5>DEBUG info; Linked techs:</h5>
-    <p>
-        {% for tech in technology.all_linked_techs %}
-            {{tech}}<br/>
-        {% endfor %}
+    <p><strong>Input</strong><br/>
+        {{technology.display_input|safe}}
+   </p>
+    <p><strong>Output</strong><br/>
+        {{technology.display_output|safe}}
    </p>
 {% endif %}
 
