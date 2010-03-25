@@ -89,6 +89,8 @@ def factors(request, model=None, id=None):
         if formset.is_valid():
             formset.save()
             return HttpResponseRedirect(reverse('technologies'))
+        else:
+            return HttpResponseRedirect(reverse('factors'))
     else:
         qs = get_or_create_answers(get_session(request))
         formset = AnswerFormSet(queryset=qs)
