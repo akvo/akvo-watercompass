@@ -150,7 +150,7 @@ def tech_choice(request, tech_id):
 
 def reset_all(request):
     request.session.flush()
-    return HttpResponseRedirect(reverse('index'))
+    return HttpResponseRedirect(reverse('factors'))
 
 
 def reset_techs(request):
