@@ -5,7 +5,7 @@ from django.contrib.sessions.models import Session
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.forms import ModelForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 
@@ -13,6 +13,9 @@ from django.template import RequestContext
 from models import Factor, TechGroup, Technology, Relevancy, Answer, Criterion, TechChoice
 from utils import pretty_name
 
+class HttpResponseNoContent(HttpResponse):
+    status_code = 204
+    
 def get_session(request):
     return Session.objects.get(pk=request.session.session_key)
     
@@ -109,7 +112,12 @@ def factors(request, model=None, id=None):
         help_item = get_model('dst', model).objects.get(id=id)
     else:
         help_item = None
-    return { 'formset': formset, 'zipped_formlist': zipped_formlist, 'help_item': help_item, }#'colspan': colspan, }
+    return {
+        'formset'           : formset,
+        'zipped_formlist'   : zipped_formlist,
+        'help_item'         : help_item,
+        'session'           : request.session,
+    }
 
 
 @render_to('dst/factor_help.html')
@@ -147,6 +155,14 @@ def tech_choice(request, tech_id):
         choice.delete()
     return HttpResponseRedirect(reverse('technologies'))
 
+
+def toggle_button(request, btn_name=''):
+    if btn_name:
+        if not request.session.setdefault(btn_name, False):
+            request.session[btn_name] = True
+        else:
+            request.session[btn_name] = False
+    return HttpResponseNoContent()
 
 def reset_all(request):
     request.session.flush()
