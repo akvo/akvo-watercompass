@@ -20,4 +20,5 @@ urlpatterns = patterns('',
     url(r'^reset_all/$', 'dst.views.reset_all', name='reset_all'),
     url(r'^reset_techs/$', 'dst.views.reset_techs', name='reset_techs'),
     url(r'^toggle_button/(?P<btn_name>\w+)/$', 'dst.views.toggle_button', name='toggle_button'),
+    url(r'^init/$', 'dst.views.init', name='init'),
 )

@@ -17,7 +17,8 @@ class HttpResponseNoContent(HttpResponse):
     status_code = 204
     
 def get_session(request):
-    return Session.objects.get(pk=request.session.session_key)
+    session, created = Session.objects.get_or_create(pk=request.session.session_key)
+    return session
     
 def render_to(template):
     """
@@ -77,7 +78,11 @@ class AnswerForm(ModelForm):
         model = Answer
         fields = ['id', 'criterion', 'applicable',]
 
-
+# currently not used: may be needed for cookie detection
+def init(request):
+    request.session['init'] = init
+    HttpResponseRedirect(reverse('factors'))
+    
 def init_session(session):
     uses = 'TECH_USE_NO', 'TECH_USE_MAYBE', 'TECH_USE_YES', 'TECH_USE_NOT_ALLOWED'
     btns = [getattr(Technology, use) for use in uses]
@@ -89,13 +94,12 @@ def init_session(session):
     
 @render_to('dst/factors.html')
 def factors(request, model=None, id=None):
-    #request.session['button_yes'] = 'init'
+    init_session(request.session)
     AnswerFormSet = modelformset_factory(
         Answer,
         form = AnswerForm,
         extra = 0,
     )
-    init_session(request.session)
     if request.method == 'POST':
         formset = AnswerFormSet(request.POST, request.FILES)
         if formset.is_valid():
