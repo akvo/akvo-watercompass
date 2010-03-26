@@ -4,31 +4,22 @@
 {% block inline_styles %}
 {{block.super}}
 
-{% if session.yes_ishidden %}.tech_yes { display:none;} {% endif %}
-{% if session.maybe_ishidden %}.tech_maybe { display:none;}{% endif %}
-{% if session.no_ishidden %}.tech_no { display:none;}{% endif %}
-{% if session.hide_ishidden %}.tech_hide { display:none;}{% endif %}
+{% if session.yes_ishidden %}
+.tech_yes { display:none;}
+{% endif %}
+{% if session.maybe_ishidden %}
+.tech_maybe { display:none;}
+{% endif %}
+{% if session.no_ishidden %}
+.tech_no { display:none;}
+{% endif %}
+{% if session.hide_ishidden %}
+.tech_hide { display:none;}
+{% endif %}
 
 {% endblock inline_styles %}
 
 {% block content %}
-
-{% comment %}
-<p><a href="{% url toggle_button 'toggle_no' %}">toggle no</a></p>
-<p>NO: {{session.toggle_no}}</p>
-{% if session.toggle_no %}
-<p>NO1: {{session.toggle_no}}</p>
-{% else %}
-<p>NO2: {{session.toggle_no}}</p>
-{% endif %}
-{% endcomment %}
-
-
-{% if session.toggle_no %}
-Is hidden
-{% else %}
-Is not hidden
-{% endif %}
 
 <div id="page_intro" class="push-1 span-16 append-1 first last">
 	<div class="frame" style="background-color:#EEF8FA">
@@ -51,12 +42,18 @@ Is not hidden
 	</div>
 	<div class="span-10" style="text-align:center;">
 		{#<a class="grey awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Deselct all' %}</a>#}
-		<a id="toggle_yes" class="ok awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide applicable' %}</a>
-		<a id="toggle_maybe" class="maybe awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide maybe' %}</a>
+		<a id="toggle_yes" class="ok awesome" style="margin-right:5px;margin-left:5px;">
+			{% if session.yes_ishidden %}{% trans 'Show' %}{% else %}{% trans 'Hide' %}{% endif %} {% trans 'applicable' %}
+		</a>
+		<a id="toggle_maybe" class="maybe awesome" style="margin-right:5px;margin-left:5px;">
+			{% if session.maybe_ishidden %}{% trans 'Show' %}{% else %}{% trans 'Hide' %}{% endif %} {% trans 'maybe' %}
+		</a>
 		<a id="toggle_no" class="no awesome" style="margin-right:5px;margin-left:5px;">
-			{% if session.toggle_no %}{% trans 'Show unsuitable' %}{% else %}{% trans 'Hide unsuitable' %}{% endif %}
+			{% if session.no_ishidden %}{% trans 'Show' %}{% else %}{% trans 'Hide' %}{% endif %} {% trans 'unsuitable' %}
 		</a>		
-		<a id="toggle_hide" class="hide awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide not usable' %}</a>
+		<a id="toggle_hide" class="hide awesome" style="margin-right:5px;margin-left:5px;">
+			{% if session.hide_ishidden %}{% trans 'Show' %}{% else %}{% trans 'Hide' %}{% endif %} {% trans 'not usable' %}
+		</a>
 	</div>
 	<div class="span-3 append-1 last">
 		<a class="aqua awesome" href="{% url solution %}" onclick="this.blur();" style="margin-left:10px; float:right;">{% trans 'Continue &rarr;' %}</a>
@@ -125,28 +122,31 @@ Is not hidden
 {% block jquery_ready %}
 {{block.super}}
 
-// jQ('.back_hide_img').fadeTo("slow", 0.3);
-// jQ('.hide_select').attr ('href', '#').click(function() { return false; }).fadeTo("slow", 0.3);
-
 
 jQ('#toggle_yes').click(function () {
-	jQ(this).html( (jQ('.back_yes').is(":visible") ? 'Show' : 'Hide') + ' applicable');
-	jQ('.back_yes').is(":visible") ? jQ('.back_yes').fadeOut("slow") : jQ('.back_yes').fadeIn("slow");
-	jQ('.tech_yes').is(":visible") ? jQ('.tech_yes').fadeOut("slow") : jQ('.tech_yes').fadeIn("slow");
-	
-	jQ.post('{% url toggle_button 'yes_ishidden' %}');
+	if (jQ('.tech_yes').is(":visible")){
+		jQ(this).html('Show applicable');
+		jQ('.tech_yes').fadeOut("slow");
+	} else {
+		jQ(this).html('Hide applicable');
+		jQ('.tech_yes').fadeIn("slow");
+	}
+	jQ.post('{% url toggle_button 'yes_ishidden' %}');	
 });
 
 jQ('#toggle_maybe').click(function () {
-	jQ(this).html( (jQ('.back_maybe').is(":visible") ? 'Show' : 'Hide') + ' maybe');
-	jQ('.back_maybe').is(":visible") ? jQ('.back_maybe').fadeOut("slow") : jQ('.back_maybe').fadeIn("slow");
-	jQ('.tech_maybe').is(":visible") ? jQ('.tech_maybe').fadeOut("slow") : jQ('.tech_maybe').fadeIn("slow");
-	
+	if (jQ('.back_maybe').is(":visible")){
+		jQ(this).html('Show maybe');
+		jQ('.tech_maybe').fadeOut("slow");
+	} else {
+		jQ(this).html('Hide maybe');
+		jQ('.tech_maybe').fadeIn("slow");
+	}
 	jQ.post('{% url toggle_button 'maybe_ishidden' %}');
 });
 
 jQ('#toggle_no').click(function () {
-	if ( jQ('.back_no').is(":visible") ) {
+	if (jQ('.back_no').is(":visible")) {
 		jQ(this).html('Show unsuitable');
 		jQ('.tech_no').fadeOut("slow");
 	}
@@ -158,16 +158,26 @@ jQ('#toggle_no').click(function () {
 });
 
 jQ('#toggle_na').click(function () {
-	jQ(this).html( (jQ('.back_na').is(":visible") ? 'Show' : 'Hide') + ' not applicable');
-	jQ('.back_na').is(":visible") ? jQ('.back_na').fadeOut("slow") : jQ('.back_na').fadeIn("slow");	
-	jQ('.tech_na').is(":visible") ? jQ('.tech_na').fadeOut("slow") : jQ('.tech_na').fadeIn("slow");
+	if (jQ('.back_na').is(":visible")) {
+		jQ(this).html('Show applicable');
+		jQ('.tech_na').fadeOut("slow");
+	}
+	else {
+		jQ(this).html( 'Hide applicable' )
+		jQ('.tech_na').fadeIn("slow");
+	}
 	jQ.post('{% url toggle_button 'na_ishidden' %}');
 });
 
 jQ('#toggle_hide').click(function () {
-	jQ(this).html( (jQ('.back_hide').is(":visible") ? 'Show' : 'Hide') + ' not usable');
-	jQ('.back_hide').is(":visible") ? jQ('.back_hide').fadeOut("slow") : jQ('.back_hide').fadeIn("slow");	
-	jQ('.tech_hide').is(":visible") ? jQ('.tech_hide').fadeOut("slow") : jQ('.tech_hide').fadeIn("slow");
+	if (jQ('.back_hide').is(":visible")) {
+		jQ(this).html('Show usable');
+		jQ('.tech_hide').fadeOut("slow");
+	}
+	else {
+		jQ(this).html( 'Hide usable' )
+		jQ('.tech_hide').fadeIn("slow");
+	}
 	jQ.post('{% url toggle_button 'hide_ishidden' %}');
 });
 
