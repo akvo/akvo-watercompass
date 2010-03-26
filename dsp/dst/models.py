@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.conf import settings
 from django.contrib.admin.models import LogEntry
 from django.contrib.sessions.models import Session
 from django.db import models
@@ -152,12 +153,25 @@ class Technology(models.Model):
         return Technology.objects.filter(pk=self.pk).all_linked_techs()
 
     def display_output(self):
-        return "<br/>".join([tech.name for tech in Technology.objects.filter(input=self)])
+        return "<table style=''>%s</table>" % "".join(
+            ["<tr><td style='text-align: left; border: 0px;'>%s</td><td style='border: 0px;'>%s</td></tr>" % (
+                 tech.name, tech.display_image('height: 32px; width: 32px; float: right;'),
+            ) for tech in Technology.objects.filter(input=self)])
     display_output.allow_tags = True
             
     def display_input(self):
-        return "<br/>".join([tech.name for tech in Technology.objects.filter(output=self)])
+        return "<table style=''>%s</table>" % "".join(
+            ["<tr><td style='text-align: left; border: 0px;'>%s</td><td style='border: 0px;'>%s</td></tr>" % (
+                 tech.name, tech.display_image('height: 32px; width: 32px; float: right;'),
+            ) for tech in Technology.objects.filter(output=self)])
     display_input.allow_tags = True
+            
+    def display_image(self, style=''):
+        if style:
+            return '<img src="%s%s" style="%s"/>' % (settings.MEDIA_URL, self.image, style)
+        else:
+            return '<img src="%s%s" />' % (settings.MEDIA_URL, self.image)
+    display_image.allow_tags = True
             
     def availability(self, session):
         """
@@ -190,7 +204,7 @@ class Technology(models.Model):
         elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_YES, criterion__in=criteria)):
             return self.TECH_USE_YES
         # this thech was not affected by the environmental factors
-        return self.TECH_USE_YES       
+        return self.TECH_USE_YES
         
 
     def usability(self, session):
@@ -200,15 +214,28 @@ class Technology(models.Model):
         # first figure if self is usable based on choices already made
         chosen_techs = Technology.objects.filter(tech_choices__session=session)
         if chosen_techs:
+            # among the chosen; return with the good news
             if self in chosen_techs:
-                # among the chosen; return with the good news
                 return self.TECH_USE_CHOSEN
+
+            # self is in a group where the choice is already made and we're not the one
             if self.group in [t.group for t in chosen_techs]:
-                # self is in a group where the choice is already made and we're not the one
                 return self.TECH_USE_NOT_ALLOWED
-            linked = [t for t in chosen_techs.all_linked_techs()]
-            if not self in linked:
+
+            # self
+            #linked = [t for t in chosen_techs.all_linked_techs()]
+            #if not self in linked:
+            #    return self.TECH_USE_NOT_ALLOWED
+
+            # find all techs linked to self
+            my_linked = [t for t in self.all_linked_techs()]
+            my_linked  = set(my_linked)
+            chosen = set(chosen_techs)
+            # all techs already chosen must be linked to me;
+            # otherwise I'm not compatible with the current choices
+            if not chosen.issubset(my_linked):
                 return self.TECH_USE_NOT_ALLOWED
+        # self is still eligible for selection, find out the applicability
         return self.applicable(session)
 
     def maybe_relevant(self, session):

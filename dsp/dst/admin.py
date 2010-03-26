@@ -47,7 +47,7 @@ class TechnologyAdminForm(ModelForm):
 
 class TechnologyAdmin(admin.ModelAdmin):
     model = get_model('dst', 'Technology')
-    list_display = ('__unicode__', 'group', 'display_output',  'display_input', )
+    list_display = ('__unicode__', 'group', 'display_output',  'display_input', 'display_image', )
     ordering = ['group__order']
     inlines = [RelevancyInLine, ]
     form = TechnologyAdminForm
