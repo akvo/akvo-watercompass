@@ -160,9 +160,18 @@ jQ('#toggle_maybe').click(function () {
 });
 
 jQ('#toggle_no').click(function () {
-	jQ(this).html( (jQ('.back_no').is(":visible") ? 'Show' : 'Hide') + ' unsuitable');
-	jQ('.back_no').is(":visible") ? jQ('.back_no').fadeOut("slow") : jQ('.back_no').fadeIn("slow");
-	jQ('.tech_no').is(":visible") ? jQ('.tech_no').fadeOut("slow") : jQ('.tech_no').fadeIn("slow");
+	if ( jQ('.back_no').is(":visible") ) {
+		jQ(this).html('Show unsuitable');
+		jQ('.back_no').fadeOut("slow");
+		jQ('.tech_no').fadeOut("slow");
+	}
+	else {
+		jQ(this).html( 'Hide unsuitable' )
+		jQ('.back_no').fadeIn("slow");
+		jQ('.tech_no').fadeIn("slow");
+	}
+
+	jQ.post('{% url toggle_button 'toggle_no' %}');
 });
 
 jQ('#toggle_na').click(function () {
