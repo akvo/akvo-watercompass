@@ -1,12 +1,34 @@
 {% extends "dst/base.html" %}
 {% load i18n akvo_filters %}
 
+{% block inline_styles %}
+{{block.super}}
+
+{% if session.yes_ishidden %}.tech_yes { display:none;} {% endif %}
+{% if session.maybe_ishidden %}.tech_maybe { display:none;}{% endif %}
+{% if session.no_ishidden %}.tech_no { display:none;}{% endif %}
+{% if session.hide_ishidden %}.tech_hide { display:none;}{% endif %}
+
+{% endblock inline_styles %}
+
 {% block content %}
+
 {% comment %}
-<div class="span-18" style="margin-bottom:30px;">
-<a class="small" id="toggle_page_intro" style="margin-left:60px;">Hide help</a>	
-</div>
+<p><a href="{% url toggle_button 'toggle_no' %}">toggle no</a></p>
+<p>NO: {{session.toggle_no}}</p>
+{% if session.toggle_no %}
+<p>NO1: {{session.toggle_no}}</p>
+{% else %}
+<p>NO2: {{session.toggle_no}}</p>
+{% endif %}
 {% endcomment %}
+
+
+{% if session.toggle_no %}
+Is hidden
+{% else %}
+Is not hidden
+{% endif %}
 
 <div id="page_intro" class="push-1 span-16 append-1 first last">
 	<div class="frame" style="background-color:#EEF8FA">
@@ -19,8 +41,6 @@
 			</p>
 			<a class="small" id="toggle_page_intro">{% trans 'Hide help' %}</a>
 			<br><br>
-			session.items is: {{ session.items }}.<br>
-			session.items.toggle_no: {{ session.toggle_no}}.<br>
 		</div>
 	</div>
 </div>
@@ -33,12 +53,9 @@
 		{#<a class="grey awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Deselct all' %}</a>#}
 		<a id="toggle_yes" class="ok awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide applicable' %}</a>
 		<a id="toggle_maybe" class="maybe awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide maybe' %}</a>
-		{% if session.toggle_no %}
-			<a id="toggle_no" class="no awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Show unsuitable' %}</a>
-		{% else %}
-			<a id="toggle_no" class="no awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide unsuitable' %}</a>
-		{% endif %}
-		
+		<a id="toggle_no" class="no awesome" style="margin-right:5px;margin-left:5px;">
+			{% if session.toggle_no %}{% trans 'Show unsuitable' %}{% else %}{% trans 'Hide unsuitable' %}{% endif %}
+		</a>		
 		<a id="toggle_hide" class="hide awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide not usable' %}</a>
 	</div>
 	<div class="span-3 append-1 last">
@@ -46,27 +63,6 @@
 	</div>
 </div>
 <hr />
-{% comment %}
-<div class="push-1 span-16 append-1 first last">
-	<p style="text-align:center;">
-		<a class="red awesome" style="margin-right:10px; float:left;"
-			href="{% url reset_all %}">{% trans 'Reset' %}</a>
-		<a class="aqua awesome" style="margin-right:10px; float:left;" href="{% url factors %}">{% trans '&larr; Back' %}</a>	
-		<a class="aqua awesome" href="{% url solution %}" onclick="this.blur();" style="margin-left:10px; float:right;">{% trans 'Continue &rarr;' %}</a>
-	</p>
-</div>
-<hr style="margin-top:20px" />
-
-<div style="text-align:center;">
-	<p class="small" id="toggles">
-		<a id="toggle_yes">Hide appropriate</a> 
-		<a id="toggle_maybe">Hide maybe</a>
-		<a id="toggle_no" >Hide not appropriate</a>
-		<!--<a id="toggle_na" >Hide not affected</a>-->
-	</p>
-</div>
-<hr />
-{% endcomment %}
 
 <div class="span-18 first last" style="margin-bottom:0;">
     {% for techgroup, techs in all_techs %}
@@ -78,7 +74,7 @@
             <div class="tech tech_{{tech.usable}}">
                 <div class="back_{{tech.usable}}">
 					<p class="small" style="margin-top:5px; display:block; height:35px; overflow:hidden; margin-bottom:5px;">
-						<a class="fancy" href="{% url technologies_help tech.id %}" title="{{tech}}">{{ tech|capfirst|smart_truncate:25 }}</a>
+						<a class="fancy" href="{% url technologies_help tech.id %}" title="{{tech.id}}">{{ tech|capfirst|smart_truncate:25 }}</a>
 					</p>
 					<a class="fancy" href="{% url technologies_help tech.id %}" title="{{tech}}">
                     <div class="back_{{tech.usable}}_img" style="margin-bottom:15px;">
@@ -94,11 +90,7 @@
 							{% endifnotequal %}
 						{% endifnotequal %}
 					{% endifequal %}
-					
-                    
-					{% comment %}
-					<a class="grey awesome small" href="#">{% trans 'Select' %}</a>						
-					{% endcomment %}
+					                    
                 </div>
             </div>
         {% endfor %}
@@ -106,7 +98,6 @@
     {% endfor %}
 
 </div>
-
 
 <div class="clear"></div>
 <hr style="margin-top:20px" />
@@ -117,28 +108,11 @@
 	</div>
 	<div class="span-10" style="text-align:center;">
 		&nbsp;
-		{% comment %}
-		<a class="grey awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Deselct all' %}</a>
-		<a class="green awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Hide appropriate' %}</a>
-		<a class="yellow awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Hide maybe' %}</a>
-		<a class="red awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Hide not appropriate' %}</a>
-		{% endcomment %}
 	</div>
 	<div class="span-3 append-1 last">
 		<a class="aqua awesome" href="{% url solution %}" onclick="this.blur();" style="margin-left:10px; float:right;">{% trans 'Continue &rarr;' %}</a>
 	</div>
 </div>
-{% comment %}
-
-<div class="push-1 span-16 append-1 first last">
-	<p style="text-align:center;">
-		<a class="green awesome" style="margin-right:10px; float:left;"
-			href="{% url reset_techs %}">{% trans 'Deselct all technologies' %}</a>
-		<a class="grey awesome" style="margin-right:10px; float:left;" href="{% url factors %}">{% trans '&larr; Back' %}</a>
-		<a class="aqua awesome" href="{% url solution %}" onclick="this.blur();" style="margin-left:10px; float:right;">{% trans 'Continue &rarr;' %}</a>
-	</p>
-</div>
-{% endcomment %}
 
 {% endblock content %}
 
@@ -159,12 +133,16 @@ jQ('#toggle_yes').click(function () {
 	jQ(this).html( (jQ('.back_yes').is(":visible") ? 'Show' : 'Hide') + ' applicable');
 	jQ('.back_yes').is(":visible") ? jQ('.back_yes').fadeOut("slow") : jQ('.back_yes').fadeIn("slow");
 	jQ('.tech_yes').is(":visible") ? jQ('.tech_yes').fadeOut("slow") : jQ('.tech_yes').fadeIn("slow");
+	
+	jQ.post('{% url toggle_button 'yes_ishidden' %}');
 });
 
 jQ('#toggle_maybe').click(function () {
 	jQ(this).html( (jQ('.back_maybe').is(":visible") ? 'Show' : 'Hide') + ' maybe');
 	jQ('.back_maybe').is(":visible") ? jQ('.back_maybe').fadeOut("slow") : jQ('.back_maybe').fadeIn("slow");
 	jQ('.tech_maybe').is(":visible") ? jQ('.tech_maybe').fadeOut("slow") : jQ('.tech_maybe').fadeIn("slow");
+	
+	jQ.post('{% url toggle_button 'maybe_ishidden' %}');
 });
 
 jQ('#toggle_no').click(function () {
@@ -176,19 +154,21 @@ jQ('#toggle_no').click(function () {
 		jQ(this).html( 'Hide unsuitable' )
 		jQ('.tech_no').fadeIn("slow");
 	}
-	jQ.post('{% url toggle_button 'toggle_no' %}');
+	jQ.post('{% url toggle_button 'no_ishidden' %}');
 });
 
 jQ('#toggle_na').click(function () {
 	jQ(this).html( (jQ('.back_na').is(":visible") ? 'Show' : 'Hide') + ' not applicable');
 	jQ('.back_na').is(":visible") ? jQ('.back_na').fadeOut("slow") : jQ('.back_na').fadeIn("slow");	
 	jQ('.tech_na').is(":visible") ? jQ('.tech_na').fadeOut("slow") : jQ('.tech_na').fadeIn("slow");
+	jQ.post('{% url toggle_button 'na_ishidden' %}');
 });
 
 jQ('#toggle_hide').click(function () {
 	jQ(this).html( (jQ('.back_hide').is(":visible") ? 'Show' : 'Hide') + ' not usable');
 	jQ('.back_hide').is(":visible") ? jQ('.back_hide').fadeOut("slow") : jQ('.back_hide').fadeIn("slow");	
 	jQ('.tech_hide').is(":visible") ? jQ('.tech_hide').fadeOut("slow") : jQ('.tech_hide').fadeIn("slow");
+	jQ.post('{% url toggle_button 'hide_ishidden' %}');
 });
 
 
