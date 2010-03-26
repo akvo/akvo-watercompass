@@ -27,7 +27,7 @@
 	</div>
 	<div class="span-10" style="text-align:center;">
 		{#<a class="grey awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Deselct all' %}</a>#}
-		<a id="toggle_yes" class="ok awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide appropriate' %}</a>
+		<a id="toggle_yes" class="ok awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide applicable' %}</a>
 		<a id="toggle_maybe" class="maybe awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide maybe' %}</a>
 		<a id="toggle_no" class="no awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide unsuitable' %}</a>
 		<a id="toggle_hide" class="hide awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide not usable' %}</a>
@@ -147,7 +147,7 @@
 
 
 jQ('#toggle_yes').click(function () {
-	jQ(this).html( (jQ('.back_yes').is(":visible") ? 'Show' : 'Hide') + ' appropriate');
+	jQ(this).html( (jQ('.back_yes').is(":visible") ? 'Show' : 'Hide') + ' applicable');
 	jQ('.back_yes').is(":visible") ? jQ('.back_yes').fadeOut("slow") : jQ('.back_yes').fadeIn("slow");
 	jQ('.tech_yes').is(":visible") ? jQ('.tech_yes').fadeOut("slow") : jQ('.tech_yes').fadeIn("slow");
 });
