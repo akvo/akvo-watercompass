@@ -146,6 +146,7 @@ def technologies(request):
     return {
         'techgroups'    : groups,
         'all_techs'     : all_techs,
+        'session'       : request.session,
     }
 
 
