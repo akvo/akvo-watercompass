@@ -78,15 +78,24 @@ class AnswerForm(ModelForm):
         fields = ['id', 'criterion', 'applicable',]
 
 
+def init_session(session):
+    uses = 'TECH_USE_NO', 'TECH_USE_MAYBE', 'TECH_USE_YES', 'TECH_USE_NOT_ALLOWED'
+    btns = [getattr(Technology, use) for use in uses]
+    buttons = ["toggle_%s" % btn for btn in btns ]
+    for button in buttons:
+        if button not in session.keys():
+            session[button] = False
+        
+    
 @render_to('dst/factors.html')
 def factors(request, model=None, id=None):
-    request.session['init'] = 'init'
+    #request.session['button_yes'] = 'init'
     AnswerFormSet = modelformset_factory(
         Answer,
         form = AnswerForm,
         extra = 0,
     )
-    
+    init_session(request.session)
     if request.method == 'POST':
         formset = AnswerFormSet(request.POST, request.FILES)
         if formset.is_valid():
