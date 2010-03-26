@@ -12,9 +12,10 @@
 	<div class="frame" style="background-color:#EEF8FA">
 		<div class="space15">
 			<p class="small" id="page_intro_text">
-				Based on the information you have provided in Step 1, the table below indicates which technologies are appropriate for your situation. Red means not appropriate, Yellow means maybe appropriate, and green means appropriate. If you click on the icon of one of the options, you will see an explanation why the technology is appropriate or not. If you click on the name of the technology, a new window will open with the Akvopedia article on that technology.<br>
+				{% blocktrans %}Based on the information you have provided in Step 1, the table below indicates which technologies are appropriate for your situation. Red means not appropriate, Yellow means maybe appropriate, and green means appropriate. If you click on the icon of one of the options, you will see an explanation why the technology is appropriate or not. If you click on the name of the technology, a new window will open with the Akvopedia article on that technology.{% endblocktrans %}
 				<br>
-				In this screen, you can explore the differerent technologies, and change the answers to the 9 questions by going back to the step 1. In the next step, only the green and yellow technologies are displayed, and you can start to build a system from these.
+				<br>
+				{% trans 'In this screen, you can explore the differerent technologies, and change the answers to the 9 questions by going back to the step 1. In the next step, only the green and yellow technologies are displayed, and you can start to build a system from these.' %}
 			</p>
 			<a class="small" id="toggle_page_intro">{% trans 'Hide help' %}</a>
 		</div>
@@ -27,7 +28,7 @@
 	</div>
 	<div class="span-10" style="text-align:center;">
 		{#<a class="grey awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Deselct all' %}</a>#}
-		<a id="toggle_yes" class="ok awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide appropriate' %}</a>
+		<a id="toggle_yes" class="ok awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide applicable' %}</a>
 		<a id="toggle_maybe" class="maybe awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide maybe' %}</a>
 		<a id="toggle_no" class="no awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide unsuitable' %}</a>
 		<a id="toggle_hide" class="hide awesome" style="margin-right:5px;margin-left:5px;">{% trans 'Hide not usable' %}</a>
@@ -147,7 +148,7 @@
 
 
 jQ('#toggle_yes').click(function () {
-	jQ(this).html( (jQ('.back_yes').is(":visible") ? 'Show' : 'Hide') + ' appropriate');
+	jQ(this).html( (jQ('.back_yes').is(":visible") ? 'Show' : 'Hide') + ' applicable');
 	jQ('.back_yes').is(":visible") ? jQ('.back_yes').fadeOut("slow") : jQ('.back_yes').fadeIn("slow");
 	jQ('.tech_yes').is(":visible") ? jQ('.tech_yes').fadeOut("slow") : jQ('.tech_yes').fadeIn("slow");
 });
