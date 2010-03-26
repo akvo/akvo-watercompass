@@ -86,7 +86,7 @@ def init(request):
 def init_session(session):
     uses = 'TECH_USE_NO', 'TECH_USE_MAYBE', 'TECH_USE_YES', 'TECH_USE_NOT_ALLOWED'
     btns = [getattr(Technology, use) for use in uses]
-    buttons = ["toggle_%s" % btn for btn in btns ]
+    buttons = ["%s_ishidden" % btn for btn in btns ]
     for button in buttons:
         if button not in session.keys():
             session[button] = False
@@ -156,9 +156,11 @@ def technologies(request):
     # if we want to transpose the data:
     #all_techs = map(None, *group_techs)
     all_techs = zip(groups, group_techs)
+    
     return {
         'techgroups'    : groups,
         'all_techs'     : all_techs,
+        'session'       : request.session,
     }
 
 
