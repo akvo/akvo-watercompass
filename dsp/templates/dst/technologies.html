@@ -25,10 +25,15 @@
 	<div class="frame" style="background-color:#EEF8FA">
 		<div class="space15">
 			<p class="small" id="page_intro_text">
-				{% blocktrans %}Based on the information you have provided in Step 1, the table below indicates which technologies are appropriate for your situation. Red means not appropriate, Yellow means maybe appropriate, and green means appropriate. If you click on the icon of one of the options, you will see an explanation why the technology is appropriate or not. If you click on the name of the technology, a new window will open with the Akvopedia article on that technology.{% endblocktrans %}
+			  {% blocktrans %}The table below shows technologies, grouped by type in columns. Based on the factors you selected, the technologies have 
+			  been shaded to indicate suitability as solutions: green for good solutions, yellow for less suitable and red for not suitable.
+			  Select a technology's icon to see an explanation of why the technology is or is not appropriate; select the technology name to get more
+			  information about it from the Akvopedia.{% endblocktrans %}
 				<br>
 				<br>
-				{% trans 'In this screen, you can explore the differerent technologies, and change the answers to the 9 questions by going back to the step 1. In the next step, only the green and yellow technologies are displayed, and you can start to build a system from these.' %}
+			{% blocktrans %}Begin building your sanitation solution by selecting technologies for each column. As you build your system, some technologies
+			may be excluded by your choices, and will appear greyed out. At any time you can return to the factors page and change your answers or start over.
+			{% endblocktrans %}
 			</p>
 			<a class="small" id="toggle_page_intro">{% trans 'Hide help' %}</a>
 			<br><br>
@@ -41,7 +46,7 @@
 		<a class="aqua awesome" style="margin-right:10px; float:left;" href="{% url factors %}">{% trans '&larr; Back' %}</a>	
 	</div>
 	<div class="span-10" style="text-align:center;">
-		{#<a class="grey awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Deselct all' %}</a>#}
+		{#<a class="grey awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Deselect all' %}</a>#}
 		<a id="toggle_yes" class="ok awesome" style="margin-right:5px;margin-left:5px;">
 			{% if session.yes_ishidden %}{% trans 'Show' %}{% else %}{% trans 'Hide' %}{% endif %} {% trans 'applicable' %}
 		</a>
