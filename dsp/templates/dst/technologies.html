@@ -17,6 +17,11 @@
 .tech_hide { display:none;}
 {% endif %}
 
+{% if session.tech_help_ishidden %}
+#page_intro_text { display:none;}
+{% endif %}
+
+
 {% endblock inline_styles %}
 
 {% block content %}
@@ -24,7 +29,7 @@
 <div id="page_intro" class="push-1 span-16 append-1 first last">
 	<div class="frame" style="background-color:#EEF8FA">
 		<div class="space15">
-			<p class="small" id="page_intro_text">
+			<p id="page_intro_text">
 			  {% blocktrans %}The table below shows technologies, grouped by type in columns. Based on the factors you selected, the technologies have 
 			  been shaded to indicate suitability as solutions: green for good solutions, yellow for less suitable and red for not suitable.
 			  Select a technology's icon to see an explanation of why the technology is or is not appropriate; select the technology name to get more
@@ -35,8 +40,7 @@
 			may be excluded by your choices, and will appear greyed out. At any time you can return to the factors page and change your answers or start over.
 			{% endblocktrans %}
 			</p>
-			<a class="small" id="toggle_page_intro">{% trans 'Hide help' %}</a>
-			<br><br>
+			<a class="small" id="toggle_page_intro">{% if session.tech_help_ishidden %}{% trans 'Show help' %}{%else%}{% trans 'Hide help' %}{% endif %}</a>
 		</div>
 	</div>
 </div>
@@ -196,7 +200,7 @@ jQ('#toggle_page_intro').click(function() {
 		jQ('#page_intro_text').slideDown("slow");
 		jQ('#toggle_page_intro').html('Hide help');
 	}
-
+	jQ.post('{% url toggle_button 'tech_help_ishidden' %}');
 });
 
 
