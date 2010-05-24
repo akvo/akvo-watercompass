@@ -1,0 +1,27 @@
+AUTHORS.txt v1.0, 24 May 2010, tbp 
+
+AUTHORS of Akvo / WASTE Decision Support Tool (DST)
+
+The PRIMARY AUTHORS are (and/or have been):
+
+- Thomas Bjelkeman-Pettersson
+- Oliver Galloway-Lunn
+- Gabriel von Heijne
+- Daniel Karlsson
+- Elizabeth Whiteside
+- Mark Tiele Westra
+
+Contributors, here is an inevitably incomplete list of MUCH APPRECIATED
+CONTRIBUTORS whom without, Akvo / WASTE DST  would not have been the same:
+
+- Gert de Bruijne
+
+Further team members can be found at < http://www.akvo.org/web/team >
+
+Funding partners, without them Akvo / WASTE DST could not have happened
+
+- WASTE
+- Resource Oriented Sanitation (ROSA)
+- EU 6th Framework Programme
+- Dutch Ministry of Foreign Affairs
+
