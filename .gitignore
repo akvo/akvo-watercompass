@@ -1,5 +1,6 @@
 .DS_Store
+.TemporaryItems
 *.py[co]
 *.kpf
-dsp/settings_local.py
 dsp/data
+dsp/settings_local.py
