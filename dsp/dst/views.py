@@ -8,16 +8,66 @@ from django.forms import ModelForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-
+import logging
+from datetime import datetime
 
 from models import Factor, TechGroup, Technology, Relevancy, Answer, Criterion, TechChoice
 from utils import pretty_name
 
+# PROFILING  
+import hotshot
+import os
+import time
+import settings
+
+try:
+    PROFILE_LOG_BASE = settings.PROFILE_LOG_BASE
+except:
+    PROFILE_LOG_BASE = "/tmp"
+
+
+def profile(log_file):
+    """Profile some callable.
+
+    This decorator uses the hotshot profiler to profile some callable (like
+    a view function or method) and dumps the profile data somewhere sensible
+    for later processing and examination.
+
+    It takes one argument, the profile log name. If it's a relative path, it
+    places it under the PROFILE_LOG_BASE. It also inserts a time stamp into the 
+    file name, such that 'my_view.prof' become 'my_view-20100211T170321.prof', 
+    where the time stamp is in UTC. This makes it easy to run and compare 
+    multiple trials.     
+    """
+
+    if not os.path.isabs(log_file):
+        log_file = os.path.join(PROFILE_LOG_BASE, log_file)
+
+    def _outer(f):
+        def _inner(*args, **kwargs):
+            # Add a timestamp to the profile output when the callable
+            # is actually called.
+            (base, ext) = os.path.splitext(log_file)
+            base = base + "-" + time.strftime("%Y%m%dT%H%M%S", time.gmtime())
+            final_log_file = base + ext
+
+            prof = hotshot.Profile(final_log_file)
+            try:
+                ret = prof.runcall(f, *args, **kwargs)
+            finally:
+                prof.close()
+            return ret
+
+        return _inner
+    return _outer
+
+# END PROFILING 
 class HttpResponseNoContent(HttpResponse):
     status_code = 204
     
 def get_session(request):
     session, created = Session.objects.get_or_create(pk=request.session.session_key)
+    #session = Session.objects.get(pk=request.session.session_key)
     return session
     
 def render_to(template):
@@ -49,6 +99,7 @@ def render_to(template):
 
 @render_to('dst/index.html')
 def index(request):
+    request.session.set_test_cookie()
     try:
         return HttpResponseRedirect(settings.START_URL)
     except:
@@ -82,9 +133,22 @@ class AnswerForm(ModelForm):
 def init(request):
     request.session['init'] = init
     HttpResponseRedirect(reverse('factors'))
+
+def initialize_linked_techs():
+    techs = Technology.objects.all()
+    for tech in techs:
+        linked_all=tech.all_linked_techs()
+        for linked in linked_all:
+            tech.linked_techs.add(linked)
+            
+    for tech in techs:
+        linked_all=tech.linked_techs.all()
+        for linked in linked_all:
+            #logging.debug('tech %s links to %s' % (tech, linked))
     
 def init_session(session):
     uses = 'TECH_USE_NO', 'TECH_USE_MAYBE', 'TECH_USE_YES', 'TECH_USE_NOT_ALLOWED'
+ #   initialize_linked_techs()
     btns = [getattr(Technology, use) for use in uses]
     buttons = ["%s_ishidden" % btn for btn in btns ]
     for button in buttons:
@@ -142,16 +206,81 @@ def factor_help(request, model=None, id=None):
         help_item = None
     return {'help_item': help_item}
 
-
+#@profile("technologies.prof")
 @render_to('dst/technologies.html')
-def technologies(request):
+def technologies(request, model=None, id=None):
+    if request.session.test_cookie_worked():
+            request.session.delete_test_cookie()
+
+    #forms part 
+    init_session(request.session)
+    AnswerFormSet = modelformset_factory(
+        Answer,
+        form = AnswerForm,
+        extra = 0,
+    )
+    
+    if request.method == 'POST':
+        formset = AnswerFormSet(request.POST, request.FILES)
+        if formset.is_valid():
+            formset.save()   
+    
+    #if there are no valid answers, we just default to false
+    qs = get_or_create_answers(get_session(request))
+    
+    formset = AnswerFormSet(queryset=qs)
+    form_list = [form for form in formset.forms]
+    change_list = []
+    factor_list = []
+    old_factor = ''
+    
+    for form in formset.forms:
+        new_factor = form.instance.criterion.factor
+        factor_list.append(new_factor)
+        change_list.append(new_factor != old_factor)
+        form.fields['applicable'].label = pretty_name(str(form.instance.criterion))
+        old_factor = new_factor
+    
+    zipped_formlist = zip(form_list, factor_list, change_list)
+    
+    if model:
+        help_item = get_model('dst', model).objects.get(id=id)
+    else:
+        help_item = None 
+    #end forms part 
+    
+    #technology part
     groups = TechGroup.objects.all()
     group_techs = []
     for group in groups:
         techs = Technology.objects.filter(group=group)
         for tech in techs:
             tech.usable = tech.usability(get_session(request))
-            tech.available = tech.availability(get_session(request))
+       #     tech.available = tech.availability(get_session(request))
+        group_techs.append(techs)
+    # if we want to transpose the data:
+    #all_techs = map(None, *group_techs)
+    all_techs = zip(groups, group_techs)
+    
+    return {
+        'techgroups'    : groups,
+        'all_techs'     : all_techs,
+        'session'       : request.session,
+        'formset'           : formset,
+        'zipped_formlist'   : zipped_formlist,
+        'help_item'         : help_item,
+    }
+
+@render_to('dst/techs_selected.html')
+def techs_selected(request, model=None, id=None):
+
+    groups = TechGroup.objects.all()
+    group_techs = []
+    for group in groups:
+        techs = Technology.objects.filter(group=group)
+        for tech in techs:
+            tech.usable = tech.usability(get_session(request))
+       #     tech.available = tech.availability(get_session(request))
         group_techs.append(techs)
     # if we want to transpose the data:
     #all_techs = map(None, *group_techs)
@@ -162,6 +291,7 @@ def technologies(request):
         'all_techs'     : all_techs,
         'session'       : request.session,
     }
+
 
 
 def tech_choice(request, tech_id):
@@ -181,7 +311,7 @@ def toggle_button(request, btn_name=''):
 
 def reset_all(request):
     request.session.flush()
-    return HttpResponseRedirect(reverse('factors'))
+    return HttpResponseRedirect(reverse('technologies'))
 
 
 def reset_techs(request):
@@ -218,7 +348,7 @@ def solution(request):
         chosen_techs = Technology.objects.filter(group=group).filter(tech_choices__session=get_session(request))
         for tech in chosen_techs:
             tech.usable = tech.usability(get_session(request))
-            tech.available = tech.availability(get_session(request))
+     #       tech.available = tech.availability(get_session(request))
         group_techs.append(chosen_techs)
     
     # if we want to transpose the data:
