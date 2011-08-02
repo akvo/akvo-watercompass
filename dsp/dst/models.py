@@ -9,8 +9,59 @@ from django.db.models.signals import post_save, post_delete
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 import itertools
-
+import logging
 from utils import pretty_name
+
+# PROFILING  
+import hotshot
+import os
+import time
+import settings
+
+try:
+    PROFILE_LOG_BASE = settings.PROFILE_LOG_BASE
+except:
+    PROFILE_LOG_BASE = "/tmp"
+
+
+def profile(log_file):
+    """Profile some callable.
+
+    This decorator uses the hotshot profiler to profile some callable (like
+    a view function or method) and dumps the profile data somewhere sensible
+    for later processing and examination.
+
+    It takes one argument, the profile log name. If it's a relative path, it
+    places it under the PROFILE_LOG_BASE. It also inserts a time stamp into the 
+    file name, such that 'my_view.prof' become 'my_view-20100211T170321.prof', 
+    where the time stamp is in UTC. This makes it easy to run and compare 
+    multiple trials.     
+    """
+
+    if not os.path.isabs(log_file):
+        log_file = os.path.join(PROFILE_LOG_BASE, log_file)
+
+    def _outer(f):
+        def _inner(*args, **kwargs):
+            # Add a timestamp to the profile output when the callable
+            # is actually called.
+            (base, ext) = os.path.splitext(log_file)
+            base = base + "-" + time.strftime("%Y%m%dT%H%M%S", time.gmtime())
+            final_log_file = base + ext
+
+            prof = hotshot.Profile(final_log_file)
+            try:
+                ret = prof.runcall(f, *args, **kwargs)
+            finally:
+                prof.close()
+            return ret
+
+        return _inner
+    return _outer
+
+# END PROFILING 
+
+
 
 class Factor(models.Model):
     factor          = models.CharField(_(u'factor'), max_length=50)
@@ -93,8 +144,9 @@ class Technology(models.Model):
     description  = models.TextField(_(u'description'),)
     #input       = models.ManyToManyField('self', blank=True, related_name='output', symmetrical=False, )
     output      = models.ManyToManyField('self', blank=True, related_name='input', symmetrical=False, )
-    image       = models.ImageField(upload_to='technologies')
+    image       = models.CharField(_(u'image'), max_length=100)
     url         = models.URLField(blank=True, verify_exists = False, help_text=_('Enter the url to the corresponding Akvopedia entry, beginning with http://.'))
+    linked_techs = models.ManyToManyField('self',blank=True, related_name='linked_tech',symmetrical=True)
 
     
     def __unicode__(self):
@@ -117,6 +169,7 @@ class Technology(models.Model):
             "find all techs that have self as input"
             return Technology.objects.filter(input__in=self)
         
+      
         def all_output(self):
             "find all techs that have self as input recursively"
             return (
@@ -137,21 +190,25 @@ class Technology(models.Model):
                 self.input().input().input().input().input()
             ).distinct()
 
-        def all_linked_techs(self):
-            """
-            find all techs linked to self
-            the reason for itertools is that when I do
-            (self.all_input() | self.all_output()) the result is not
-            the expected union of all_input and all_output
-            """
-            return itertools.chain(self.all_input(), self.all_output())
+        #def all_linked_techs(self):
+        #    """
+        #    find all techs linked to self
+        #    the reason for itertools is that when I do
+        #    (self.all_input() | self.all_output()) the result is not
+        #    the expected union of all_input and all_output
+        #    """
+        #    return itertools.chain(self.all_input(), self.all_output())
 
         def all_chosen(self, session):
             return self.filter(tech_choices__session=session).order_by('group__order')
 
-    def all_linked_techs(self):
-        return Technology.objects.filter(pk=self.pk).all_linked_techs()
+    
 
+
+    #def all_linked_techs(self):
+    #    #return Technology.objects.filter(pk=self.pk).all_linked_techs()
+
+        
     def display_output(self):
         return "<table style=''>%s</table>" % "".join(
             ["<tr><td style='text-align: left; border: 0px;'>%s</td><td style='border: 0px;'>%s</td></tr>" % (
@@ -172,20 +229,27 @@ class Technology(models.Model):
         else:
             return '<img src="%s%s" />' % (settings.MEDIA_URL, self.image)
     display_image.allow_tags = True
-            
-    def availability(self, session):
-        """
-        figure out if I am "available" that is can be used given choices of techs already made
-        """
-        chosen_techs = Technology.objects.filter(tech_choices__session=session)
-        if self in chosen_techs:
-            return self.TECH_USE_CHOSEN
-        if self.group in [t.group for t in chosen_techs]:
-            return self.TECH_USE_NOT_ALLOWED
-        if self in chosen_techs.all_linked_techs():
-            return True
-        return False
     
+         
+    #def availability(self, session):
+    #    """
+    #    figure out if I am "available" that is can be used given choices of techs already made
+    #    """
+    #    chosen_techs = Technology.objects.filter(tech_choices__session=session)
+    #    # self is within the chosen techs
+    #    if self in chosen_techs:
+    #        return self.TECH_USE_CHOSEN
+    #    
+    #     # self is in a group where a choice has already been made, and because we failed the first test, we are not the one chosen. Hence not available
+    #    if self.group in [t.group for t in chosen_techs]:
+    #        return self.TECH_USE_NOT_ALLOWED
+    #    
+    #    # self is within those techs which are linked to the chosen techs, hence available.
+    #    if self in chosen_techs.all_linked_techs():
+    #        return True
+    #    return False
+    #
+ 
     def applicable(self, session):
         """
         figure out if I'm applicable given the current environmental factors
@@ -194,19 +258,23 @@ class Technology(models.Model):
         answers = Answer.objects.filter(session=session, applicable__exact=True)
         # given the answers, get the corresponding criteria
         criteria = Criterion.objects.filter(answer__in=answers)
+        
         # now try to find one or more instances of Relevancy.applicability = CHOICE_NO
         if len(self.relevancies.filter(applicability=Relevancy.CHOICE_NO, criterion__in=criteria)):
             return self.TECH_USE_NO
+        
         # if we found no CHOICE_NO relevanciew try for CHOICE_MAYBE
         elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_MAYBE, criterion__in=criteria)):
             return self.TECH_USE_MAYBE
+        
         # if we found no CHOICE_MAYBE relevanciew try for CHOICE_YES
         elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_YES, criterion__in=criteria)):
             return self.TECH_USE_YES
+        
         # this thech was not affected by the environmental factors
         return self.TECH_USE_YES
         
-
+       
     def usability(self, session):
         """
         figure out "usability" status based on Answers and TechChoices
@@ -228,7 +296,9 @@ class Technology(models.Model):
             #    return self.TECH_USE_NOT_ALLOWED
 
             # find all techs linked to self
-            my_linked = [t for t in self.all_linked_techs()]
+            my_linked = [t for t in self.linked_techs.all()]
+            #my_linked = [t for t in self.all_linked_techs()]
+            
             my_linked  = set(my_linked)
             chosen = set(chosen_techs)
             # all techs already chosen must be linked to me;
