@@ -4,3 +4,5 @@
 *.kpf
 dsp/data
 dsp/settings_local.py
+
+dsp/debug.log
