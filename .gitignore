@@ -6,3 +6,5 @@ dsp/data
 dsp/settings_local.py
 
 dsp/debug.log
+
+dsp/templates/dst/debug.log

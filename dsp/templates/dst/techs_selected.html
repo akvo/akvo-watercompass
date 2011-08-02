@@ -39,12 +39,12 @@
     <div class="span-16 last">
 	
 	<!-- start selected technologies -->
-	<div class="span-16 last" style="margin-bottom:10px;margin-left:20px; background:#ddd;">
-	   <p style="font-weight:bold;display:block;color:#888;margin-top:5px;margin-left:5px;margin-bottom:5px;">Sanitation system with selected technologies</p>
+	<div class="span-18 first last" style="margin-bottom:10px; background:#ddd;">
+	   <p style="font-weight:bold;display:block;color:#888;margin-top:5px;margin-left:20px;margin-bottom:5px;">Sanitation system with selected technologies</p>
 	
-	<div class="span-14 last" style="margin-bottom:0; background:#ddd;">
+	<div class="span-18 first last" style="margin-bottom:0; margin-left:20px;">
 	    {% for techgroup, techs in all_techs %}
-		<div class="span-2b {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center;">	
+		<div class="span-2a {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center;">	
 		    <div class="techs_selected">
 		    {% for tech in techs %}
 			{% ifequal tech.usable 'chosen'%}
@@ -55,8 +55,8 @@
 						<img src="{{ MEDIA_URL}}{{ tech.image }}""/>		
 				    </div>
 				    </a>
-				    <p class="tiny" style="margin-top:5px; display:block; height:35px; overflow:hidden; margin-bottom:5px;">
-				        <a class="fancy" href="{% url technologies_help tech.id %}" title="{{tech.id}}">{{ tech|capfirst|smart_truncate:35 }}</a>
+				    <p class="small" style="margin-top:5px; display:block; height:70px; overflow:hidden; margin-bottom:5px;">
+				        <a class="fancy" href="{% url technologies_help tech.id %}" title="{{tech.id}}">{{ tech|capfirst|smart_truncate:50 }}</a>
 				    </p>	                    
 				</div>
 			    </div>
@@ -65,7 +65,7 @@
 		    </div>
 		</div>
 		  {% if not forloop.last %}
-		    <div style="margin-top:30px;margin-left:12px;float:left;">
+		    <div style="margin-top:70px;margin-left:0px;width:27px;float:left;">
 			<img src="{{ MEDIA_URL}}img/extra/arrow.gif"> 
 		    </div>
 		    {% endif %}
@@ -76,40 +76,6 @@
 </div>	
 	
 <div class="clear"></div>
-<hr style="margin-top:20px" />
-
-
-<div id="page_intro" class="push-1 span-16 append-1 first last">
-	<div class="frame" style="background-color:#EEF8FA">
-		<div class="space15">
-			<p id="page_intro_text">
-			  {% blocktrans %}The table below shows technologies, grouped by type in columns. Based on the factors you selected, the technologies have 
-			  been shaded to indicate suitability as solutions: green for good solutions, yellow for less suitable and red for not suitable.
-			  Select a technology's icon to see an explanation of why the technology is or is not appropriate; select the technology name to get more
-			  information about it from the Akvopedia.{% endblocktrans %}
-				<br>
-				<br>
-			{% blocktrans %}Begin building your sanitation solution by selecting technologies for each column. As you build your system, some technologies
-			may be excluded by your choices, and will appear greyed out. At any time you can return to the factors page and change your answers or start over.
-			{% endblocktrans %}
-			</p>
-			<a class="small" id="toggle_page_intro">{% if session.tech_help_ishidden %}{% trans 'Show help' %}{%else%}{% trans 'Hide help' %}{% endif %}</a>
-		</div>
-	</div>
-</div>	
-
-
-<div class="span-18">
-	<div class="push-1 span-3 first">
-		<a class="aqua awesome" style="margin-right:10px; float:left;" href="{% url factors %}">{% trans '&larr; Back' %}</a>	
-	</div>
-	<div class="span-10" style="text-align:center;">
-		&nbsp;
-	</div>
-	<div class="span-3 append-1 last">
-		<a class="aqua awesome" href="{% url solution %}" onclick="this.blur();" style="margin-left:10px; float:right;">{% trans 'Continue &rarr;' %}</a>
-	</div>
-</div>
 
 {% endblock content %}
 
@@ -123,76 +89,6 @@
 {{block.super}}
 
 
-jQ('#toggle_yes').click(function () {
-	if (jQ('.tech_yes').is(":visible")){
-		jQ(this).html('Show applicable');
-		jQ('.tech_yes').fadeOut("slow");
-	} else {
-		jQ(this).html('Hide applicable');
-		jQ('.tech_yes').fadeIn("slow");
-	}
-	jQ.post('{% url toggle_button 'yes_ishidden' %}');	
-});
-
-jQ('#toggle_maybe').click(function () {
-	if (jQ('.back_maybe').is(":visible")){
-		jQ(this).html('Show maybe');
-		jQ('.tech_maybe').fadeOut("slow");
-	} else {
-		jQ(this).html('Hide maybe');
-		jQ('.tech_maybe').fadeIn("slow");
-	}
-	jQ.post('{% url toggle_button 'maybe_ishidden' %}');
-});
-
-jQ('#toggle_no').click(function () {
-	if (jQ('.back_no').is(":visible")) {
-		jQ(this).html('Show unsuitable');
-		jQ('.tech_no').fadeOut("slow");
-	}
-	else {
-		jQ(this).html( 'Hide unsuitable' )
-		jQ('.tech_no').fadeIn("slow");
-	}
-	jQ.post('{% url toggle_button 'no_ishidden' %}');
-});
-
-jQ('#toggle_na').click(function () {
-	if (jQ('.back_na').is(":visible")) {
-		jQ(this).html('Show applicable');
-		jQ('.tech_na').fadeOut("slow");
-	}
-	else {
-		jQ(this).html( 'Hide applicable' )
-		jQ('.tech_na').fadeIn("slow");
-	}
-	jQ.post('{% url toggle_button 'na_ishidden' %}');
-});
-
-jQ('#toggle_hide').click(function () {
-	if (jQ('.back_hide').is(":visible")) {
-		jQ(this).html('Show excluded');
-		jQ('.tech_hide').fadeOut("slow");
-	}
-	else {
-		jQ(this).html( 'Hide excluded' )
-		jQ('.tech_hide').fadeIn("slow");
-	}
-	jQ.post('{% url toggle_button 'hide_ishidden' %}');
-});
-
-
-jQ('#toggle_page_intro').click(function() {
-	if ( jQ('#page_intro_text').is(":visible") ) {
-		jQ('#page_intro_text').slideUp("slow");
-		jQ('#toggle_page_intro').html('Show help');
-	}
-	else {
-		jQ('#page_intro_text').slideDown("slow");
-		jQ('#toggle_page_intro').html('Hide help');
-	}
-	jQ.post('{% url toggle_button 'tech_help_ishidden' %}');
-});
 
 
 jQ("a.fancy").fancybox();
