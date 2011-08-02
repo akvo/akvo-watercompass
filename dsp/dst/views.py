@@ -141,14 +141,15 @@ def initialize_linked_techs():
         for linked in linked_all:
             tech.linked_techs.add(linked)
             
-    for tech in techs:
-        linked_all=tech.linked_techs.all()
-        for linked in linked_all:
-            #logging.debug('tech %s links to %s' % (tech, linked))
+    #for tech in techs:
+    #    linked_all=tech.linked_techs.all()
+    #    for linked in linked_all:
+    #        logging.debug('tech %s links to %s' % (tech, linked))
     
 def init_session(session):
     uses = 'TECH_USE_NO', 'TECH_USE_MAYBE', 'TECH_USE_YES', 'TECH_USE_NOT_ALLOWED'
- #   initialize_linked_techs()
+ #  initializing linked technologies is only necessary to build up the lookup table in the database
+ #  initialize_linked_techs()
     btns = [getattr(Technology, use) for use in uses]
     buttons = ["%s_ishidden" % btn for btn in btns ]
     for button in buttons:
