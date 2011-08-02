@@ -36,6 +36,7 @@ a { color:#2B80AF; text-decoration: none; cursor: pointer;  }
 a:visited { color:#2B80AF; }
 a:hover { color:#0FA0CB; text-decoration: underline; }
 
+
 p {
     font-size:0.875em; /* 16*0.875 = 14*/
     line-height:1.4em; 
@@ -72,10 +73,10 @@ h4 {
 }
 
 h5 {
-    color:#000;
-    font-size: 0.8125em;
+     color:#000;
+    font-size:0.8em;
     line-height:1.2em;
-    margin-bottom:0.5em;
+    margin-bottom:0.3em;
 }
 
 
@@ -93,10 +94,10 @@ h6 {
 
 ul, ol { 
     margin-bottom:0.5em; 
-    line-height:1.7em;
-    font-size:0.875em;
+    line-height:1.0em;
+    font-size:0.775em;
     color:#333;
-    margin-top:-0.5em;
+    margin-top:0.5em;
     margin-bottom:1.5em;
     
 }
@@ -190,10 +191,7 @@ input[type="submit"], input[type="button"] {
 }
 
 input[type='checkbox'], input[type='radio'] {
-    margin-right:1em;
-    margin-bottom:1em;
-    margin: 0.5em 1px;
-    margin-left:1em;
+    margin:0.25em 0.25em 0.25em 0.25em;
 }
 
 textarea { border: 1px solid #ccc;}
@@ -235,6 +233,11 @@ p.lede {
 p.small, .small p, .small label, ul.small, a.small {
     font-size:0.8125em;
     line-height:1.4em;
+}
+
+p.small_choices, .small_choices p, .small_choices label, ul.small_choices, a.small_choices {
+    font-size:0.8125em;
+    line-height:1.0em;
 }
 
 
