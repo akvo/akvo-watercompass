@@ -1,7 +1,9 @@
-# -*- coding: utf-8 -*-
+ # -*- coding: utf-8 -*-
 
 from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
+import logging
+from datetime import datetime
 
 urlpatterns = patterns('',
     url(r'^$', 'dst.views.index', name='index'),
@@ -10,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^(?P<model>\w+)_factorhelp/(?P<id>\d+)/$', 'dst.views.factor_help', name='factor_help'),
     
     url(r'^technologies/$', 'dst.views.technologies', name='technologies'),
+    url(r'^techs_selected/$', 'dst.views.techs_selected', name='techs_selected'),
     url(r'^technologies/(?P<id>\d+)/help/$', 'dst.views.technologies_help', name='technologies_help'),
     url(r'^choice/(?P<tech_id>\d+)/$', 'dst.views.tech_choice', name='tech_choice'),
 
