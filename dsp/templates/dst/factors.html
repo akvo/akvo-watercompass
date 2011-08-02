@@ -27,21 +27,23 @@
 	</div>
 	
 	<hr />
-	<div class="push-1 span-9 first">
+	<div class="push-1 span-3 first">
         {% for form, factor, change in zipped_formlist %}
             {% if change %}
                 {% if not forloop.first %}
                 </ul>
                 {% endif %}
-                <h2><a href="{% url factor_help 'factor' factor.id %}" class="fancy">{{factor.factor|capfirst}}</a></h2>
+                <hr style="margin-bottom:0.5em;"/>
+		<h5><a href="{% url factor_help 'factor' factor.id %}" class="fancy">{{factor.factor|capfirst}}</a></h5>
                 <ul style="list-style-type:none;">
             {% endif %}
 
-			<li>
+		<li>
                 {{form.id}}{{form.criterion}}{{form.applicable}}
-                <a class="small fancy" href="{% url factor_help 'criterion' form.instance.criterion.id %}" target="_blank">{{form.instance.criterion|capfirst}}</a>
+                <a class="small_choices fancy" href="{% url factor_help 'criterion' form.instance.criterion.id %}" target="_blank">{{form.instance.criterion|capfirst}}</a>
             </li>
         {% endfor %}
+	<hr />
         </ul>
 	</div>
     
