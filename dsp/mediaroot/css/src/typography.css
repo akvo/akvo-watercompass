@@ -240,6 +240,12 @@ p.small_choices, .small_choices p, .small_choices label, ul.small_choices, a.sma
     line-height:1.0em;
 }
 
+p.large_choices, .large_choices p, .large_choices label, ul.large_choices, a.large_choices {
+    font-size:0.9em;
+    line-height:1.0em;
+    margin-bottom:5px;
+    margin-top:5px;
+}
 
 p.tiny, .tiny p, .tiny label, ul.tiny, a.tiny {
     font-size:0.6875em;

@@ -7,6 +7,7 @@ from django.db import models
 from django.db.models.query import QuerySet
 from django.db.models.signals import post_save, post_delete
 from django.utils.translation import ugettext, ugettext_lazy as _
+from django import forms
 
 import itertools
 import logging
@@ -108,7 +109,23 @@ class Answer(models.Model):
         verbose_name = _(u'answer')
         verbose_name_plural = _(u'answers')
         
+class PDF_prefs(forms.Form):
+    incl_selected= forms.BooleanField(required=False,initial=True)
+    incl_short_expl=forms.BooleanField(required=False, initial=True)
+    incl_akvopedia_1=forms.BooleanField(required=False, initial=False)
+    incl_akvopedia_2=forms.BooleanField(required=False, initial=False)
+    incl_akvopedia_3=forms.BooleanField(required=False, initial=False)
+    incl_akvopedia_4=forms.BooleanField(required=False, initial=False)
+    incl_akvopedia_5=forms.BooleanField(required=False, initial=False)
+    incl_akvopedia_6=forms.BooleanField(required=False, initial=False)
+    
+    def __unicode__(self):
+        return self.name
 
+    class Meta:
+        verbose_name = _(u'PDF preferences')
+        verbose_name_plural = _(u'PDF preferences')
+        
 class TechGroup(models.Model):
     name        = models.CharField(_(u'name'), max_length=50)
     order       = models.IntegerField(_(u'order'),)
@@ -273,7 +290,6 @@ class Technology(models.Model):
         
         # this thech was not affected by the environmental factors
         return self.TECH_USE_YES
-        
        
     def usability(self, session):
         """

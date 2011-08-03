@@ -11,8 +11,9 @@ from django.template import RequestContext
 import logging
 from datetime import datetime
 
-from models import Factor, TechGroup, Technology, Relevancy, Answer, Criterion, TechChoice
+from models import Factor, TechGroup, Technology, Relevancy, Answer, Criterion, TechChoice, PDF_prefs
 from utils import pretty_name
+from pdf_utils import *
 
 # PROFILING  
 import hotshot
@@ -173,6 +174,7 @@ def factors(request, model=None, id=None):
         else:
             return HttpResponseRedirect(reverse('factors'))
     else:
+        #get answers. If they don't exist yet for this session, create them and make the False by default
         qs = get_or_create_answers(get_session(request))
         formset = AnswerFormSet(queryset=qs)
         form_list = [form for form in formset.forms]
@@ -235,6 +237,7 @@ def technologies(request, model=None, id=None):
     factor_list = []
     old_factor = ''
     
+    # the 'change' variable is used to detect when we need to display a new factor. The form list is just a list of all criteria.
     for form in formset.forms:
         new_factor = form.instance.criterion.factor
         factor_list.append(new_factor)
@@ -242,6 +245,7 @@ def technologies(request, model=None, id=None):
         form.fields['applicable'].label = pretty_name(str(form.instance.criterion))
         old_factor = new_factor
     
+    # create zipped list of forms, factors and change. Each form is one criterium.
     zipped_formlist = zip(form_list, factor_list, change_list)
     
     if model:
@@ -276,21 +280,61 @@ def technologies(request, model=None, id=None):
 def techs_selected(request, model=None, id=None):
 
     groups = TechGroup.objects.all()
-    group_techs = []
+
+    chosen_techs = Technology.objects.filter(tech_choices__session=get_session(request))    
+    chosen_in_group = []
+
     for group in groups:
+        found = False
         techs = Technology.objects.filter(group=group)
         for tech in techs:
-            tech.usable = tech.usability(get_session(request))
-       #     tech.available = tech.availability(get_session(request))
-        group_techs.append(techs)
-    # if we want to transpose the data:
-    #all_techs = map(None, *group_techs)
-    all_techs = zip(groups, group_techs)
+            if tech in chosen_techs:
+                chosen_in_group.append(tech)
+                found = True
+        if found == False:
+            chosen_in_group.append('')
+        
+    all_chosen_techs = zip(groups,chosen_in_group)
+    
+    if request.method == 'POST': # If the form has been submitted...
+        form = PDF_prefs(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            
+            incl_selected=form.cleaned_data['incl_selected']
+            incl_short_expl=form.cleaned_data['incl_short_expl']
+            
+            incl_akvopedia=[]
+            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_1'])
+            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_2'])
+            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_3'])
+            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_4'])
+            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_5'])
+            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_6'])
+            
+            Akvopedia_articles_URL=[]
+            for index,incl_akv in enumerate(incl_akvopedia):
+                if (incl_akv==True and chosen_in_group[index]!=''):
+                    if chosen_in_group[index].url!='':
+                        Akvopedia_articles_URL.append(chosen_in_group[index].url)
+                    
+            #create the PDF        
+            
+            create_PDF_selected_techs(all_chosen_techs)
+            
+            for article_url in Akvopedia_articles_URL:
+                create_PDF_akvopedia(article_url)
+            
+            
+            
+            return HttpResponseRedirect('/thanks/') # Redirect after POST
+    else:
+        form = PDF_prefs() # An unbound form
     
     return {
         'techgroups'    : groups,
-        'all_techs'     : all_techs,
+        'all_chosen_techs'    : all_chosen_techs,
         'session'       : request.session,
+        'form'          : form,
     }
 
 
