@@ -56,7 +56,13 @@ body {
 -------------------------------------------------------------- */
 
 /* Sets up basic grid floating and margin. */
-div.span-1, div.span-2, div.span-2a, div.span-3, div.span-4, div.span-5, div.span-6, div.span-7, div.span-8, div.span-9, div.span-10, div.span-11, div.span-12, div.span-13, div.span-14, div.span-15, div.span-16, div.span-17, div.span-18 {float:left;margin-right: 15px;}
+div.span-1, div.span-2,  div.span-3, div.span-4, div.span-5, div.span-6, div.span-7, div.span-8, div.span-9, div.span-10, div.span-11, div.span-12, div.span-13, div.span-14, div.span-15, div.span-16, div.span-17, div.span-18 {float:left;margin-right: 15px;}
+
+div.span-2a
+{
+  float:left;
+  margin-left:3px;
+}
 
 /* The last column in a row needs this class. */
 div.last { margin-right: 0; }
@@ -65,7 +71,7 @@ div.last { margin-right: 0; }
 .span-1a  { width: 20px; margin-right:0px;}
 .span-1  { width: 40px;}
 .span-2  { width: 95px;}
-.span-2a { width: 110px;}
+.span-2a { width: 120px;}
 .span-2b { width: 90px; float:left; margin-right:5px;}
 .span-3  { width: 150px;}
 .span-4  { width: 205px;}
@@ -84,6 +90,11 @@ div.last { margin-right: 0; }
 .span-17 { width: 920px;}
 .span-18, div.span-18 { width: 975px; margin: 0; }
 
+.withborder {
+  border-right-width:1px;
+  border-style:solid;
+  border-color:#888;
+}
 
 /* Add these to a column to append empty cols. */
 .append-1  { padding-right: 55px;}
