@@ -283,18 +283,35 @@ def techs_selected(request, model=None, id=None):
 
     chosen_techs = Technology.objects.filter(tech_choices__session=get_session(request))    
     chosen_in_group = []
+    relevance=[]
+    empty=[]
 
     for group in groups:
-        found = False
+        found_tech = False
+        found_relevance=False
         techs = Technology.objects.filter(group=group)
         for tech in techs:
             if tech in chosen_techs:
                 chosen_in_group.append(tech)
-                found = True
-        if found == False:
+                found_tech = True
+               
+                applicable = tech.applicable(get_session(request))
+              #  relevancy_objects = []
+                
+                if applicable == tech.TECH_USE_MAYBE:
+                    relevancy_objects = list(tech.maybe_relevant(get_session(request)))
+                    if len(relevancy_objects)!=0:
+                        #for object in relevancy_objects:
+                         #   logging.debug(object.note)
+                        relevance.append(relevancy_objects)
+                        found_relevance=True
+
+        if found_tech == False:
             chosen_in_group.append('')
+        if found_relevance == False:
+            relevance.append(empty)
         
-    all_chosen_techs = zip(groups,chosen_in_group)
+    all_chosen_techs = zip(groups,chosen_in_group,relevance)
     
     if request.method == 'POST': # If the form has been submitted...
         form = PDF_prefs(request.POST) # A form bound to the POST data
@@ -311,22 +328,52 @@ def techs_selected(request, model=None, id=None):
             incl_akvopedia.append(form.cleaned_data['incl_akvopedia_5'])
             incl_akvopedia.append(form.cleaned_data['incl_akvopedia_6'])
             
+            # create list of Akvopedia articles to be included
             Akvopedia_articles_URL=[]
             for index,incl_akv in enumerate(incl_akvopedia):
                 if (incl_akv==True and chosen_in_group[index]!=''):
                     if chosen_in_group[index].url!='':
                         Akvopedia_articles_URL.append(chosen_in_group[index].url)
-                    
-            #create the PDF        
             
-            create_PDF_selected_techs(all_chosen_techs)
+            # create list of factors and criteria
+            answers = get_or_create_answers(get_session(request))
+        
+            criterion_list=[]
+            applicable_list=[]
+            change_list = []
+            factor_list = []
+            old_factor = ''
+    
+            # the 'change' variable is used to detect when we need to display a new factor. The form list is just a list of all criteria.
+            for answer in answers:
+                criterion_list.append(answer.criterion)
+                applicable_list.append(answer.applicable)
+                new_factor = answer.criterion.factor
+                factor_list.append(new_factor)
+                change_list.append(new_factor != old_factor)
+                old_factor = new_factor
+        
+        
+            zipped_answerlist = zip(factor_list,change_list,criterion_list,applicable_list)
             
-            for article_url in Akvopedia_articles_URL:
-                create_PDF_akvopedia(article_url)
+            #logging.debug('criterion --------------------------------------')
+            #for factor, change, criterion, applicable in zipped_answerlist:
+             #   logging.debug('factor:%s, change %s, criterion:%s, applicable: %s' % (factor, change, criterion,applicable))
+        
+            #create the basic PDF        
+            create_PDF_selected_techs(all_chosen_techs, zipped_answerlist,incl_selected,incl_short_expl)
             
+            #for article_url in Akvopedia_articles_URL:
+                #create_PDF_akvopedia(article_url)
             
-            
-            return HttpResponseRedirect('/thanks/') # Redirect after POST
+            return {
+              'techgroups'    : groups,
+                'all_chosen_techs'    : all_chosen_techs,
+                'session'       : request.session,
+                'form'          : form,  
+            }        
+                
+                #HttpResponseRedirect(reverse('techs_selected_download')) # Redirect after POST
     else:
         form = PDF_prefs() # An unbound form
     
