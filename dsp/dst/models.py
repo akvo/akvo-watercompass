@@ -164,7 +164,7 @@ class Technology(models.Model):
     image       = models.CharField(_(u'image'), max_length=100)
     url         = models.URLField(blank=True, verify_exists = False, help_text=_('Enter the url to the corresponding Akvopedia entry, beginning with http://.'))
     linked_techs = models.ManyToManyField('self',blank=True, related_name='linked_tech',symmetrical=True)
-
+    order       =  models.IntegerField(null=True)
     
     def __unicode__(self):
         return self.name
