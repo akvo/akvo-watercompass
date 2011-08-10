@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^techs_selected/$', 'dst.views.techs_selected', name='techs_selected'),
     url(r'^technologies/(?P<id>\d+)/help/$', 'dst.views.technologies_help', name='technologies_help'),
     url(r'^choice/(?P<tech_id>\d+)/$', 'dst.views.tech_choice', name='tech_choice'),
+    url(r'^pdf/(?P<filename>[a-z0-9A-Z_\-]*\.pdf)$', 'dst.views.pdf'),
 
     url(r'^solution/$', 'dst.views.solution', name='solution'),
         

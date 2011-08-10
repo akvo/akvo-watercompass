@@ -10,6 +10,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 import logging
 from datetime import datetime
+from pyPdf import PdfFileWriter, PdfFileReader
 
 from models import Factor, TechGroup, Technology, Relevancy, Answer, Criterion, TechChoice, PDF_prefs
 from utils import pretty_name
@@ -281,6 +282,16 @@ def technologies(request, model=None, id=None):
         'help_item'         : help_item,
     }
 
+def pdf(request, filename):
+    logging.debug('------------------------path -----')
+    
+    fullpath = os.path.join(settings.PDF_PATH, filename)
+    logging.debug('------------------------path -----'+fullpath)
+    response = HttpResponse(file(fullpath).read())
+    response['Content-Type'] = 'application/pdf'
+    response['Content-disposition'] = 'attachment'
+    return response
+
 @render_to('dst/techs_selected.html')
 def techs_selected(request, model=None, id=None):
 
@@ -364,17 +375,54 @@ def techs_selected(request, model=None, id=None):
             # This will generate all akvopedia articles in pdf form from the wiki. Needs to be done only once.
             #initialize_Akvopedia_articles()
             
-            #create the basic PDF        
-            create_PDF_selected_techs(all_chosen_techs, zipped_answerlist,incl_selected,incl_short_expl)
+            #create the basic PDF
+            today=datetime.datetime.today()
+    
+            format_temp = "Akvo-DST-%a-%b-%d-%Y_%H-%M-%S.temp.pdf"
+            format_final= "Akvo-DST-%a-%b-%d-%Y_%H-%M-%S.pdf"
             
-            for article_url in Akvopedia_articles_URL:
-                #create_PDF_akvopedia(article_url)
+            s_name_temp=today.strftime(format_temp)
+            s_name_final=today.strftime(format_final)
+            
+            #first create first pages
+            pdf_path=create_PDF_selected_techs(all_chosen_techs, zipped_answerlist,incl_selected,incl_short_expl,s_name_temp)
+            
+            # append akvopedia articles if checked.
+            THIS_PATH=os.path.dirname(__file__)
+            (HOME,HERE)=os.path.split(THIS_PATH)
+            akvopedia_pdf_dir=HOME+'/mediaroot/akvopedia_pdf/'
+            output_dir=HOME+'/mediaroot/pdf_tmp/'
+               
+            output = PdfFileWriter()
+            outputStream = file(output_dir+s_name_final, "wb")
+            
+            input = PdfFileReader(file(output_dir+s_name_temp, "rb"))
+            num_pages=input.getNumPages()
+            for i in range(num_pages):
+                output.addPage(input.getPage(i))
+            
+            for article_url in Akvopedia_articles_URL:    
+                # create pdf path
+                URL_list=article_url.split("/")
+                article_name=URL_list[-1]
+                full_path=akvopedia_pdf_dir+article_name+'.pdf'
+                
+                # append article
+                input = PdfFileReader(file(full_path, "rb"))
+                num_pages=input.getNumPages()
+                for i in range(num_pages):
+                    output.addPage(input.getPage(i))
+            
+            output.write(outputStream)
+            outputStream.close()       
+            
             
             return {
               'techgroups'    : groups,
                 'all_chosen_techs'    : all_chosen_techs,
                 'session'       : request.session,
-                'form'          : form,  
+                'form'          : form,
+                'pdf_file'      :'/pdf/'+s_name_final,
             }        
                 
                 #HttpResponseRedirect(reverse('techs_selected_download')) # Redirect after POST
@@ -386,6 +434,7 @@ def techs_selected(request, model=None, id=None):
         'all_chosen_techs'    : all_chosen_techs,
         'session'       : request.session,
         'form'          : form,
+        'pdf_file'      :'',
     }
 
 

@@ -12,6 +12,7 @@ logging.basicConfig(level=logging.DEBUG, filename='debug.log',
 # end MTW
 
 BASE_PATH = os.path.dirname(__file__)
+PDF_PATH=BASE_PATH+'/mediaroot/pdf_tmp/'
 
 PROFILE_LOG_BASE=BASE_PATH+'/profile/'
 

@@ -83,6 +83,13 @@
 	<p style="display:block;color:#555;margin-bottom:5px;">You can make a PDF document of this system, including, if you like, the Akvopedia articles of each technology (this might take some time). <br/><br/>
 
 Please indicate your preferences and press "Download PDF"</p>
+	
+ {%ifnotequal pdf_file ''%}
+     <p style="font-weight:bold;display:block;color:#555;margin-bottom:5px;"> Downloading your PDF</p>
+    <p>Your PDF is ready. Please click on the button below to download it.</p>
+    <a href="{{pdf_file}}" ><img src="{{ MEDIA_URL}}img/extra/pdf-icon-download.png"></a>
+	
+{% endifnotequal %}	    
     </div>
     <div class="span-10 last">
 	<p style="font-weight:bold;display:block;color:#555;margin-bottom:15px;"> Include this in my PDF:</p>
@@ -98,9 +105,6 @@ Please indicate your preferences and press "Download PDF"</p>
 	    <div style="width:100px;float:left;text-align:right;"><p style="display:block;color:#555;margin-bottom:5px;margin-top:5px;">Akvopedia articles</p>
 	    </div>
 	    <div style="width:440px;margin-bottom:20px;padding:0 0 0 10px;float:left;margin-left:30px;border-left-width:1px;border-style:solid;border-color:#888;">
-		
-		 
-		
 		    
 		{% for techgroup,chosen_in_group in all_chosen_techs %}
 		
@@ -116,20 +120,20 @@ Please indicate your preferences and press "Download PDF"</p>
 			    {{chosen_in_group}}</p>
 		    {% endifnotequal %}
 		
-	 
 		{% endfor %}
 		    
-		
-		
-	    
 	    </div>
 	    <div style="width:100px;float:left;text-align:right;"><p style="display:block;color:#555;margin-bottom:5px;">&nbsp;</p>
 	    </div>
-	    <div style="width:440px;margin-bottom:20px;padding:0 0 0 10px;float:left;margin-left:30px;">
-		<a href="javascript:document.PDf_preference.submit();" 
-				onclick="this.blur();" style="float:left;"><img src="{{ MEDIA_URL}}img/extra/pdf-icon.png"></a>
-	    </div>
 	    
+	    <div style="width:420px;margin-bottom:20px;padding:0 0 0 10px;float:left;margin-left:30px;">
+		<a  style="margin-right:10px;" href="javascript:document.PDf_preference.submit();" 
+				onclick="this.blur();" style="float:left;"><img src="{{ MEDIA_URL}}img/extra/pdf-icon.png"></a>
+	    
+	   </div>
+	    
+	   
+	     
 	</div>
     </div>
 </div>    

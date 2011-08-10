@@ -39,9 +39,13 @@ def create_PDF_akvopedia(URL):
     
 
 
-def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,incl_short_expl):
+def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,incl_short_expl,name):
     Intro = """Results of the Sanitation Decision Support Tool. The tool was created by WASTE (www.waste.nl) and the Akvo Foundation (www.akvo.org), in order to assist people in choosing sanitation technologies. We hope this tool proves useful, any comments can be send to m.t.westra@akvo.org."""
-    tmp_dir=os.path.dirname(__file__)+'/tmp_pdf/'   
+    
+    THIS_PATH=os.path.dirname(__file__)
+    (HOME,HERE)=os.path.split(THIS_PATH)
+    tmp_dir=HOME+'/mediaroot/pdf_tmp/'
+       
     PAGE_HEIGHT=defaultPageSize[1]
     PAGE_WIDTH=defaultPageSize[0]
     
@@ -203,7 +207,7 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
     
     def go():
         Elements.insert(0,Spacer(0,1*cm))
-        doc = SimpleDocTemplate(tmp_dir+'page1.pdf')
+        doc = SimpleDocTemplate(tmp_dir+name)
         doc.build(Elements,onFirstPage=myFirstPage, onLaterPages=myLaterPages)
         
     Elements = []
@@ -285,4 +289,4 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
                 Elements.append(Spacer(0,0.3*cm))
     go()
     
-    return 
+    return tmp_dir+name
