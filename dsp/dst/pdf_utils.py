@@ -30,9 +30,13 @@ def create_PDF_akvopedia(URL):
     args.append('--imagesize=300')
     
     args.append(article_name)
+    #logging.debug('will attmpt: %s' % (article_name))
     
     p = subprocess.Popen(args)
+    #give it some time
+    time.sleep(15)
     return p
+    
 
 
 def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,incl_short_expl):

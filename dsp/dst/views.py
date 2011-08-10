@@ -157,6 +157,11 @@ def init_session(session):
         if button not in session.keys():
             session[button] = False
         
+def initialize_Akvopedia_articles():
+    techs = Technology.objects.all()
+    for tech in techs:
+        if tech.url!='':
+            create_PDF_akvopedia(tech.url)
     
 @render_to('dst/factors.html')
 def factors(request, model=None, id=None):
@@ -258,7 +263,7 @@ def technologies(request, model=None, id=None):
     groups = TechGroup.objects.all()
     group_techs = []
     for group in groups:
-        techs = Technology.objects.filter(group=group)
+        techs = Technology.objects.filter(group=group).order_by('order')
         for tech in techs:
             tech.usable = tech.usability(get_session(request))
        #     tech.available = tech.availability(get_session(request))
@@ -355,15 +360,14 @@ def techs_selected(request, model=None, id=None):
         
         
             zipped_answerlist = zip(factor_list,change_list,criterion_list,applicable_list)
-            
-            #logging.debug('criterion --------------------------------------')
-            #for factor, change, criterion, applicable in zipped_answerlist:
-             #   logging.debug('factor:%s, change %s, criterion:%s, applicable: %s' % (factor, change, criterion,applicable))
         
+            # This will generate all akvopedia articles in pdf form from the wiki. Needs to be done only once.
+            #initialize_Akvopedia_articles()
+            
             #create the basic PDF        
             create_PDF_selected_techs(all_chosen_techs, zipped_answerlist,incl_selected,incl_short_expl)
             
-            #for article_url in Akvopedia_articles_URL:
+            for article_url in Akvopedia_articles_URL:
                 #create_PDF_akvopedia(article_url)
             
             return {
