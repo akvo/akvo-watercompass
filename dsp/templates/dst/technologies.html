@@ -26,8 +26,8 @@
 {% block content %}
 
 <div class="span-6 last">
-<p class="small" style="margin-top:15px;margin-bottom:0"> Continue with selected technologies <a class="blue_w awesome" style="margin-right:10px; float:right;"
-				href="{% url techs_selected %}">{% trans 'continue &rarr;' %}</a>
+<p class="small" style="margin-top:15px;margin-bottom:0;"> <a class="blue_w awesome" style="margin-right:10px; float:right;"
+				href="{% url techs_selected %}">{% trans 'Continue with selected technologies &rarr;' %}</a>
 </p>
 </div>
 <!-- form stuff begin -->
@@ -38,8 +38,12 @@
 <div class="span-18">
 	<div class="span-4 first">
 	    <div style="padding:0 10px 0 20px;">
+		<p style="text-align:left;">
+			<a class="blue_w awesome" style="margin-right:10px; margin-bottom:5px; "
+				href="{% url index %}">&larr;{% trans 'Back to introduction' %}</a>
+		</p>
 		<p class="small"> Use the options below to describe your situation. Click on the items for more help. </p>
-		<p style="text-align:center;">
+		<p style="text-align:left;">
 			<a class="blue_w awesome" style="margin-right:10px; margin-bottom:5px; float:left;"
 				href="{% url reset_all %}">{% trans 'Reset options' %}</a>
 		</p>
@@ -81,7 +85,7 @@
 	
 	<!-- start selected technologies -->
 	<div class="span-14 last" style="margin-bottom:10px; background:#ddd;">
-	   <p style="font-weight:bold;display:block;color:#888;margin-top:5px;margin-left:5px;margin-bottom:5px;">Sanitation system with selected technologies</p>
+	   <p style="font-weight:bold;display:block;color:#888;margin-top:5px;margin-left:5px;margin-bottom:5px;">Selected technologies</p>
 	
 	<div class="span-14 last" style="margin-bottom:0; background:#ddd;">
 	    {% for techgroup, techs in all_techs %}
