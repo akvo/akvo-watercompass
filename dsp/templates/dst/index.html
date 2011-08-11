@@ -1,35 +1,127 @@
 {% extends "dst/base.html" %}
-
+{% load i18n  %}
 {% block content %}
-<div class="push-1 span-17 first last">
-	<h2>Decision Support Tools (at Akvopedia)</h2>
+<div class="span-3 append-2 last">
+<p class="small" style="margin-top:15px;margin-bottom:0"> <a class="blue_w awesome" style="margin-right:10px; float:right;"
+				href="{% url technologies %}">{% trans 'To the tool &rarr;' %}</a>
+</p>
 </div>
-<div class="push-1 span-8 first">
+
+<div class="push-1 span-11 first">
 	<div class="frame" style="background-color:#EEF8FA">
 		<div class="space15">
-			<p>
-				The <a href="{% url technologies %}">Sanitation Decision Support Tool</a> helps you explore which sanitation technology or combination of technologies is right for you. The tool helps to narrow down options based on the answers of questions on your situation you provide.
-			</p>
+			<h3>Introduction</h3>
+			<p>Investing in adequate sanitation and hygiene is one of the most effective ways to improve the health and living conditions of people, especially in poor urban and peri-urban areas. However, one of the problems is the limited knowledge and awareness about sustainable and affordable options. This <a href="{% url technologies %}">Sanitation Decision Support Tool</a> helps you explore sanitation systems, based on your own situation. </p>
 		</div>
 	</div>
 </div>
-<div class="span-8 push-1 last">
-	&nbsp;
-</div>
 
-
-<div class="push-1 span-8 first">
+<div class="push-1 span-11 first">
 	<div class="frame" style="background-color:#EEF8FA">
 		<div class="space15">
-			<p>
-				The <a href="{% url factors %}">Water Purification Decision Support Tool</a> helps you navigate the many options that exist for water purification.
-			</p>
+			<h3>How to use the tool</h3>
+			<p><strong>Applying options</strong><br/>
+The first step is to select the options that best describe your situation in the column on the left. You can click on the words for extra information. After you have made your selection, click 'Apply options'. The technologies are all given a colour, depending on their suitability. Green means: suitable, orange means: might be suitable, depending on conditions, and red means: not suitable.</p>
+
+<p>To find out why a technology was given a certain color, or to find out more about a technology, simply click on the picture or the name. This will open a help screen, with a short description, a link to the Akvopedia article, and the options that were relevant to this technology. You can experiment by choosing different options, and seeing the effect this has on the suitability.</p>
+
+<p><strong>Making a selection</strong><br/>
+If you click on the 'Select' button underneath a suitable (green or orange) technology, the technology will appear in the top row. At the same time, technologies that are incompatible with this technology will be greyed out, and can no longer be selected. For example: a <a href="http://www.akvo.org/wiki/index.php/Cistern_Flush_Toilet">cistern flush toilet</a> is not compatible with a <a href="http://www.akvo.org/wiki/index.php/Single_Pit">pit latrine</a>, because far too much water is used for the pit to absorb. By selecting more technologies, you can find compatible technologies that together form (part of) a sanitation system.</p>
+
+<p><strong>Documenting your results</strong><br/>
+Once you are happy with your selection, click 'Continue with selected technologies' (top right) to go to the next page. There, you can select which information you would like to include in your document. Depending on your choice, the document can include a list of the selected technologies, a short explanation of each technology, and the full Akvopedia articles on each technology. Clicking on 'Create PDF' will make create the PDF and prompt you for a location on your computer to store it.</p>
 		</div>
 	</div>
 </div>
-<div class="span-8 push-1 last">
+
+<div class="push-1 span-4 first">
+	<p style="margin-bottom:4px;">Choosing options </p>
+	<img style="margin-left:20px;" src="{{MEDIA_URL}}img/extra/options.png" alt="selecting options" />
+	<p style="margin-bottom:4px; margin-top:10px;">Display of results </p>
+	<img style="margin-left:20px;" src="{{MEDIA_URL}}img/extra/techs.png" alt="technologies" />
+	<p style="margin-bottom:4px;margin-top:10px;">Making a selection </p>
+	<img style="margin-left:20px;" src="{{MEDIA_URL}}img/extra/selection.png" alt="selecting technologies" />
+	<p style="margin-bottom:4px;margin-top:10px;">Creating a pdf</p>
+	<img style="margin-left:20px;" src="{{MEDIA_URL}}img/extra/pdf.png" alt="creating pdf" />
+</div>
+
+<div class="push-1 span-11 first">
+	<div class="frame" style="background-color:#EEF8FA">
+		<div class="space15">
+			<h3>Limitations of the tool</h3>
+			
+<p>Sanitation is a process consisting of a number of steps, in which the waste travels from the toilet to the point of use or ultimate disposal. A complete sanitation system consists of a chain of technologies, where different waste products go from one technology to another.</p>
+
+<p>The current limitation of this tool is that it only presents a single chain of technologies, where in fact a complete sanitation system has to deal with all the different waste streams. For example: if you have a <a href="http://www.akvo.org/wiki/index.php/Urine_Diverting_Dry_Toilet" title="Urine Diverting Dry Toilet">Urine Diversion Dry Toilet</a>, you have feaces and urine as two separate waste streams. The faeces could be taken away through <a href="http://www.akvo.org/wiki/index.php/Human-Powered_Emptying_and_Transport" title="Human-Powered Emptying and Transport">Human-Powered Emptying and Transport</a> to be processed through <a href="http://www.akvo.org/wiki/index.php/Co-composting" title="Co-composting">Co-composting</a> and then finally be used through <a href="http://www.akvo.org/wiki/index.php/Application_of_Compost_-_Eco-Humus" title="Application of Compost - Eco-Humus">Application of Compost - Eco-Humus</a>. In parallel, the urine could be used for <a href="http://www.akvo.org/wiki/index.php/Application_of_Urine" title="Application of Urine">Application of Urine</a>. When using the tool, this limitation should be kept in mind.</p>
+
+<p><strong>Recommended reading</strong><br/>
+To learn more about putting together complete sanitation systems that deal with all the waste streams, we higly recommend reading the "<a href="http://www.eawag.ch/forschung/sandec/publikationen/compendium_e/index_EN">Compendium of Sanitation Systems and Technologies</a>" (published by <a href="http://www.eawag.ch/forschung/sandec/index_EN">Sandec / Eawag</a>). The publication is available in English, French, and Spanish. The Compendium contains an overview of different sanitation systems, and has details on all the technologies. It has formed the basis for the material on this Decision Support Tool.</p>
+			
+			
+			
+		</div>
+	</div>
+</div>
+
+<div class="push-1 span-4 first">
+	<p style="margin-bottom:4px;">Recommended reading </p>
+	<a href="http://www.eawag.ch/forschung/sandec/publikationen/compendium_e/index_EN"><img style="margin-left:20px;" src="{{MEDIA_URL}}img/extra/compendium.png" alt="selecting options" /></a>
+</div>
+
+
+<div class="push-1 span-11 first">
+	<div class="frame" style="background-color:#EEF8FA">
+		<div class="space15">
+			<h3>Origin of the tool</h3>
+			<p>This tool was produced by <a href="http://www.akvo.org">Akvo</a> on the basis of a paper version of the tool developed by <a href="http://www.waste.nl/">WASTE</a>, an organisations which advises on urban environment and development. Their programmes and projects have a focus on bottom-up development in relation to recycling, solid waste management, ecological sanitation and knowledge sharing.</p>
+
+<p>The information of the individual technologies originates from the excellent <a href="http://www.eawag.ch/forschung/sandec/publikationen/compendium_e/index_EN">Compendium of Sanitation Systems and Technologies</a>" mentioned above.</p>
+			
+<p>We would like to add additional functionality to this tool, such as the capability to construct complete systems, and saving and retrieving of results. If we are able to add these functions will depend on further funding. </p>
+			
+<p><strong>Comments and suggestions</strong></br>
+We would like to hear from you! Comments and suggestions about the tool can be send to m.t.westra<img src="{{MEDIA_URL}}img/extra/at.png"/>akvo.org</p>
+		</div>
+	</div>
+</div>
+<div class="push-1 span-4 last">	
+			<p style="margin-bottom:4px;">Realised by: </p>
+			<a href="http://www.akvo.org">
+				<img src="{{MEDIA_URL}}img/logos/logo_akvo.png" alt="Akvo" />
+			</a>
+			<a href="http://www.waste.nl/">
+				<img src="{{MEDIA_URL}}img/logos/logo_waste.jpg" alt="Waste" />
+			</a>
+</div>	
+
+<div class="push-1 span-9 last">
 	&nbsp;
 </div>
+<div style="clear:both;">
+		
+<div class="push-1 span-5 last">			
+			<h4>{% trans 'As a part of the ROSA project' %}:</h4>
+			<a href="http://rosa.boku.ac.at/">
+				<img src="{{MEDIA_URL}}img/logos/logo_rosa.png" width="150" height="90" alt="Rosa" />
+			</a>
+</div>			
+<div class="push-1 span-5 last">			
+			<h4>{% trans 'Financial support by' %}:</h4>
+			<a href="http://www.minbuza.nl/">
+				<img src="{{MEDIA_URL}}img/logos/logo_rijksoverheid.gif" alt="Rijksoverheid" />
+			</a>
+			<a href="http://ec.europa.eu/research/fp6/">
+				<img src="{{MEDIA_URL}}img/logos/logo_fp6.png" alt="EU 6th Freamework programme" />
+			</a>
+</div>			
+	
+		{% comment %}
+		<h2>Help</h2>
+		- <a href="{% url help %}" class="fancy">Why use the tool?</a><br><br />
+		- <a href="{% url demo %}" class="fancy">Demonstration</a>
+		{% endcomment %}
+	</div>
+
 
 
 {% endblock content %}
