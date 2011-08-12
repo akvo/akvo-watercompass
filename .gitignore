@@ -4,3 +4,7 @@
 *.kpf
 dsp/data
 dsp/settings_local.py
+dsp/mediaroot/pdf_tmp
+dsp/debug.log
+
+dsp/templates/dst/debug.log

@@ -21,10 +21,170 @@
 #page_intro_text { display:none;}
 {% endif %}
 
-
 {% endblock inline_styles %}
 
 {% block content %}
+
+<div class="span-6 last">
+<p class="small" style="margin-top:15px;margin-bottom:0;"> <a class="blue_w awesome" style="margin-right:10px; float:right;"
+				href="{% url techs_selected %}">{% trans 'Continue with selected technologies &rarr;' %}</a>
+</p>
+</div>
+<!-- form stuff begin -->
+
+<form name="factorform" method="post">
+{{ formset.management_form }}    
+
+<div class="span-18">
+	<div class="span-4 first">
+	    <div style="padding:0 10px 0 20px;">
+		<p style="text-align:left;">
+			<a class="blue_w awesome" style="margin-right:10px; margin-bottom:5px; "
+				href="{% url index %}">&larr;{% trans 'Back to introduction' %}</a>
+		</p>
+		<p class="small"> Use the options below to describe your situation. Click on the items for more help. </p>
+		<p style="text-align:left;">
+			<a class="blue_w awesome" style="margin-right:10px; margin-bottom:5px; float:left;"
+				href="{% url reset_all %}">{% trans 'Reset options' %}</a>
+		</p>
+	    </div>
+	<!-- create left sidebar with questions -->
+	    <div style="padding:0 10px 0 20px;">
+		{% for form, factor, change in zipped_formlist %}
+		{% if change %}
+		    {% if not forloop.first %}
+		    </ul>
+                {% endif %}
+		    <hr style="margin-bottom:0.5em;"/>
+		    <h5><a href="{% url factor_help 'factor' factor.id %}" class="fancy">{{factor.factor|capfirst}}</a></h5>
+		    <ul style="list-style-type:none;">
+		{% endif %}
+
+		    <li>
+		   {{form.id}}{{form.criterion}}{{form.applicable}}
+		    <a class="small_choices fancy" href="{% url factor_help 'criterion' form.instance.criterion.id %}" target="_blank">{{form.instance.criterion|capfirst}}</a>
+		</li>
+		{% endfor %}
+		<hr />
+		</ul>
+	    </div>
+	</div>
+
+<!--	{% if help_item %}
+	    <h3>Item info</h3>
+	    <p style="font-weight:bold">{{help_item.info_heading}}</p>
+	    <p>{{help_item.info_text}}</p>
+	{% endif %} -->
+
+<!--  </div>
+</form> -->
+
+<!-- end of form stuff-->
+<!-- start of main column -->
+    <div class="span-14 last">
+	
+	<!-- start selected technologies -->
+	<div class="span-14 last" style="margin-bottom:10px; background:#ddd;">
+	   <p style="font-weight:bold;display:block;color:#888;margin-top:5px;margin-left:5px;margin-bottom:5px;">Selected technologies</p>
+	
+	<div class="span-14 last" style="margin-bottom:0; background:#ddd;">
+	    {% for techgroup, techs in all_techs %}
+		<div class="span-2b {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center;">	
+		    <div class="tech_top" style="background-image: url('{{ MEDIA_URL}}img/extra/please_select.gif'); background-repeat: no-repeat; background-position: 50% 50%; ">
+		    {% for tech in techs %}
+			{% ifequal tech.usable 'chosen'%}
+			<div style="background:#fff;">
+			       <div>	
+				    <a class="fancy" href="{% url technologies_help tech.id %}" title="{{tech}}">
+				    <div style="margin-bottom:5px;">
+						<img src="{{ MEDIA_URL}}small/{{ tech.image }}""/>		
+				    </div>
+				    </a>
+				    <p class="tiny" style="margin-top:5px; display:block; height:35px; overflow:hidden; margin-bottom:5px;">
+				        <a class="fancy" href="{% url technologies_help tech.id %}" title="{{tech.id}}">{{ tech|capfirst|smart_truncate:25 }}</a>
+				    </p>	                    
+				</div>
+			    </div>
+			       <div style="margin-top:0px;">
+				    <a class="small" style="color:#666;" href="{% url tech_choice tech.id %}"> <img src="{{ MEDIA_URL}}img/extra/minus.gif">   {% trans 'remove' %}</a>
+			       </div>
+			{% endifequal %}
+		    {% endfor %}
+		    </div>
+		</div>
+		  {% if not forloop.last %}
+		    <div style="margin-top:30px;margin-left:12px;float:left;">
+			<img src="{{ MEDIA_URL}}img/extra/arrow.gif"> 
+		    </div>
+		    {% endif %}
+	    {% endfor %}
+	</div>
+    </div>	
+	<!-- end selected technologies -->	
+	
+	
+<!-- start buttons -->
+	<div class="span-14 last" style="margin-bottom:5px; height:25px; background:#fff;">
+	    
+	    <a class="blue_w awesome" href="javascript:document.factorform.submit();" 
+				onclick="this.blur();" style="float:left;">{% trans 'Apply options &rarr;' %}</a>
+
+	    <a id="toggle_maybe" class="maybe awesome" style="margin-right:5px;margin-left:5px;float:right">
+			{% if session.maybe_ishidden %}{% trans 'Show' %}{% else %}{% trans 'Hide' %}{% endif %} {% trans 'maybe' %}
+		</a>
+	    <a id="toggle_no" class="no awesome" style="margin-right:5px;margin-left:5px;float:right">
+			{% if session.no_ishidden %}{% trans 'Show' %}{% else %}{% trans 'Hide' %}{% endif %} {% trans 'unsuitable' %}
+		</a>
+	     <a id="toggle_hide" class="hide awesome" style="margin-right:5px;margin-left:5px;float:right;">
+			{% if session.hide_ishidden %}{% trans 'Show' %}{% else %}{% trans 'Hide' %}{% endif %} {% trans 'excluded' %}
+		</a>
+	</div>
+	<!-- start technology grid-->
+	<div class="span-14 last" style="margin-bottom:0; background:#ddd;">
+	    {% for techgroup, techs in all_techs %}
+	    <div class="span-2a  {% if forloop.first %}first{% endif %} {% if not forloop.last %}withborder{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center;">
+		    	<div style="margin-bottom:30px; ">
+			<p style="font-weight:bold;display:block;height:45px;margin-top:5px; color:#222">{{ techgroup|capfirst}}</p>				
+		    	</div>
+		{% for tech in techs %}
+		<div class="tech tech_{{tech.usable}}">
+		    <div class="back_{{tech.usable}}">	
+					<a class="fancy" href="{% url technologies_help tech.id %}" title="{{tech}}">
+		        <div class="back_{{tech.usable}}_img" style="margin-bottom:5px;">
+						<img src="{{ MEDIA_URL}}{{ tech.image }}" />		
+		        </div>
+		    			</a>
+		    			<p class="small" style="margin-top:5px; display:block; height:35px; overflow:hidden; margin-bottom:5px;">
+		    			<a class="fancy" href="{% url technologies_help tech.id %}" title="{{tech.id}}">{{ tech|capfirst|smart_truncate:25 }}</a>
+		    			</p>
+		    			
+		    			
+		    			{% ifequal tech.usable 'chosen'  %}
+		    				<a class="white awesome small" href="{% url tech_choice tech.id %}">{% trans 'Deselect' %}</a>
+		    			{% else %}
+		    				{% ifnotequal tech.usable 'no' %}
+		    					{% ifnotequal tech.usable 'hide' %}
+		    						<a class="white awesome small" href="{% url tech_choice tech.id %}">{% trans 'Select' %}</a>
+		    					{% endifnotequal %}
+		    				{% endifnotequal %}
+		    			{% endifequal %}
+		    			                    
+		        </div>
+		    </div>
+	      {% endfor %}
+	 </div>
+	    {% endfor %}
+
+	</div>
+    </div>
+
+</div>
+</form>
+<!-- einde form + tech blok -->
+
+<div class="clear"></div>
+<hr style="margin-top:20px" />
+
 
 <div id="page_intro" class="push-1 span-16 append-1 first last">
 	<div class="frame" style="background-color:#EEF8FA">
@@ -43,70 +203,8 @@
 			<a class="small" id="toggle_page_intro">{% if session.tech_help_ishidden %}{% trans 'Show help' %}{%else%}{% trans 'Hide help' %}{% endif %}</a>
 		</div>
 	</div>
-</div>
-	
-<div class="span-18">
-	<div class="push-1 span-3 first">
-		<a class="aqua awesome" style="margin-right:10px; float:left;" href="{% url factors %}">{% trans '&larr; Back' %}</a>	
-	</div>
-	<div class="span-10" style="text-align:center;">
-		{#<a class="grey awesome" style="margin-right:5px;margin-left:5px;" href="{% url reset_techs %}">{% trans 'Deselect all' %}</a>#}
-		<a id="toggle_yes" class="ok awesome" style="margin-right:5px;margin-left:5px;">
-			{% if session.yes_ishidden %}{% trans 'Show' %}{% else %}{% trans 'Hide' %}{% endif %} {% trans 'applicable' %}
-		</a>
-		<a id="toggle_maybe" class="maybe awesome" style="margin-right:5px;margin-left:5px;">
-			{% if session.maybe_ishidden %}{% trans 'Show' %}{% else %}{% trans 'Hide' %}{% endif %} {% trans 'maybe' %}
-		</a>
-		<a id="toggle_no" class="no awesome" style="margin-right:5px;margin-left:5px;">
-			{% if session.no_ishidden %}{% trans 'Show' %}{% else %}{% trans 'Hide' %}{% endif %} {% trans 'unsuitable' %}
-		</a>		
-		<a id="toggle_hide" class="hide awesome" style="margin-right:5px;margin-left:5px;">
-			{% if session.hide_ishidden %}{% trans 'Show' %}{% else %}{% trans 'Hide' %}{% endif %} {% trans 'excluded' %}
-		</a>
-	</div>
-	<div class="span-3 append-1 last">
-		<a class="aqua awesome" href="{% url solution %}" onclick="this.blur();" style="margin-left:10px; float:right;">{% trans 'Continue &rarr;' %}</a>
-	</div>
-</div>
-<hr />
+</div>	
 
-<div class="span-18 first last" style="margin-bottom:0;">
-    {% for techgroup, techs in all_techs %}
-        <div class="span-3 {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center;">
-			<div style="border-bottom:1px solid #F4F4F4; margin-bottom:40px; ">
-            	<p style="font-weight:bold;display:block;height:40px; color:#888">{{ techgroup|capfirst}}</p>				
-			</div>
-        {% for tech in techs %}
-            <div class="tech tech_{{tech.usable}}">
-                <div class="back_{{tech.usable}}">
-					<p class="small" style="margin-top:5px; display:block; height:35px; overflow:hidden; margin-bottom:5px;">
-						<a class="fancy" href="{% url technologies_help tech.id %}" title="{{tech.id}}">{{ tech|capfirst|smart_truncate:25 }}</a>
-					</p>
-					<a class="fancy" href="{% url technologies_help tech.id %}" title="{{tech}}">
-                    <div class="back_{{tech.usable}}_img" style="margin-bottom:15px;">
-						<img src="{{ MEDIA_URL}}{{ tech.image }}" />
-                    </div>
-					</a>
-					{% ifequal tech.usable 'chosen'  %}
-						<a class="aqua awesome small" href="{% url tech_choice tech.id %}">{% trans 'Deselect' %}</a>
-					{% else %}
-						{% ifnotequal tech.usable 'no' %}
-							{% ifnotequal tech.usable 'hide' %}
-								<a class="aqua awesome small" href="{% url tech_choice tech.id %}">{% trans 'Select' %}</a>
-							{% endifnotequal %}
-						{% endifnotequal %}
-					{% endifequal %}
-					                    
-                </div>
-            </div>
-        {% endfor %}
-        </div>
-    {% endfor %}
-
-</div>
-
-<div class="clear"></div>
-<hr style="margin-top:20px" />
 
 <div class="span-18">
 	<div class="push-1 span-3 first">

@@ -6,28 +6,59 @@
 {% block panel_content %}
 
 {% if technology.url %}
-	<p>
-    	Akvopedia {% trans 'article' %}: <a href="{{technology.url}}" target="_blank">{{technology}}</a>
-	</p>
+	<div class="span-7 first">
+		<div class="span-2 first" style="float:left;">
+			<div class="back_{{tech.usable}}_img" style="margin-bottom:5px;">
+						<img src="{{ MEDIA_URL}}{{ technology.image }}" />		
+		        </div>
+		</div>
+		<div class="span-4 " style="float:left;">
+			<p>Visit the <a href="{{technology.url}}" target="_blank">Akvopedia article on {{technology}} &rarr;</a>
+		</div>
+	</div>
+	<div style="clear:both;"></div>
 {% endif %}
-<p>{{ technology.description }}</p>
+<div>
+	<p>{{ technology.description }}</p>
+</div>
 
+<h4>Relevant options</h4>
 {% if relevancy_objects %}
+	
+	<p>{% trans 'The following options you have chosen are relevant for this technology:' %}</p>	
 	{% for object in relevancy_objects  %}
-        {% if object.note %}
-            <h4>{{ object }}</h4>
-            <p>
-                Factor: {{ object }}<br />
-                Criterion: {{ object.show_criterion }}<br />
-                Applicability: {{ object.get_applicability_display }}<br />
-                Note: {{ object.note.note }}<br />
-            </p>
-        {% endif %}
+	        {% if object.note %}
+	           <div class="span-13 first">
+			<div class="prepend-1 span-1 first" style="float:left;">
+				<p style="color:#2B80AF; font-size:2em; margin:10px 10px 10px 10px;">{{forloop.counter}}</p>
+			</div>
+			<div class="span-10" style="float:left;">
+				<p>
+		                At option <strong>{{ object }}</strong> you have selected <strong>{{ object.show_criterion }}</strong>.<br />
+	                
+				{%ifequal object.get_applicability_display 'No'%}
+					This means that in your situation, {{ technology}} is probably not a suitable technology, because:
+					<strong>{{ object.note.note }}</strong><br/>
+				{% else %}
+					{%ifequal object.get_applicability_display 'Maybe'%}
+						This means that in your situation, {{technology}} might be a suitable technology. This depends on:<br/>
+						<strong>{{ object.note.note }}</strong><br/>
+					{%endifequal%}
+				{%endifequal%}
+		            </p>
+			</div>
+		</div>
+		   
+		    
+	        {% endif %}
 	{% endfor %}
-{% else %}
-	<p>{% trans 'There were no environmental factor notes for ' %} {{ technology }}.</p>
-{% endif %}
 
+{% else %}
+	<p>{% trans 'None of the options were relevant for ' %} {{ technology }}.</p>
+
+{% endif %}
+<div style="clear:both;"></div>
+<!--
 {% if settings.DEBUG %}
     <h5>DEBUG info; Linked techs:</h5>
     <p><strong>Input</strong><br/>
@@ -36,7 +67,7 @@
     <p><strong>Output</strong><br/>
         {{technology.display_output|safe}}
    </p>
-{% endif %}
+{% endif %} -->
 
 {% endblock panel_content %}
 

@@ -4,6 +4,7 @@ _dir = dirname(__file__)
 
 ADMINS = (
     ('Gabriel von Heijne', 'gabriel@akvo.org'),
+    ('Mark Tiele Westra', 'm.t.westra@akvo.org'),
 )
 
 # Absolute path to the directory that holds media.

@@ -18,4 +18,5 @@ records = [
 [13, u'technology group', u'dst', u'techgroup']
 [14, u'note', u'dst', u'note']
 [15, u'criterion', u'dst', u'criterion']
+[16, u'technology choice', u'dst', u'techchoice']
 ]
