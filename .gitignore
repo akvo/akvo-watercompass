@@ -3,7 +3,12 @@
 *.log
 *.py[co]
 *.kpf
-dsp/data
+dsp/data/
 dsp/settings_local.py
 dsp/mediaroot/admin
 dsp/mediaroot/pdf_tmp
+dsp/datadir/
+dsp/mediaroot/akvopedia_pdf/
+dsp/mediaroot/small/
+dsp/mediaroot/techs_white/
+dsp/mediaroot/technologies/
