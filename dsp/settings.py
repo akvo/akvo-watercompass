@@ -6,12 +6,12 @@ from os.path import dirname, join
 _dir = dirname(__file__)
 # MTW added logging
 import logging
-logging.basicConfig(level=logging.DEBUG, filename='debug.log',
+BASE_PATH = os.path.dirname(__file__)
+
+logging.basicConfig(level=logging.DEBUG, filename=BASE_PATH+'/mediaroot/logging/debug.log',
                     format='%(asctime)s %(levelname)s: %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 # end MTW
-
-BASE_PATH = os.path.dirname(__file__)
 PDF_PATH=BASE_PATH+'/mediaroot/pdf_tmp/'
 
 PROFILE_LOG_BASE=BASE_PATH+'/profile/'
