@@ -22,7 +22,7 @@ import os
 import time
 import settings
 import re
-import markdown
+import markdown2
 
 try:
     PROFILE_LOG_BASE = settings.PROFILE_LOG_BASE
@@ -31,7 +31,7 @@ except:
 
 # turns markdown to html. changes html links to target _blank
 def markdownToHtml(mdString):
-    result = markdown.markdown(mdString) 
+    result = markdown2.markdown(mdString) 
     # we should add a target="_blank" to the links, so they open in a new window.
     return result 
 
