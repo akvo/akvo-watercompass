@@ -5,7 +5,7 @@
 	{% block panel_title %}{{help_item|capfirst}}{% endblock panel_title %}
 	{% block panel_content %}
 	<p style="font-weight:bold">{{help_item.info_heading}}</p>
-	<p>{{help_item.info_text}}</p>
+	<p>{% autoescape off %}{{help_item.info_text}}{% endautoescape %}</p>
 	{% endblock panel_content %}
 {% else %}
 	<p>{% trans 'No help found.' %}</p>

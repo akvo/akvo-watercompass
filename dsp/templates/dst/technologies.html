@@ -25,11 +25,13 @@
 
 {% block content %}
 
+ {%if one_chosen%} 
 <div class="span-6 last">
 <p class="small" style="margin-top:15px;margin-bottom:0;"> <a class="blue_w awesome" style="margin-right:10px; float:right;"
-				href="{% url techs_selected %}">{% trans 'Continue with selected technologies &rarr;' %}</a>
+	href="{% url techs_selected %}">{% trans 'Continue with selected technologies &rarr;' %}</a>
 </p>
 </div>
+{%endif%}
 <!-- form stuff begin -->
 
 <form name="factorform" method="post">
@@ -84,44 +86,41 @@
     <div class="span-14 last">
 	
 	<!-- start selected technologies -->
+
 	<div class="span-14 last" style="margin-bottom:10px; background:#ddd;">
-	   <p style="font-weight:bold;display:block;color:#888;margin-top:5px;margin-left:5px;margin-bottom:5px;">Selected technologies</p>
-	
-	<div class="span-14 last" style="margin-bottom:0; background:#ddd;">
-	    {% for techgroup, techs in all_techs %}
-		<div class="span-2b {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center;">	
-		    <div class="tech_top" style="background-image: url('{{ MEDIA_URL}}img/extra/please_select.gif'); background-repeat: no-repeat; background-position: 50% 50%; ">
-		    {% for tech in techs %}
-			{% ifequal tech.usable 'chosen'%}
-			<div style="background:#fff;">
+	 {%if one_chosen%} 
+	 <p style="font-weight:bold;display:block;color:#888;margin-top:5px;margin-left:5px;margin-bottom:5px;">Selected technologies</p>
+	{%endif%}
+	<div class="span-14 last" style="margin-bottom:0; background:#eee;">
+	   
+	    {% for choice in chosen_techs %}
+
+		<div class=" {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center; width:80px; float:left; margin-right;">	
+		    <div class="tech_top">
+			<div>
 			       <div>	
-				    <a class="fancy" href="{% url technologies_help tech.id %}" title="{{tech}}">
+				    <a class="fancy" href="{% url technologies_help choice.technology.id %}" title="{{choice.technology}}">
 				    <div style="margin-bottom:5px;">
-						<img src="{{ MEDIA_URL}}small/{{ tech.image }}""/>		
+						<img src="{{ MEDIA_URL}}small/{{ choice.technology.image }}"/>		
 				    </div>
 				    </a>
-				    <p class="tiny" style="margin-top:5px; display:block; height:35px; overflow:hidden; margin-bottom:5px;">
-				        <a class="fancy" href="{% url technologies_help tech.id %}" title="{{tech.id}}">{{ tech|capfirst|smart_truncate:25 }}</a>
+				    <p class="tiny" style="margin-top:5px; display:block; height:45px; overflow:hidden; margin-bottom:5px;">
+				        <a class="fancy" href="{% url technologies_help choice.technology.id %}" title="{{choice.technology.id}}">{{ choice.technology|capfirst|smart_truncate:35 }}</a>
 				    </p>	                    
 				</div>
-			    </div>
-			       <div style="margin-top:0px;">
-				    <a class="small" style="color:#666;" href="{% url tech_choice tech.id %}"> <img src="{{ MEDIA_URL}}img/extra/minus.gif">   {% trans 'remove' %}</a>
-			       </div>
-			{% endifequal %}
-		    {% endfor %}
+			 </div>
+			 <div style="margin-top:0px;">
+				&lsaquo;&nbsp;&nbsp;<a class="small" style="color:#666;" href="{% url tech_choice choice.technology.id %}"> <img src="{{ MEDIA_URL}}img/extra/minus.gif"></a>&nbsp;&nbsp;&rsaquo;
+			  </div>
+
+
 		    </div>
 		</div>
-		  {% if not forloop.last %}
-		    <div style="margin-top:30px;margin-left:12px;float:left;">
-			<img src="{{ MEDIA_URL}}img/extra/arrow.gif"> 
-		    </div>
-		    {% endif %}
-	    {% endfor %}
+		    {% endfor %}
 	</div>
     </div>	
+
 	<!-- end selected technologies -->	
-	
 	
 <!-- start buttons -->
 	<div class="span-14 last" style="margin-bottom:5px; height:25px; background:#fff;">
@@ -162,11 +161,7 @@
 		    			{% ifequal tech.usable 'chosen'  %}
 		    				<a class="white awesome small" href="{% url tech_choice tech.id %}">{% trans 'Deselect' %}</a>
 		    			{% else %}
-		    				{% ifnotequal tech.usable 'no' %}
-		    					{% ifnotequal tech.usable 'hide' %}
-		    						<a class="white awesome small" href="{% url tech_choice tech.id %}">{% trans 'Select' %}</a>
-		    					{% endifnotequal %}
-		    				{% endifnotequal %}
+		    				<a class="white awesome small" href="{% url tech_choice tech.id %}">{% trans 'Select' %}</a>
 		    			{% endifequal %}
 		    			                    
 		        </div>

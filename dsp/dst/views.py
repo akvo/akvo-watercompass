@@ -21,12 +21,19 @@ import hotshot
 import os
 import time
 import settings
+import re
+import markdown
 
 try:
     PROFILE_LOG_BASE = settings.PROFILE_LOG_BASE
 except:
     PROFILE_LOG_BASE = "/tmp"
 
+# turns markdown to html. changes html links to target _blank
+def markdownToHtml(mdString):
+    result = markdown.markdown(mdString) 
+    # we should add a target="_blank" to the links, so they open in a new window.
+    return result 
 
 def profile(log_file):
     """Profile some callable.
@@ -211,6 +218,7 @@ def factor_help(request, model=None, id=None):
     factors = Factor.objects.all()
     if model:
         help_item = get_model('dst', model).objects.get(id=id)
+        help_item.info_text = markdownToHtml(help_item.info_text)
     else:
         help_item = None
     return {'help_item': help_item}
@@ -262,11 +270,15 @@ def technologies(request, model=None, id=None):
     
     #technology part
     groups = TechGroup.objects.all()
+    choices = TechChoice.objects.all().order_by('order')
     group_techs = []
+    one_chosen = False;
     for group in groups:
         techs = Technology.objects.filter(group=group).order_by('order')
         for tech in techs:
             tech.usable = tech.usability(get_session(request))
+            if (tech.usable == 'chosen'):
+                one_chosen = True
        #     tech.available = tech.availability(get_session(request))
         group_techs.append(techs)
     # if we want to transpose the data:
@@ -280,6 +292,8 @@ def technologies(request, model=None, id=None):
         'formset'           : formset,
         'zipped_formlist'   : zipped_formlist,
         'help_item'         : help_item,
+        'one_chosen'        : one_chosen,
+        'chosen_techs' : choices,
     }
 
 def pdf(request, filename):
@@ -440,9 +454,18 @@ def techs_selected(request, model=None, id=None):
 
 
 def tech_choice(request, tech_id):
+    numChoices = TechChoice.objects.filter(session=get_session(request)).count()
     choice, created = TechChoice.objects.get_or_create(session=get_session(request), technology=Technology.objects.get(pk=tech_id))
     if not created:
+        allChoices = TechChoice.objects.filter(session=get_session(request))
+        for ch in allChoices:
+            if (ch.order > choice.order):
+                ch.order = ch.order - 1
+                ch.save()
         choice.delete()
+    else:
+        choice.order = numChoices + 1
+        choice.save()
     return HttpResponseRedirect(reverse('technologies'))
 
 
@@ -463,7 +486,6 @@ def reset_techs(request):
     TechChoice.objects.filter(session=get_session(request)).delete()
     return HttpResponseRedirect(reverse('technologies'))
 
-
 @render_to('dst/technologies_help.html')
 def technologies_help(request,id=None):
     # Needs to be refined to filter on selection
@@ -476,6 +498,14 @@ def technologies_help(request,id=None):
     applicable = technology.applicable(session)
     relevancy_objects = []
     
+    # turn links into html links
+    technology.description = markdownToHtml(technology.description)
+    technology.desc_financial = markdownToHtml(technology.desc_financial)
+    technology.desc_institutional = markdownToHtml(technology.desc_institutional)
+    technology.desc_environmental = markdownToHtml(technology.desc_environmental)
+    technology.desc_technical = markdownToHtml(technology.desc_technical)
+    technology.desc_social = markdownToHtml(technology.desc_social)
+
     if applicable == technology.TECH_USE_MAYBE:
         relevancy_objects = technology.maybe_relevant(session)
 

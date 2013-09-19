@@ -5,30 +5,36 @@
 {% block panel_title %} {{ technology|capfirst }}{% endblock panel_title %}
 {% block panel_content %}
 
-{% if technology.url %}
-	<div class="span-7 first">
-		<div class="span-2 first" style="float:left;">
-			<div class="back_{{tech.usable}}_img" style="margin-bottom:5px;">
-						<img src="{{ MEDIA_URL}}{{ technology.image }}" />		
-		        </div>
-		</div>
-		<div class="span-4 " style="float:left;">
-			<p>Visit the <a href="{{technology.url}}" target="_blank">Akvopedia article on {{technology}} &rarr;</a>
-		</div>
-	</div>
-	<div style="clear:both;"></div>
-{% endif %}
 <div>
-	<p>{{ technology.description }}</p>
+	<p>{% autoescape off %}{{ technology.description }}{% endautoescape %}</p>
+</div>
+<div>
+	<h4>Financial</h4>
+	<p>{% autoescape off %}{{ technology.desc_financial }}{% endautoescape %}</p>
+</div>
+<div>
+	<h4>Institutional</h4>
+	<p>{% autoescape off %}{{ technology.desc_institutional }}{% endautoescape %}</p>
+</div>
+<div>
+	<h4>Environmental</h4>
+	<p>{% autoescape off %}{{ technology.desc_environmental }}{% endautoescape %}</p>
+</div>
+<div>
+	<h4>Techical</h4>
+	<p>{% autoescape off %}{{ technology.desc_technical }}{% endautoescape %}</p>
+</div>
+<div>
+	<h4>Social</h4>
+	<p>{% autoescape off %}{{ technology.desc_social }}{% endautoescape %}</p>
 </div>
 
 <h4>Relevant options</h4>
 {% if relevancy_objects %}
-	
 	<p>{% trans 'The following options you have chosen are relevant for this technology:' %}</p>	
 	{% for object in relevancy_objects  %}
 	        {% if object.note %}
-	           <div class="span-13 first">
+	        <div class="span-13 first">
 			<div class="prepend-1 span-1 first" style="float:left;">
 				<p style="color:#2B80AF; font-size:2em; margin:10px 10px 10px 10px;">{{forloop.counter}}</p>
 			</div>
@@ -48,16 +54,21 @@
 		            </p>
 			</div>
 		</div>
-		   
-		    
-	        {% endif %}
+	    {% endif %}
 	{% endfor %}
-
 {% else %}
 	<p>{% trans 'None of the options were relevant for ' %} {{ technology }}.</p>
-
 {% endif %}
 <div style="clear:both;"></div>
+{% if technology.url1 %}
+<p>{{technology.url_source1}} - <a href"{{technology.url1}}">{{technology.url_title1}}</a></p>
+{% endif %}
+{% if technology.url2 %}
+<p>{{technology.url_source2}} - <a href"{{technology.url1}}">{{technology.url_title2}}</a></p>
+{% endif %}
+{% if technology.url3 %}
+<p>{{technology.url_source3}} - <a href"{{technology.url1}}">{{technology.url_title3}}</a></p>
+{% endif %}
 <!--
 {% if settings.DEBUG %}
     <h5>DEBUG info; Linked techs:</h5>

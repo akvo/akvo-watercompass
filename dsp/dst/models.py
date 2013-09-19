@@ -159,10 +159,23 @@ class Technology(models.Model):
     factors     = models.ManyToManyField(Factor, verbose_name=_('factors'), blank=True)
     name        = models.CharField(_(u'name'), max_length=50)
     description  = models.TextField(_(u'description'),)
-    #input       = models.ManyToManyField('self', blank=True, related_name='output', symmetrical=False, )
+    desc_financial = models.TextField(_(u'financial'),)
+    desc_institutional = models.TextField(_(u'institutional'),)
+    desc_environmental = models.TextField(_(u'environmental'),)
+    desc_technical = models.TextField(_(u'technical'),)
+    desc_social = models.TextField(_(u'social'),)
     output      = models.ManyToManyField('self', blank=True, related_name='input', symmetrical=False, )
-    image       = models.CharField(_(u'image'), max_length=100)
-    url         = models.URLField(blank=True, verify_exists = False, help_text=_('Enter the url to the corresponding Akvopedia entry, beginning with http://.'))
+    image       = models.CharField(_(u'icon image'), max_length=100, help_text=_('Enter the url of the icon image'))
+    url_source1 = models.CharField(_(u'source 1'), blank=True,max_length=100, help_text=_('Enter the source of a webpage'))
+    url_title1 = models.CharField(_(u'title 1'), blank=True,max_length=100, help_text=_('Enter the webpage title'))
+    url1         = models.URLField(_(u'URL 1'), blank=True, verify_exists = False, help_text=_('Enter the url to the page, starting with http://'))
+    url_source2 = models.CharField(_(u'source 2'), blank=True,max_length=100)
+    url_title2 = models.CharField(_(u'title 2'), blank=True,max_length=100)
+    url2         = models.URLField(_(u'URL 2'),blank=True, verify_exists = False)
+    url_source3 = models.CharField(_(u'source 3'), blank=True,max_length=100)
+    url_title3 = models.CharField(_(u'title 3'), blank=True,max_length=100)
+    url3         = models.URLField(_(u'URL 3'),blank=True, verify_exists = False)
+
     linked_techs = models.ManyToManyField('self',blank=True, related_name='linked_tech',symmetrical=True)
     order       =  models.IntegerField(null=True)
     
@@ -351,6 +364,7 @@ class Technology(models.Model):
 class TechChoice(models.Model):
     session     = models.ForeignKey(Session, verbose_name=_('session'))
     technology  = models.ForeignKey(Technology, verbose_name=_('technology'), related_name='tech_choices' )
+    order = models.IntegerField(null=True)
     
     class Meta:
         verbose_name = _(u'technology choice')
