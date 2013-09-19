@@ -5,7 +5,6 @@
 *.kpf
 dsp/data/
 dsp/settings_local.py
-dsp/mediaroot/admin
 dsp/mediaroot/pdf_tmp
 dsp/datadir/
 dsp/mediaroot/akvopedia_pdf/
