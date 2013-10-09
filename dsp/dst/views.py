@@ -270,7 +270,7 @@ def technologies(request, model=None, id=None):
     
     #technology part
     groups = TechGroup.objects.all()
-    choices = TechChoice.objects.all().order_by('order')
+    choices = TechChoice.objects.filter(session=get_session(request)).order_by('order')
     group_techs = []
     one_chosen = False;
     for group in groups:
