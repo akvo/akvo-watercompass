@@ -316,8 +316,8 @@ class Technology(models.Model):
                 return self.TECH_USE_CHOSEN
 
             # self is in a group where the choice is already made and we're not the one
-            if self.group in [t.group for t in chosen_techs]:
-                return self.TECH_USE_NOT_ALLOWED
+            #if self.group in [t.group for t in chosen_techs]:
+            #    return self.TECH_USE_NOT_ALLOWED
 
             # self
             #linked = [t for t in chosen_techs.all_linked_techs()]
@@ -325,15 +325,15 @@ class Technology(models.Model):
             #    return self.TECH_USE_NOT_ALLOWED
 
             # find all techs linked to self
-            my_linked = [t for t in self.linked_techs.all()]
+            #my_linked = [t for t in self.linked_techs.all()]
             #my_linked = [t for t in self.all_linked_techs()]
             
-            my_linked  = set(my_linked)
-            chosen = set(chosen_techs)
+            #my_linked  = set(my_linked)
+            #chosen = set(chosen_techs)
             # all techs already chosen must be linked to me;
             # otherwise I'm not compatible with the current choices
-            if not chosen.issubset(my_linked):
-                return self.TECH_USE_NOT_ALLOWED
+            #if not chosen.issubset(my_linked):
+                #return self.TECH_USE_NOT_ALLOWED
         # self is still eligible for selection, find out the applicability
         return self.applicable(session)
 
