@@ -70,3 +70,34 @@
 	padding:5px 10px;
 	margin: 10px;
 }
+
+.info-block{
+	height:200px;
+	width: 30%;
+	float:left;
+	overflow:scroll;
+	padding: 7px 7px 7px 7px;
+	margin:  5px 5px 5px 5px;
+}
+
+.info-block h4 {
+	margin: 0 0 0 0;
+	display: inline;
+}
+
+.color-block h4 {
+	color:#9a8602;
+}
+
+.info-block p {
+	display: inline;
+}
+
+.color-block {
+	background-color:#cee6ff;
+    border-radius: 15px;
+}
+
+.color-block p {
+	color:#000;
+}

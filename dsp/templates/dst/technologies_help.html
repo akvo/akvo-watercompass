@@ -5,28 +5,29 @@
 {% block panel_title %} {{ technology|capfirst }}{% endblock panel_title %}
 {% block panel_content %}
 
-<div>
-	<p>{% autoescape off %}{{ technology.description }}{% endautoescape %}</p>
+<div class="info-block">
+   <h4>Description&nbsp;&nbsp;</h4>
+	{% autoescape off %}{{ technology.description }}{% endautoescape %}
 </div>
-<div>
-	<h4>Financial</h4>
-	<p>{% autoescape off %}{{ technology.desc_financial }}{% endautoescape %}</p>
+<div class="info-block color-block">
+	<h4>Financial&nbsp;&nbsp;</h4>
+{% autoescape off %}{{ technology.desc_financial }}{% endautoescape %}
 </div>
-<div>
-	<h4>Institutional</h4>
-	<p>{% autoescape off %}{{ technology.desc_institutional }}{% endautoescape %}</p>
+<div class="info-block color-block">
+	<h4>Institutional&nbsp;&nbsp;</h4>
+	{% autoescape off %}{{ technology.desc_institutional }}{% endautoescape %}
 </div>
-<div>
-	<h4>Environmental</h4>
-	<p>{% autoescape off %}{{ technology.desc_environmental }}{% endautoescape %}</p>
+<div class="info-block color-block">
+	<h4>Environmental&nbsp;&nbsp;</h4>
+	{% autoescape off %}{{ technology.desc_environmental }}{% endautoescape %}
 </div>
-<div>
-	<h4>Techical</h4>
-	<p>{% autoescape off %}{{ technology.desc_technical }}{% endautoescape %}</p>
+<div class="info-block color-block">
+	<h4>Techical&nbsp;&nbsp;</h4>
+{% autoescape off %}{{ technology.desc_technical }}{% endautoescape %}
 </div>
-<div>
+<div class="info-block color-block">
 	<h4>Social</h4>
-	<p>{% autoescape off %}{{ technology.desc_social }}{% endautoescape %}</p>
+{% autoescape off %}{{ technology.desc_social }}{% endautoescape %}
 </div>
 
 <h4>Relevant options</h4>
