@@ -289,15 +289,15 @@ class Technology(models.Model):
         # given the answers, get the corresponding criteria
         criteria = Criterion.objects.filter(answer__in=answers)
         
-        # now try to find one or more instances of Relevancy.applicability = CHOICE_NO
-        if len(self.relevancies.filter(applicability=Relevancy.CHOICE_NO, criterion__in=criteria)):
-            return self.TECH_USE_NO
-        
-        # if we found no CHOICE_NO relevanciew try for CHOICE_MAYBE
-        elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_MAYBE, criterion__in=criteria)):
+        # try for CHOICE_MAYBE
+        if len(self.relevancies.filter(applicability=Relevancy.CHOICE_MAYBE, criterion__in=criteria)):
             return self.TECH_USE_MAYBE
         
-        # if we found no CHOICE_MAYBE relevanciew try for CHOICE_YES
+        # tryRelevancy.applicability = CHOICE_NO
+        elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_NO, criterion__in=criteria)):
+            return self.TECH_USE_NO
+        
+        # if we found no CHOICE_MAYBE or CHOICE_NO relevancies try for CHOICE_YES
         elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_YES, criterion__in=criteria)):
             return self.TECH_USE_YES
         
@@ -351,7 +351,15 @@ class Technology(models.Model):
         # given the answers, get the corresponding criteria
         criteria = Criterion.objects.filter(answer__in=answers)
         # return the relevancy objects that indicate the tech is not applicable
-        return Relevancy.objects.filter(technology=self, applicability=Relevancy.CHOICE_NO, criterion__in=criteria)
+        return Relevancy.objects.filter(technology=self, applicability=Relevancy.CHOICE_NO, criterion__in=criteria) 
+
+    def relevancy_notes(self,session):
+        # find the criteria that apply, i.e. get answers where applicable = True
+        answers = Answer.objects.filter(session=session, applicable__exact=True)
+        # given the answers, get the corresponding criteria
+        criteria = Criterion.objects.filter(answer__in=answers)
+        # return the relevancy objects that indicate the tech is not applicable or maybe applicable
+        return Relevancy.objects.filter(technology=self, applicability=Relevancy.CHOICE_NO, criterion__in=criteria) | Relevancy.objects.filter(technology=self, applicability=Relevancy.CHOICE_MAYBE, criterion__in=criteria)
 
     def maybe_notes(self, session):
         "return the notes for the maybe relevant techs"
