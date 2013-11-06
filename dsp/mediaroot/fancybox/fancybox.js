@@ -655,7 +655,10 @@
 
 		if ($(currentArray[ currentIndex ]).is('img') == false && selectedOpts.type !== 'image' && selectedOpts.type !== 'iframe') {
 			inner.css({
-				'overflow' : 'auto'
+				'overflow-y' : 'auto'
+			});
+			inner.css({
+				'overflow-x' : 'hidden'
 			});
 		}
 
