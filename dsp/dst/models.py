@@ -296,17 +296,16 @@ class Technology(models.Model):
         result = 0
         for fac in factors:
             criteria = Criterion.objects.filter(answer__in=answers, factor=fac)
+            yes_len = len(self.relevancies.filter(applicability=Relevancy.CHOICE_YES, criterion__in=criteria))
+            if yes_len:
+                continue
             maybe_len = len(self.relevancies.filter(applicability=Relevancy.CHOICE_MAYBE, criterion__in=criteria))
-            fac_result = 0
             if maybe_len:
-                fac_result = 1
-            else:
-                no_len = len(self.relevancies.filter(applicability=Relevancy.CHOICE_NO, criterion__in=criteria))
-
-            if (fac_result == 0 and no_len):
-                fac_result = 2
-
-            result = max(result, fac_result)
+                result = max(result,1)
+                continue
+            no_len = len(self.relevancies.filter(applicability=Relevancy.CHOICE_NO, criterion__in=criteria))
+            if no_len:
+                result = max(result,2)
 
         if (result == 1):
             return self.TECH_USE_MAYBE
