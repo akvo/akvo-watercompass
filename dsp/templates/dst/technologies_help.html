@@ -29,30 +29,30 @@
 	<h4>Social</h4>
 {% autoescape off %}{{ technology.desc_social }}{% endautoescape %}
 </div>
-
+<div style="clear:both"></div>
 <h4>Relevant options</h4>
 {% if relevancy_objects %}
 	<p>{% trans 'The following options you have chosen are relevant for this technology:' %}</p>	
 	{% for object in relevancy_objects  %}
-	        {% if object.note %}
-	        <div class="span-13 first">
-			<div class="prepend-1 span-1 first" style="float:left;">
-				<p style="color:#2B80AF; font-size:2em; margin:10px 10px 10px 10px;">{{forloop.counter}}</p>
+	    {% if object.note %}
+	    <div class="span-13 first">
+		<div class="prepend-1 first" style="float:left; margin-right:15px;">
+			
+			{%ifequal object.get_applicability_display 'No'%}
+			  <div style="background:#ed6262; width:10px; height:100px"></div>
+			{% else %}
+				{%ifequal object.get_applicability_display 'Maybe'%}
+				<div style="background:#dab159; width:10px; height:100px"></div>
+				{%endifequal%}
+			{%endifequal%}
 			</div>
 			<div class="span-10" style="float:left;">
+			<div style="color:#fff; background:#005a8b; margin: 3px 3px 3px 3px; padding:5px 0 5px 10px; font-size: 0.875em">
+				<strong>{{ object }}</strong> &mdash; selection <strong>{{ object.show_criterion }}</strong>
+			</div>
 				<p>
-		                At option <strong>{{ object }}</strong> you have selected <strong>{{ object.show_criterion }}</strong>.<br />
-	                
-				{%ifequal object.get_applicability_display 'No'%}
-					This means that in your situation, {{ technology}} is probably not a suitable technology, because:
-					<strong>{{ object.note.note }}</strong><br/>
-				{% else %}
-					{%ifequal object.get_applicability_display 'Maybe'%}
-						This means that in your situation, {{technology}} might be a suitable technology. This depends on:<br/>
-						<strong>{{ object.note.note }}</strong><br/>
-					{%endifequal%}
-				{%endifequal%}
-		            </p>
+					{{ object.note.note }}
+				</p>
 			</div>
 		</div>
 	    {% endif %}
@@ -61,14 +61,14 @@
 	<p>{% trans 'None of the options were relevant for ' %} {{ technology }}.</p>
 {% endif %}
 <div style="clear:both;"></div>
-{% if technology.url1 %}
-<p>{{technology.url_source1}} - <a href"{{technology.url1}}">{{technology.url_title1}}</a></p>
+{% if technology.source1 %}
+	<p>{{technology.url_source1}} - <a href"{{technology.url1}}">{{technology.url_title1}}</a></p>
 {% endif %}
-{% if technology.url2 %}
-<p>{{technology.url_source2}} - <a href"{{technology.url1}}">{{technology.url_title2}}</a></p>
+{% if technology.source2 %}
+	<p>{{technology.url_source2}} - <a href"{{technology.url1}}">{{technology.url_title2}}</a></p>
 {% endif %}
-{% if technology.url3 %}
-<p>{{technology.url_source3}} - <a href"{{technology.url1}}">{{technology.url_title3}}</a></p>
+{% if technology.source3 %}
+	<p>{{technology.url_source3}} - <a href"{{technology.url1}}">{{technology.url_title3}}</a></p>
 {% endif %}
 <!--
 {% if settings.DEBUG %}
