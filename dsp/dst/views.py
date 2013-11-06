@@ -505,7 +505,7 @@ def technologies_help(request,id=None):
     technology.desc_technical = markdownToHtml(technology.desc_technical)
     technology.desc_social = markdownToHtml(technology.desc_social)
 
-    relevancy_objects = technology.relevancy_notes(session)
+    relevancy_objects = technology.relevancy_notes(session) 
     return { 'technology': technology, 'relevancy_objects':relevancy_objects, 'settings': settings}
 
 
