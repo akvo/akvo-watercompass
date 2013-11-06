@@ -286,23 +286,34 @@ class Technology(models.Model):
         """
         # find the criteria that apply, i.e. get answers where applicable = True
         answers = Answer.objects.filter(session=session, applicable__exact=True)
+
         # given the answers, get the corresponding criteria
         criteria = Criterion.objects.filter(answer__in=answers)
-        
-        # try for CHOICE_MAYBE
-        if len(self.relevancies.filter(applicability=Relevancy.CHOICE_MAYBE, criterion__in=criteria)):
+
+        # given the criteria, find the factors that have a criterion which is selected
+        factors = Factor.objects.filter(criteria__in=criteria)
+
+        result = 0
+        for fac in factors:
+            criteria = Criterion.objects.filter(answer__in=answers, factor=fac)
+            maybe_len = len(self.relevancies.filter(applicability=Relevancy.CHOICE_MAYBE, criterion__in=criteria))
+            fac_result = 0
+            if maybe_len:
+                fac_result = 1
+            else:
+                no_len = len(self.relevancies.filter(applicability=Relevancy.CHOICE_NO, criterion__in=criteria))
+
+            if (fac_result == 0 and no_len):
+                fac_result = 2
+
+            result = max(result, fac_result)
+
+        if (result == 1):
             return self.TECH_USE_MAYBE
-        
-        # tryRelevancy.applicability = CHOICE_NO
-        elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_NO, criterion__in=criteria)):
+        elif (result == 2):
             return self.TECH_USE_NO
-        
-        # if we found no CHOICE_MAYBE or CHOICE_NO relevancies try for CHOICE_YES
-        elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_YES, criterion__in=criteria)):
-            return self.TECH_USE_YES
-        
-        # this thech was not affected by the environmental factors
         return self.TECH_USE_YES
+
        
     def usability(self, session):
         """

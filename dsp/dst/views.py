@@ -284,7 +284,6 @@ def technologies(request, model=None, id=None):
     # if we want to transpose the data:
     #all_techs = map(None, *group_techs)
     all_techs = zip(groups, group_techs)
-    
     return {
         'techgroups'    : groups,
         'all_techs'     : all_techs,
