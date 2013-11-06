@@ -505,15 +505,7 @@ def technologies_help(request,id=None):
     technology.desc_technical = markdownToHtml(technology.desc_technical)
     technology.desc_social = markdownToHtml(technology.desc_social)
 
-    if (applicable == technology.TECH_USE_MAYBE or applicable == technology.TECH_USE_NO):
-        relevancy_objects = technology.relevancy_notes(session)
-
-#    if applicable == technology.TECH_USE_MAYBE:
-#        relevancy_objects = technology.maybe_relevant(session)
-
-#    elif applicable == technology.TECH_USE_NO:
-#        relevancy_objects = technology.not_relevant(session)
-    
+    relevancy_objects = technology.relevancy_notes(session)
     return { 'technology': technology, 'relevancy_objects':relevancy_objects, 'settings': settings}
 
 
