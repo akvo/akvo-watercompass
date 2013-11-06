@@ -35,7 +35,7 @@
 	<p>{% trans 'The following options you have chosen are relevant for this technology:' %}</p>	
 	{% for object in relevancy_objects  %}
 	    {% if object.note %}
-	    <div class="span-13 first" style:"margin-top:5px;">
+	    <div class="span-13 first" style="margin:10px 0 0 0;">
 		<div class="prepend-1 first" style="float:left; margin-right:15px;">
 			
 			{%ifequal object.get_applicability_display 'No'%}
@@ -47,7 +47,7 @@
 			{%endifequal%}
 			</div>
 			<div class="span-10" style="float:left;">
-			<div style="color:#fff; background:#005a8b; margin: 3px 3px 3px 3px; padding:5px 0 5px 10px; font-size: 0.875em">
+			<div style="color:#fff; background:#005a8b; padding:5px 0 5px 10px; font-size: 0.875em">
 				<strong>{{ object }}</strong> &mdash; selection <strong>{{ object.show_criterion }}</strong>
 			</div>
 				<p>
