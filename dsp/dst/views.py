@@ -494,7 +494,6 @@ def technologies_help(request,id=None):
     session = get_session(request)
         
     technology = get_object_or_404(Technology, pk=id)
-    applicable = technology.applicable(session)
     relevancy_objects = []
     
     # turn links into html links

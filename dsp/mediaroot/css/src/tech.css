@@ -80,6 +80,10 @@
 	margin:  5px 5px 5px 5px;
 }
 
+.dst-tooltip {
+	color: #633;
+}
+
 .info-block h4 {
 	margin: 0 0 0 0;
 	display: inline;
