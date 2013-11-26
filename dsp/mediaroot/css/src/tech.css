@@ -82,7 +82,7 @@
 
 .link-block{
 	height:60px;
-	width: 200px;
+	width: 285px;
 	float:left;
 	overflow:auto;
 	padding: 7px 7px 7px 7px;
@@ -91,12 +91,12 @@
 
 #remarks_col {
    float:left;
-   width:695px;
+   width:595px;
 }
 #links_col {
    float:right;
-   width:240px;
-   padding-right:10px;
+   width:300px;
+   padding-right:25px;
 }
 
 .dst-tooltip {
