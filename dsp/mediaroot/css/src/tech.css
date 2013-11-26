@@ -72,12 +72,31 @@
 }
 
 .info-block{
-	height:220px;
+	height:180px;
 	width: 30%;
 	float:left;
 	overflow:auto;
 	padding: 7px 7px 7px 7px;
 	margin:  5px 5px 5px 5px;
+}
+
+.link-block{
+	height:60px;
+	width: 200px;
+	float:left;
+	overflow:auto;
+	padding: 7px 7px 7px 7px;
+	margin:  5px 5px 5px 5px;
+}
+
+#remarks_col {
+   float:left;
+   width:695px;
+}
+#links_col {
+   float:right;
+   width:240px;
+   padding-right:10px;
 }
 
 .dst-tooltip {
@@ -93,15 +112,24 @@
 	color:#9a8602;
 }
 
-.info-block p {
-	display: inline;
+.color-block p {
+	color:#000;
 }
-
 .color-block {
 	background-color:#cee6ff;
     border-radius: 15px;
 }
 
-.color-block p {
+.color-block-1 p {
 	color:#000;
 }
+.color-block-1 {
+	background-color:#FEF49C;
+    border-radius: 15px;
+}
+
+.info-block p {
+	display: inline;
+}
+
+
