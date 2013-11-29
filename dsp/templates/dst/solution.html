@@ -24,7 +24,7 @@
 					<p class="small" style="margin-top:5px; display:block; height:35px; overflow:hidden; margin-bottom:5px;" <a class="fancy" href="{% url technologies_help tech.id %}" alt="{{tech.usable}}">{{ tech|capfirst }}</a></p>
 					<a class="fancy" href="{% url technologies_help tech.id %}">
                     	<div class="back_{{tech.usable}}_img" style="margin-bottom:15px;">
-							<img src="{{ MEDIA_URL}}{{ tech.image }}" />
+							<img src="{{ MEDIA_URL}}technologies/{{ tech.image }}" />
                     	</div>
 					</a>
                 </div>
