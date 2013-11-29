@@ -40,7 +40,7 @@
 	
 	<!-- start selected technologies -->
 	<div class="span-18 first last" style="margin-bottom:10px; background:#ddd;">
-	   <p style="font-weight:bold;display:block;color:#888;margin-top:5px;margin-left:20px;margin-bottom:5px;">Sanitation system with selected technologies</p>
+	   <p style="font-weight:bold;display:block;color:#888;margin-top:5px;margin-left:20px;margin-bottom:5px;">Selected technologies</p>
 	
 	<div class="span-18 first last" style="margin-bottom:0; margin-left:20px;">
 	    {% for techgroup,chosen_in_group in all_chosen_techs %}
@@ -51,7 +51,7 @@
 			       <div>	
 				    <a class="fancy" href="{% url technologies_help chosen_in_group.id %}" title="{{chosen_in_group}}">
 				    <div style="margin-bottom:5px;">
-						<img src="{{ MEDIA_URL}}{{ chosen_in_group.image }}""/>		
+						<img src="{{ MEDIA_URL}}technologies/{{ chosen_in_group.image }}""/>		
 				    </div>
 				    </a>
 				    <p class="small" style="margin-top:5px; display:block; height:70px; overflow:hidden; margin-bottom:5px;">
@@ -80,7 +80,7 @@
 <div class="span-18" style="margin-top:30px;">
     <div class="span-5 append-2 first" style="margin-left:20px;">
 	<p style="font-weight:bold;display:block;color:#555;margin-bottom:5px;"> Making a PDF</p>
-	<p style="display:block;color:#555;margin-bottom:5px;">You can make a PDF document of this system, including, if you like, the Akvopedia articles of each technology. <br/><br/>
+	<p style="display:block;color:#555;margin-bottom:5px;">You can make a PDF document of these technologies by clicking 'Create PDF' on the right. <br/><br/>
 
 Please indicate your preferences and press "Download PDF"</p>
 	
@@ -95,34 +95,13 @@ Please indicate your preferences and press "Download PDF"</p>
 	<p style="font-weight:bold;display:block;color:#555;margin-bottom:15px;"> Include this in my PDF:</p>
 	<div style="width:600px;">
 	    
-	    <div style="width:100px;float:left;text-align:right;"><p style="display:block;color:#555;margin-bottom:5px;margin-top:5px;">General</p>
+	    <div style="width:100px;float:left;text-align:right;"><p style="display:block;color:#555;margin-bottom:5px;margin-top:5px;">Include:</p>
 	    </div>
 	    <div style="width:440px;margin-bottom:20px;padding:0 0 0 10px;float:left;margin-left:30px;border-left-width:1px;border-style:solid;border-color:#888;">
 		    <p class="large_choices" style="color:#2B80AF;">{{form.incl_selected}} A list of the selected options and technologies</p>
 		    <p class="large_choices" style="color:#2B80AF">{{form.incl_short_expl}} A short explanation of each technology</p>		
 	    </div>
-	
-	    <div style="width:100px;float:left;text-align:right;"><p style="display:block;color:#555;margin-bottom:5px;margin-top:5px;">Akvopedia articles</p>
-	    </div>
-	    <div style="width:440px;margin-bottom:20px;padding:0 0 0 10px;float:left;margin-left:30px;border-left-width:1px;border-style:solid;border-color:#888;">
-		    
-		{% for techgroup,chosen_in_group in all_chosen_techs %}
-		
-		    {% ifnotequal chosen_in_group ''%}
-		        <p class="large_choices" style="color:#2B80AF;">
-			    {% ifequal forloop.counter 1 %}{{form.incl_akvopedia_1}}{% endifequal %}
-			    {% ifequal forloop.counter 2 %}{{form.incl_akvopedia_2}}{% endifequal %}
-			    {% ifequal forloop.counter 3 %}{{form.incl_akvopedia_3}}{% endifequal %}
-			    {% ifequal forloop.counter 4 %}{{form.incl_akvopedia_4}}{% endifequal %}
-			    {% ifequal forloop.counter 5 %}{{form.incl_akvopedia_5}}{% endifequal %}
-			    {% ifequal forloop.counter 6 %}{{form.incl_akvopedia_6}}{% endifequal %}
-				 
-			    {{chosen_in_group}}</p>
-		    {% endifnotequal %}
-		
-		{% endfor %}
-		    
-	    </div>
+	  
 	    <div style="width:100px;float:left;text-align:right;"><p style="display:block;color:#555;margin-bottom:5px;">&nbsp;</p>
 	    </div>
 	    
