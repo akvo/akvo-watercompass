@@ -178,40 +178,7 @@
 <!-- einde form + tech blok -->
 
 <div class="clear"></div>
-<hr style="margin-top:20px" />
 
-
-<div id="page_intro" class="push-1 span-16 append-1 first last">
-	<div class="frame" style="background-color:#EEF8FA">
-		<div class="space15">
-			<p id="page_intro_text">
-			  {% blocktrans %}The table below shows technologies, grouped by type in columns. Based on the factors you selected, the technologies have 
-			  been shaded to indicate suitability as solutions: green for good solutions, yellow for less suitable and red for not suitable.
-			  Select a technology's icon to see an explanation of why the technology is or is not appropriate; select the technology name to get more
-			  information about it from the Akvopedia.{% endblocktrans %}
-				<br>
-				<br>
-			{% blocktrans %}Begin building your sanitation solution by selecting technologies for each column. As you build your system, some technologies
-			may be excluded by your choices, and will appear greyed out. At any time you can return to the factors page and change your answers or start over.
-			{% endblocktrans %}
-			</p>
-			<a class="small" id="toggle_page_intro">{% if session.tech_help_ishidden %}{% trans 'Show help' %}{%else%}{% trans 'Hide help' %}{% endif %}</a>
-		</div>
-	</div>
-</div>	
-
-
-<div class="span-18">
-	<div class="push-1 span-3 first">
-		<a class="aqua awesome" style="margin-right:10px; float:left;" href="{% url factors %}">{% trans '&larr; Back' %}</a>	
-	</div>
-	<div class="span-10" style="text-align:center;">
-		&nbsp;
-	</div>
-	<div class="span-3 append-1 last">
-		<a class="aqua awesome" href="{% url solution %}" onclick="this.blur();" style="margin-left:10px; float:right;">{% trans 'Continue &rarr;' %}</a>
-	</div>
-</div>
 
 {% endblock content %}
 
