@@ -51,7 +51,7 @@
 			       <div>	
 				    <a class="fancy" href="{% url technologies_help chosen_in_group.id %}" title="{{chosen_in_group}}">
 				    <div style="margin-bottom:5px;">
-						<img src="{{ MEDIA_URL}}technologies/{{ chosen_in_group.image }}""/>		
+						<img src="{{ MEDIA_URL}}technologies/{{ chosen_in_group.image }}"/>		
 				    </div>
 				    </a>
 				    <p class="small" style="margin-top:5px; display:block; height:70px; overflow:hidden; margin-bottom:5px;">
@@ -80,9 +80,7 @@
 <div class="span-18" style="margin-top:30px;">
     <div class="span-5 append-2 first" style="margin-left:20px;">
 	<p style="font-weight:bold;display:block;color:#555;margin-bottom:5px;"> Making a PDF</p>
-	<p style="display:block;color:#555;margin-bottom:5px;">You can make a PDF document of these technologies by clicking 'Create PDF' on the right. <br/><br/>
-
-Please indicate your preferences and press "Download PDF"</p>
+	<p style="display:block;color:#555;margin-bottom:5px;">You can make a PDF document of these technologies by clicking 'Create PDF' on the right.</p>
 	
  {%ifnotequal pdf_file ''%}
      <p style="font-weight:bold;display:block;color:#555;margin-bottom:5px;"> Downloading your PDF</p>
@@ -92,14 +90,12 @@ Please indicate your preferences and press "Download PDF"</p>
 {% endifnotequal %}	    
     </div>
     <div class="span-10 last">
-	<p style="font-weight:bold;display:block;color:#555;margin-bottom:15px;"> Include this in my PDF:</p>
+	<p style="font-weight:bold;display:block;color:#555;margin-bottom:15px;"> This will be included in your PDF:</p>
 	<div style="width:600px;">
 	    
-	    <div style="width:100px;float:left;text-align:right;"><p style="display:block;color:#555;margin-bottom:5px;margin-top:5px;">Include:</p>
-	    </div>
 	    <div style="width:440px;margin-bottom:20px;padding:0 0 0 10px;float:left;margin-left:30px;border-left-width:1px;border-style:solid;border-color:#888;">
-		    <p class="large_choices" style="color:#2B80AF;">{{form.incl_selected}} A list of the selected options and technologies</p>
-		    <p class="large_choices" style="color:#2B80AF">{{form.incl_short_expl}} A short explanation of each technology</p>		
+		    <p class="large_choices" style="color:#2B80AF;">A list of the selected options and technologies</p>
+		    <p class="large_choices" style="color:#2B80AF">A short explanation of each technology</p>		
 	    </div>
 	  
 	    <div style="width:100px;float:left;text-align:right;"><p style="display:block;color:#555;margin-bottom:5px;">&nbsp;</p>

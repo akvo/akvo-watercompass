@@ -12,6 +12,8 @@ from reportlab.rl_config import defaultPageSize
 from reportlab.lib.units import cm, inch
 from reportlab.platypus.flowables import Spacer, HRFlowable, PageBreak
 from reportlab.lib import colors
+from django.utils.html import strip_tags
+
 
 
 def create_PDF_akvopedia(URL):
@@ -172,7 +174,7 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
         if incl_selected:
             THIS_PATH=os.path.dirname(__file__)
             (HOME,HERE)=os.path.split(THIS_PATH)
-            MEDIA_PATH=HOME+'/mediaroot/techs_white/'
+            MEDIA_PATH=HOME+'/mediaroot/technologies/'
     
             styles.add(ParagraphStyle(name='smallfont', fontName='Helvetica',fontSize=8))
             smallfont=styles["smallfont"]
@@ -246,14 +248,14 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
     Elements.append(PageBreak())
     
     # Link to Akvopedia articles
-    header("Links to Akvopedia articles")
+  #  header("Links to Akvopedia articles")
     
-    for group, tech, relevance in all_chosen_techs:
-        if not tech=='':
-            t_name=tech.name
-            t_link=tech.url
-            string="&nbsp;&nbsp;&nbsp;&bull; %s:<br/>&nbsp;&nbsp;&nbsp;&nbsp; %s" % (tech.name, tech.url)
-            p(string)
+  #  for group, tech, relevance in all_chosen_techs:
+  #      if not tech=='':
+  #          t_name=tech.name
+  #          t_link=tech.url
+  #          string="&nbsp;&nbsp;&nbsp;&bull; %s:<br/>&nbsp;&nbsp;&nbsp;&nbsp; %s" % (tech.name, tech.url)
+  #          p(string)
     
     
     if incl_short_expl:
@@ -267,13 +269,13 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
     
         THIS_PATH=os.path.dirname(__file__)
         (HOME,HERE)=os.path.split(THIS_PATH)
-        MEDIA_PATH=HOME+'/mediaroot/techs_white/'
+        MEDIA_PATH=HOME+'/mediaroot/technologies/'
         
         for group, tech, relevance_objects in all_chosen_techs:
              if not tech=='':
                 header("<b>"+tech.name+"</b>",tech_header,sep=0.0 )
             
-                header(tech.description,indent_left)
+                header(strip_tags(tech.description),indent_left)
                 (path,pic)=os.path.split(tech.image)
                 pic1=os.path.join(MEDIA_PATH,pic)
                 image_url="""<img src="%s">""" %(pic1)

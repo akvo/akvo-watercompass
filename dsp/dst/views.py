@@ -346,23 +346,23 @@ def techs_selected(request, model=None, id=None):
         form = PDF_prefs(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
             
-            incl_selected=form.cleaned_data['incl_selected']
-            incl_short_expl=form.cleaned_data['incl_short_expl']
+         #   incl_selected=form.cleaned_data['incl_selected']
+         #   incl_short_expl=form.cleaned_data['incl_short_expl']
             
-            incl_akvopedia=[]
-            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_1'])
-            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_2'])
-            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_3'])
-            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_4'])
-            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_5'])
-            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_6'])
+         #   incl_akvopedia=[]
+         #   incl_akvopedia.append(form.cleaned_data['incl_akvopedia_1'])
+         #   incl_akvopedia.append(form.cleaned_data['incl_akvopedia_2'])
+         #   incl_akvopedia.append(form.cleaned_data['incl_akvopedia_3'])
+         #   incl_akvopedia.append(form.cleaned_data['incl_akvopedia_4'])
+         #   incl_akvopedia.append(form.cleaned_data['incl_akvopedia_5'])
+         #   incl_akvopedia.append(form.cleaned_data['incl_akvopedia_6'])
             
             # create list of Akvopedia articles to be included
-            Akvopedia_articles_URL=[]
-            for index,incl_akv in enumerate(incl_akvopedia):
-                if (incl_akv==True and chosen_in_group[index]!=''):
-                    if chosen_in_group[index].url!='':
-                        Akvopedia_articles_URL.append(chosen_in_group[index].url)
+         #   Akvopedia_articles_URL=[]
+         #   for index,incl_akv in enumerate(incl_akvopedia):
+         #       if (incl_akv==True and chosen_in_group[index]!=''):
+         #           if chosen_in_group[index].url!='':
+         #               Akvopedia_articles_URL.append(chosen_in_group[index].url)
             
             # create list of factors and criteria
             answers = get_or_create_answers(get_session(request))
@@ -398,12 +398,12 @@ def techs_selected(request, model=None, id=None):
             s_name_final=today.strftime(format_final)
             
             #first create first pages
-            pdf_path=create_PDF_selected_techs(all_chosen_techs, zipped_answerlist,incl_selected,incl_short_expl,s_name_temp)
+            pdf_path=create_PDF_selected_techs(all_chosen_techs, zipped_answerlist,True,True,s_name_temp)
             
             # append akvopedia articles if checked.
             THIS_PATH=os.path.dirname(__file__)
             (HOME,HERE)=os.path.split(THIS_PATH)
-            akvopedia_pdf_dir=HOME+'/mediaroot/akvopedia_pdf/'
+        #    akvopedia_pdf_dir=HOME+'/mediaroot/akvopedia_pdf/'
             output_dir=HOME+'/mediaroot/pdf_tmp/'
                
             output = PdfFileWriter()
@@ -414,17 +414,17 @@ def techs_selected(request, model=None, id=None):
             for i in range(num_pages):
                 output.addPage(input.getPage(i))
             
-            for article_url in Akvopedia_articles_URL:    
-                # create pdf path
-                URL_list=article_url.split("/")
-                article_name=URL_list[-1]
-                full_path=akvopedia_pdf_dir+article_name+'.pdf'
+      #      for article_url in Akvopedia_articles_URL:    
+    #         # create pdf path
+      #          URL_list=article_url.split("/")
+      #          article_name=URL_list[-1]
+      #          full_path=akvopedia_pdf_dir+article_name+'.pdf'
                 
                 # append article
-                input = PdfFileReader(file(full_path, "rb"))
-                num_pages=input.getNumPages()
-                for i in range(num_pages):
-                    output.addPage(input.getPage(i))
+      #          input = PdfFileReader(file(full_path, "rb"))
+      #          num_pages=input.getNumPages()
+      #          for i in range(num_pages):
+      #              output.addPage(input.getPage(i))
             
             output.write(outputStream)
             outputStream.close()       
