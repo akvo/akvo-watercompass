@@ -42,7 +42,7 @@ def create_PDF_akvopedia(URL):
 
 
 def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,incl_short_expl,name):
-    Intro = """Results of the Sanitation Decision Support Tool. The tool was created by WASTE (www.waste.nl) and the Akvo Foundation (www.akvo.org), in order to assist people in choosing sanitation technologies. We hope this tool proves useful, any comments can be send to m.t.westra@akvo.org."""
+    Intro = """Results of the WaterCompass Tool. The tool was created by Practica Foundation (www.practicafoundation.nl) and the Akvo Foundation (www.akvo.org), in order to assist people in choosing water technologies. We hope this tool proves useful, any comments can be send to watercompass@practicafoundation.nl."""
     
     THIS_PATH=os.path.dirname(__file__)
     (HOME,HERE)=os.path.split(THIS_PATH)
@@ -58,9 +58,9 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
     s_date=today.strftime(format_date)
     s_time=today.strftime(format_time)
     
-    Title = "The Sanitation Decision Support tool"
-    Author = "Akvo"
-    URL = "www.akvopedia.org"
+    Title = "The WaterCompass"
+    Author = "Practica Foundation, Akvo"
+    URL = "watercompass.info"
 
     pageinfo = "%s —- %s -- %s" % (Title, Author, URL )
     
@@ -73,17 +73,19 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
         THIS_PATH=os.path.dirname(__file__)
         (HOME,HERE)=os.path.split(THIS_PATH)
         MEDIA_PATH=HOME+'/mediaroot/img/logos/'
+        pic2=os.path.join(MEDIA_PATH,'logo_practica.png')
+        canvas.drawImage(pic2,16*cm, 27*cm)
         pic1=os.path.join(MEDIA_PATH,'akvo_logo_white.png')
-        canvas.drawImage(pic1,16*cm, 26*cm)
+        canvas.drawImage(pic1,16*cm, 25*cm)
         
         LEADING=0.5*cm
         canvas.setFont('Helvetica',9)
-        canvas.drawString(15*cm, PAGE_HEIGHT-5*cm, "Session information")
-        canvas.drawString(15*cm, PAGE_HEIGHT-5*cm-LEADING, "Date:  %s" % (s_date))
-        canvas.drawString(15*cm, PAGE_HEIGHT-5*cm-2*LEADING, "Time:  %s" % (s_time))
+        canvas.drawString(15*cm, PAGE_HEIGHT-6*cm, "Session information")
+        canvas.drawString(15*cm, PAGE_HEIGHT-6*cm-LEADING, "Date:  %s" % (s_date))
+        canvas.drawString(15*cm, PAGE_HEIGHT-6*cm-2*LEADING, "Time:  %s" % (s_time))
         
-        COLUMN_HEIGHT=7*cm
-        BOTTOM_OPTIONS=12*cm
+        COLUMN_HEIGHT=13*cm
+        BOTTOM_OPTIONS=7*cm
  
         f1=Frame(2*cm,BOTTOM_OPTIONS,5*cm,2*cm+COLUMN_HEIGHT,showBoundary=0)
         f2=Frame(8*cm,BOTTOM_OPTIONS,5*cm,2*cm+COLUMN_HEIGHT,showBoundary=0)
@@ -107,10 +109,10 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
             if change:
                 factor_num+=1
             
-            if factor_num in [1,2,3]:
+            if factor_num in [1,2,3,4,5]:
                 column=1
             else:
-                if factor_num in [4,5,6]:
+                if factor_num in [6,7,8]:
                     column=2
                 else:
                     column=3            
@@ -150,25 +152,25 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
         
         canvas.setFillColorRGB(1,1,1)
         
-        def draw_arrow(canvas,x,y):
-            canvas.saveState()
-            canvas.setStrokeColorRGB(0.5,0.5,0.5)
-            canvas.setFillColorRGB(0.5,0.5,0.5)
-            U=0.2*cm
-            p=canvas.beginPath()
-            p.moveTo(x,y)
-            p.lineTo(x+U,y+2*U)
-            p.lineTo(x,y+4*U)
-            p.lineTo(x+2*U,y+2*U)
-            p.lineTo(x,y)
-            canvas.drawPath(p,stroke=0,fill=1)
-            canvas.restoreState()
+        # def draw_arrow(canvas,x,y):
+        #     canvas.saveState()
+        #     canvas.setStrokeColorRGB(0.5,0.5,0.5)
+        #     canvas.setFillColorRGB(0.5,0.5,0.5)
+        #     U=0.2*cm
+        #     p=canvas.beginPath()
+        #     p.moveTo(x,y)
+        #     p.lineTo(x+U,y+2*U)
+        #     p.lineTo(x,y+4*U)
+        #     p.lineTo(x+2*U,y+2*U)
+        #     p.lineTo(x,y)
+        #     canvas.drawPath(p,stroke=0,fill=1)
+        #     canvas.restoreState()
         
         BOX_LOC_X=1.5*cm
-        BOX_MARG_BOT=5.0*cm
+        BOX_MARG_BOT=2.5*cm
         BOX_WIDTH=2.5*cm
         BOX_HEIGHT=4.5*cm
-        BOX_DELTA=0.7*cm
+        BOX_DELTA=0.5*cm
         num_arrows=0
         
         if incl_selected:
@@ -179,10 +181,10 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
             styles.add(ParagraphStyle(name='smallfont', fontName='Helvetica',fontSize=8))
             smallfont=styles["smallfont"]
 
-            for group, tech, relevance in all_chosen_techs:
-                canvas.rect(BOX_LOC_X,BOX_MARG_BOT,BOX_WIDTH,BOX_HEIGHT,stroke=1, fill=1)
+            for tech, relevance in all_chosen_techs:
+                #canvas.rect(BOX_LOC_X,BOX_MARG_BOT,BOX_WIDTH,BOX_HEIGHT,stroke=1, fill=1)
                 if num_arrows<=4:
-                    draw_arrow(canvas,BOX_LOC_X+BOX_WIDTH+0.2*cm,BOX_MARG_BOT+0.4*BOX_HEIGHT)
+                    #draw_arrow(canvas,BOX_LOC_X+BOX_WIDTH+0.2*cm,BOX_MARG_BOT+0.4*BOX_HEIGHT)
                     num_arrows+=1
             
                 if not tech=='':
@@ -241,12 +243,8 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
     
     header("Options chosen")
     
-    # selected technologies are drawn in first page definition
-    if incl_selected:
-        header("Selected technologies",sep=4)
-    
     Elements.append(PageBreak())
-    
+
     # Link to Akvopedia articles
   #  header("Links to Akvopedia articles")
     
@@ -266,29 +264,48 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
     
         styles.add(ParagraphStyle(name='indent_left', fontName='Helvetica',leftIndent=4*cm))
         indent_left=styles["indent_left"]
+
+        styles.add(ParagraphStyle(name='full_width', fontName='Helvetica'))
+        full_width=styles["full_width"]
     
         THIS_PATH=os.path.dirname(__file__)
         (HOME,HERE)=os.path.split(THIS_PATH)
         MEDIA_PATH=HOME+'/mediaroot/technologies/'
         
-        for group, tech, relevance_objects in all_chosen_techs:
-             if not tech=='':
-                header("<b>"+tech.name+"</b>",tech_header,sep=0.0 )
+        for tech, relevance_objects in all_chosen_techs:
+              if not tech=='':
+                 header("<b>"+tech.name+"</b>",tech_header,sep=0.0 )
             
-                header(strip_tags(tech.description),indent_left)
-                (path,pic)=os.path.split(tech.image)
-                pic1=os.path.join(MEDIA_PATH,pic)
-                image_url="""<img src="%s">""" %(pic1)
-                p(image_url)
+                 header(strip_tags(tech.description),indent_left)
+                 (path,pic)=os.path.split(tech.image)
+                 pic1=os.path.join(MEDIA_PATH,pic)
+                 image_url="""<img src="%s">""" %(pic1)
+                 p(image_url)
+
+                 p("<strong>Financial</strong> - " + strip_tags(tech.desc_financial))
+                 p("<strong>Institutional</strong> - " +strip_tags(tech.desc_institutional))
+                 p("<strong>Environmental</strong> - " +strip_tags(tech.desc_environmental))
+                 p("<strong>Technical</strong> - " +strip_tags(tech.desc_technical))
+                 p("<strong>Social</strong> - " +strip_tags(tech.desc_social))
+
+
+                 p("<b>Relevant remarks</b>")
+                 if len(relevance_objects)!=0:
+                     for relevance_object in relevance_objects:
+                         string = "<strong>"+relevance_object.criterion.factor.factor+"</strong> - selection <strong>"+relevance_object.criterion.criterion+"</strong>"
+                         print relevance_object.applicability
+                         if relevance_object.applicability == 'N':
+                             string+=' - Technology likely not suitable'
+                         else:
+                             if relevance_object.applicability == 'M':
+                                 string+=' - Technololgy might be suitable'       
+                         string += "<br/>"
+                         string += relevance_object.note.note+"<br/>"
+                         p(string)       
             
-                p("<b>Relevant options</b>")
-                if len(relevance_objects)!=0:
-                    for relevance_object in relevance_objects:
-                        p("At option <strong>"+relevance_object.criterion.factor.factor+"</strong> you have selected <strong>"+relevance_object.criterion.criterion+"</strong>. This means that in your situation,"+ tech.name+" might be a suitable technology. This depends on: <strong>"+relevance_object.note.note+"</strong><br/>")       
-            
-                Elements.append(Spacer(0,0.3*cm))
-                Elements.append(HRFlowable(width='100%', hAlign='LEFT', thickness=1, spaceBefore=0, spaceAfter=10, color=colors.grey))
-                Elements.append(Spacer(0,0.3*cm))
+                 Elements.append(Spacer(0,0.3*cm))
+                 Elements.append(HRFlowable(width='100%', hAlign='LEFT', thickness=1, spaceBefore=0, spaceAfter=10, color=colors.grey))
+                 Elements.append(Spacer(0,0.3*cm))
     go()
     
     return tmp_dir+name

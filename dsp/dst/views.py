@@ -310,38 +310,69 @@ def techs_selected(request, model=None, id=None):
 
     groups = TechGroup.objects.all()
 
-    chosen_techs = Technology.objects.filter(tech_choices__session=get_session(request))    
+    chosen_techs = Technology.objects.filter(tech_choices__session=get_session(request))
+    choices = TechChoice.objects.filter(session=get_session(request)).order_by('order')    
     chosen_in_group = []
+    all_techs =[]
     relevance=[]
     empty=[]
 
-    for group in groups:
-        found_tech = False
-        found_relevance=False
-        techs = Technology.objects.filter(group=group)
-        for tech in techs:
-            if tech in chosen_techs:
-                chosen_in_group.append(tech)
-                found_tech = True
-               
-                applicable = tech.applicable(get_session(request))
-              #  relevancy_objects = []
-                
-                if applicable == tech.TECH_USE_MAYBE:
-                    relevancy_objects = list(tech.maybe_relevant(get_session(request)))
-                    if len(relevancy_objects)!=0:
-                        #for object in relevancy_objects:
-                         #   logging.debug(object.note)
-                        relevance.append(relevancy_objects)
-                        found_relevance=True
-
-        if found_tech == False:
-            chosen_in_group.append('')
-        if found_relevance == False:
+    for tech in chosen_techs:
+        all_techs.append(tech)
+        applicable = tech.applicable(get_session(request))
+        relevance_added=False
+        if applicable == tech.TECH_USE_MAYBE:
+            relevancy_objects = list(tech.maybe_relevant(get_session(request)))
+            if len(relevancy_objects)!=0:
+                relevance.append(relevancy_objects)
+                relevance_added = True
+        if applicable == tech.TECH_USE_NO:
+            relevancy_objects = list(tech.not_relevant(get_session(request)))
+            if len(relevancy_objects)!=0:
+                relevance.append(relevancy_objects)
+                relevance_added = True
+        if not relevance_added:
             relevance.append(empty)
+
+    # for group in groups:
+    #     found_tech = False
+    #     found_relevance=False
+    #     techs = Technology.objects.filter(group=group)
+    #     for tech in techs:
+    #         if tech in chosen_techs:
+    #             chosen_in_group.append(tech)
+    #             found_tech = True
+               
+    #             applicable = tech.applicable(get_session(request))
+    #           #  relevancy_objects = []
+                
+    #             if applicable == tech.TECH_USE_MAYBE:
+    #                 relevancy_objects = list(tech.maybe_relevant(get_session(request)))
+    #                 if len(relevancy_objects)!=0:
+    #                     #for object in relevancy_objects:
+    #                      #   logging.debug(object.note)
+    #                     relevance.append(relevancy_objects)
+    #                     found_relevance=True
+
+    #     if found_tech == False:
+    #         chosen_in_group.append('')
+    #     if found_relevance == False:
+    #         relevance.append(empty)
+
+    # for tech_choice in choices:
+    #     all_techs.append(tech_choice.technology)
+    #     applicable = tech.applicable(get_session(request))
+    #     if applicable == tech_choice.TECH_USE_MAYBE:
+    #         relevancy_objects = list(tech_choice.maybe_relevant(get_session(request)))
+    #         if len(relevancy_objects)!=0:
+    #             relevance.append(relevancy_objects)
+    #     if applicable == tech_choice.TECH_USE_NO:
+    #         relevancy_objects = list(tech_choice.not_relevant(get_session(request)))
+    #         if len(relevancy_objects)!=0:
+    #             relevance.append(relevancy_objects)
         
-    all_chosen_techs = zip(groups,chosen_in_group,relevance)
-    
+    all_chosen_techs = zip(all_techs,relevance)
+
     if request.method == 'POST': # If the form has been submitted...
         form = PDF_prefs(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
@@ -391,8 +422,8 @@ def techs_selected(request, model=None, id=None):
             #create the basic PDF
             today=datetime.datetime.today()
     
-            format_temp = "Akvo-DST-%a-%b-%d-%Y_%H-%M-%S.temp.pdf"
-            format_final= "Akvo-DST-%a-%b-%d-%Y_%H-%M-%S.pdf"
+            format_temp = "watercompass-%a-%b-%d-%Y_%H-%M-%S.temp.pdf"
+            format_final= "watercompass-%a-%b-%d-%Y_%H-%M-%S.pdf"
             
             s_name_temp=today.strftime(format_temp)
             s_name_final=today.strftime(format_final)
@@ -444,10 +475,11 @@ def techs_selected(request, model=None, id=None):
     
     return {
         'techgroups'    : groups,
-        'all_chosen_techs'    : all_chosen_techs,
+        'chosen_techs'    : chosen_techs,
         'session'       : request.session,
         'form'          : form,
         'pdf_file'      :'',
+        'chosen_techs'  : choices
     }
 
 

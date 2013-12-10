@@ -41,35 +41,29 @@
 	<!-- start selected technologies -->
 	<div class="span-18 first last" style="margin-bottom:10px; background:#ddd;">
 	   <p style="font-weight:bold;display:block;color:#888;margin-top:5px;margin-left:20px;margin-bottom:5px;">Selected technologies</p>
-	
-	<div class="span-18 first last" style="margin-bottom:0; margin-left:20px;">
-	    {% for techgroup,chosen_in_group in all_chosen_techs %}
-		<div class="span-2a {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center;">	
-		    <div class="techs_selected">
-			{% ifnotequal chosen_in_group ''%}
-			<div style="background:#fff;">
+
+	   <div class="span-14 last" style="margin-bottom:0; ">
+	    {% for choice in chosen_techs %}
+
+		<div class=" {% if forloop.first %}first{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center; width:80px; float:left; margin-right;">	
+		    <div class="tech_top">
+			<div>
 			       <div>	
-				    <a class="fancy" href="{% url technologies_help chosen_in_group.id %}" title="{{chosen_in_group}}">
+				    <a class="fancy" href="{% url technologies_help choice.technology.id %}" title="{{choice.technology}}">
 				    <div style="margin-bottom:5px;">
-						<img src="{{ MEDIA_URL}}technologies/{{ chosen_in_group.image }}"/>		
+						<img src="{{ MEDIA_URL}}small/{{ choice.technology.image }}"/>		
 				    </div>
 				    </a>
-				    <p class="small" style="margin-top:5px; display:block; height:70px; overflow:hidden; margin-bottom:5px;">
-				        <a class="fancy" href="{% url technologies_help chosen_in_group.id %}" title="{{chosen_in_group.id}}">{{ chosen_in_group|capfirst|smart_truncate:50 }}</a>
+				    <p class="tiny" style="margin-top:5px; display:block; height:45px; overflow:hidden; margin-bottom:5px;">
+				        <a class="fancy" href="{% url technologies_help choice.technology.id %}" title="{{choice.technology.id}}">{{ choice.technology|capfirst|smart_truncate:35 }}</a>
 				    </p>	                    
 				</div>
-			    </div>
-			{% endifnotequal %}
+			 </div>
 		    </div>
-		
 		</div>
-		  {% if not forloop.last %}
-		    <div style="margin-top:70px;margin-left:0px;width:27px;float:left;">
-			<img src="{{ MEDIA_URL}}img/extra/arrow.gif"> 
-		    </div>
-		    {% endif %}
-	    {% endfor %}
+		    {% endfor %}	
 	</div>
+
     </div>	
 	<!-- end selected technologies -->	
 </div>	
