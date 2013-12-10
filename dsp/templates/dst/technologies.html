@@ -110,7 +110,7 @@
 				</div>
 			 </div>
 			 <div style="margin-top:0px;">
-				&lsaquo;&nbsp;&nbsp;<a class="small" style="color:#666;" href="{% url tech_choice choice.technology.id %}"> <img src="{{ MEDIA_URL}}img/extra/minus.gif"></a>&nbsp;&nbsp;&rsaquo;
+				<a class="small" style="color:#666;" href="{% url order_down choice.technology.id %}">&lsaquo;</a>&nbsp;&nbsp;<a class="small" style="color:#666;" href="{% url tech_choice choice.technology.id %}"> <img src="{{ MEDIA_URL}}img/extra/minus.gif"></a>&nbsp;&nbsp;<a class="small" style="color:#666;" href="{% url order_up choice.technology.id %}">&rsaquo;</a>
 			  </div>
 
 

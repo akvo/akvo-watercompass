@@ -499,6 +499,36 @@ def tech_choice(request, tech_id):
         choice.save()
     return HttpResponseRedirect(reverse('technologies'))
 
+def tech_choice_order_down(request, tech_id):
+    numChoices = TechChoice.objects.filter(session=get_session(request)).count()
+    choice = TechChoice.objects.get(session=get_session(request), technology=Technology.objects.get(pk=tech_id))
+    allChoices = TechChoice.objects.filter(session=get_session(request))
+    if choice.order == 1:
+        return HttpResponseRedirect(reverse('technologies')) 
+
+    for ch in allChoices:
+        if (ch.order == choice.order - 1):
+            ch.order = ch.order + 1
+            ch.save()
+            choice.order = choice.order - 1
+            choice.save()
+    return HttpResponseRedirect(reverse('technologies'))
+
+
+def tech_choice_order_up(request, tech_id):
+    numChoices = TechChoice.objects.filter(session=get_session(request)).count()
+    choice = TechChoice.objects.get(session=get_session(request), technology=Technology.objects.get(pk=tech_id))
+    allChoices = TechChoice.objects.filter(session=get_session(request))
+    if choice.order == numChoices:
+        return HttpResponseRedirect(reverse('technologies')) 
+
+    for ch in allChoices:
+        if (ch.order == choice.order + 1):
+            ch.order = ch.order - 1
+            ch.save()
+            choice.order = choice.order + 1
+            choice.save()
+    return HttpResponseRedirect(reverse('technologies'))
 
 def toggle_button(request, btn_name=''):
     if btn_name:
