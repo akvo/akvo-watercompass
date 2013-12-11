@@ -42,7 +42,7 @@ def create_PDF_akvopedia(URL):
 
 
 def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,incl_short_expl,name):
-    Intro = """Results of the WaterCompass Tool. The tool was created by Practica Foundation (www.practicafoundation.nl) and the Akvo Foundation (www.akvo.org), in order to assist people in choosing water technologies. We hope this tool proves useful, any comments can be send to watercompass@practicafoundation.nl."""
+    Intro = """Results of the WaterCompass Tool. The tool was created by Practica Foundation (www.practicafoundation.nl) and the Akvo Foundation (www.akvo.org), in order to assist people in choosing water technologies. We hope this tool proves useful, any comments can be send to watercompass@practica.org."""
     
     THIS_PATH=os.path.dirname(__file__)
     (HOME,HERE)=os.path.split(THIS_PATH)
@@ -74,9 +74,9 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
         (HOME,HERE)=os.path.split(THIS_PATH)
         MEDIA_PATH=HOME+'/mediaroot/img/logos/'
         pic2=os.path.join(MEDIA_PATH,'logo_practica.png')
-        canvas.drawImage(pic2,16*cm, 27*cm)
+        canvas.drawImage(pic2,15*cm, 27*cm)
         pic1=os.path.join(MEDIA_PATH,'akvo_logo_white.png')
-        canvas.drawImage(pic1,16*cm, 25*cm)
+        canvas.drawImage(pic1,15*cm, 25*cm)
         
         LEADING=0.5*cm
         canvas.setFont('Helvetica',9)
@@ -122,7 +122,7 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
                     options1.append(Spacer(0,0.5*cm))
                     options1.append(Paragraph('<b>'+factor.factor+'</b>',styleN))     
                 if applicable:
-                    options1.append(Paragraph("&nbsp;&nbsp;&bull; <u><b>"+criterion.criterion+"</b></u>",styleN))
+                    options1.append(Paragraph("&nbsp;&nbsp;&bull; <font color=blue><u><b>"+criterion.criterion+"</b></u></font>",styleN))
                 else:
                     options1.append(Paragraph("&nbsp;&nbsp;&bull; "+criterion.criterion,styleN))
             
@@ -131,7 +131,7 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
                     options2.append(Spacer(0,0.5*cm))
                     options2.append(Paragraph('<b>'+factor.factor+'</b>',styleN))    
                 if applicable:
-                    options2.append(Paragraph("&nbsp;&nbsp;&bull; <u><b>"+criterion.criterion+"</b></u>",styleN))
+                    options2.append(Paragraph("&nbsp;&nbsp;&bull; <font color=blue><u><b>"+criterion.criterion+"</b></u></font>",styleN))
                 else:
                     options2.append(Paragraph("&nbsp;&nbsp;&bull; "+criterion.criterion,styleN))
             
@@ -140,7 +140,7 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
                     options3.append(Spacer(0,0.5*cm))
                     options3.append(Paragraph('<b>'+factor.factor+'</b>',styleN))    
                 if applicable:
-                    options3.append(Paragraph("&nbsp;&nbsp;&bull; <u><b>"+criterion.criterion+"</b></u>",styleN))
+                    options3.append(Paragraph("&nbsp;&nbsp;&bull; <font color=blue><u><b>"+criterion.criterion+"</b></u></font>",styleN))
                 else:
                     options3.append(Paragraph("&nbsp;&nbsp;&bull; "+criterion.criterion,styleN))
 
