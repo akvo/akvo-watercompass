@@ -42,7 +42,7 @@ def create_PDF_akvopedia(URL):
 
 
 def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,incl_short_expl,name):
-    Intro = """Results of the WaterCompass Tool. The tool was created by Practica Foundation (www.practicafoundation.nl) and the Akvo Foundation (www.akvo.org), in order to assist people in choosing water technologies. We hope this tool proves useful, any comments can be send to watercompass@practica.org."""
+    Intro = """Results of the WaterCompass Tool. The tool was created by Practica Foundation (www.practica.org) and the Akvo Foundation (www.akvo.org), in order to assist people in choosing water technologies. We hope this tool proves useful, any comments can be send to watercompass@practica.org."""
     
     THIS_PATH=os.path.dirname(__file__)
     (HOME,HERE)=os.path.split(THIS_PATH)
