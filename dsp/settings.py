@@ -16,8 +16,8 @@ PDF_PATH=BASE_PATH+'/mediaroot/pdf_tmp/'
 
 PROFILE_LOG_BASE=BASE_PATH+'/profile/'
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+DEBUG = False
+#TEMPLATE_DEBUG = DEBUG
 
 SERVER_EMAIL = 'm.t.westra@akvo.org'
 
