@@ -109,10 +109,10 @@ def index(request):
         return {}
 
 def get_or_create_answers(session):
-    answers = Answer.objects.filter(session=session)
-    if not answers.count():
-        criteria = Criterion.objects.all()
-        for criterion in criteria:
+    criteria = Criterion.objects.all()
+    for criterion in criteria:
+        ans = Answer.objects.filter(session=session,criterion=criterion)
+        if not ans.count():
             Answer.objects.create(session=session, criterion=criterion, applicable=False)
     return Answer.objects.filter(session=session).order_by('criterion__factor__order', 'criterion__order')
 
@@ -238,7 +238,7 @@ def technologies(request, model=None, id=None):
             formset.save()   
     
     #if there are no valid answers, we just default to false
-    qs = get_or_create_answers(get_session(request))
+    get_or_create_answers(get_session(request))
  
    # get the active meta factor
     crit = None
@@ -250,6 +250,7 @@ def technologies(request, model=None, id=None):
     qs_filtered = Answer.objects.filter(session=get_session(request)).filter(Q(criterion__factor__meta_criterion=crit) | Q(criterion__factor__is_meta_factor=True)).order_by('criterion__factor__order', 'criterion__order')
 
     formset = AnswerFormSet(queryset=qs_filtered)
+    
     form_list = [form for form in formset.forms]
     change_list = []
     factor_list = []

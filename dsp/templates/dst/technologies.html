@@ -52,7 +52,6 @@
 	    <div style="padding:0 10px 0 20px;">
 		{% for form, factor, change in zipped_formlist %}
 		  {%if form.meta_factor%}
-		
  			<p style="text-align:left;">
             <a class="green awesome" style="margin-right:10px; margin-bottom:5px; float:left;"
                 href="{% url choose_meta form.instance.criterion.id %}">
