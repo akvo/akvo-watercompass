@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.db.models import get_model
 from django.forms import ModelForm 
 from django.utils.translation import ugettext, ugettext_lazy as _
+from models import Criterion
 
 from models import Technology, TechGroup
 
@@ -19,8 +20,13 @@ class CriterionInLine(admin.TabularInline):
 
 class FactorAdmin(admin.ModelAdmin):
     model = get_model('dst', 'Factor')
-    list_display = ('factor', 'order', 'display_criteria',)
+    list_display = ('factor', 'order','is_meta_factor','display_criteria',)
     inlines = [CriterionInLine, ]
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == "meta_criterion":
+            kwargs["queryset"] = Criterion.objects.filter(factor__is_meta_factor=True)
+        return super(FactorAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 admin.site.register(get_model('dst', 'Factor'), FactorAdmin)
 

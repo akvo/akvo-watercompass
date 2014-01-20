@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib.sessions.models import Session
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
+from django.db.models import Q
 from django.forms import ModelForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
@@ -154,6 +155,8 @@ def init_session(session):
  #  initialize_linked_techs()
     btns = [getattr(Technology, use) for use in uses]
     buttons = ["%s_ishidden" % btn for btn in btns ]
+    if 'no_ishidden' not in session.keys():
+        session['no_ishidden'] = True
     for button in buttons:
         if button not in session.keys():
             session[button] = False
@@ -236,19 +239,29 @@ def technologies(request, model=None, id=None):
     
     #if there are no valid answers, we just default to false
     qs = get_or_create_answers(get_session(request))
-    
-    formset = AnswerFormSet(queryset=qs)
+ 
+   # get the active meta factor
+    crit = None
+    meta_answers = Answer.objects.filter(session=get_session(request),criterion__factor__is_meta_factor=True)
+    for ans in meta_answers:
+        if ans.applicable:
+            crit = ans.criterion
+
+    qs_filtered = Answer.objects.filter(session=get_session(request)).filter(Q(criterion__factor__meta_criterion=crit) | Q(criterion__factor__is_meta_factor=True)).order_by('criterion__factor__order', 'criterion__order')
+
+    formset = AnswerFormSet(queryset=qs_filtered)
     form_list = [form for form in formset.forms]
     change_list = []
     factor_list = []
     old_factor = ''
-    
+
     # the 'change' variable is used to detect when we need to display a new factor. The form list is just a list of all criteria.
     for form in formset.forms:
         new_factor = form.instance.criterion.factor
         factor_list.append(new_factor)
         change_list.append(new_factor != old_factor)
         form.fields['applicable'].label = pretty_name(str(form.instance.criterion))
+        form.meta_factor = form.instance.criterion.factor.is_meta_factor
         old_factor = new_factor
     
     # create zipped list of forms, factors and change. Each form is one criterium.
@@ -463,6 +476,20 @@ def reset_techs(request):
     TechChoice.objects.filter(session=get_session(request)).delete()
     return HttpResponseRedirect(reverse('technologies'))
 
+def choose_meta(request, criterion_id):
+    criterion = Criterion.objects.get(id=criterion_id)
+    all_answers = Answer.objects.filter(session=get_session(request))
+    meta_answer = Answer.objects.filter(session=get_session(request),criterion=criterion)
+
+    for ans in all_answers:
+        ans.applicable = False
+        ans.save()
+
+    for ans in meta_answer: 
+        ans.applicable = True
+        ans.save()
+    return HttpResponseRedirect(reverse('technologies'))
+ 
 
 @render_to('dst/technologies_help.html')
 def technologies_help(request,id=None):

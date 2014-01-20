@@ -69,6 +69,8 @@ class Factor(models.Model):
     order           = models.IntegerField(_(u'order'),)
     info_heading    = models.CharField(_(u'info heading'), max_length=50)
     info_text       = models.TextField(_(u'info text'),)
+    is_meta_factor  = models.BooleanField(verbose_name=_('This is a meta factor'))
+    meta_criterion  = models.ManyToManyField('Criterion', blank=True, related_name='factors', symmetrical=False, )
 
     def __unicode__(self):
         return self.factor

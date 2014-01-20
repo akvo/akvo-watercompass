@@ -18,7 +18,7 @@ urlpatterns = patterns('',
     url(r'^pdf/(?P<filename>[a-z0-9A-Z_\-]*\.pdf)$', 'dst.views.pdf'),
 
     url(r'^solution/$', 'dst.views.solution', name='solution'),
-        
+    url(r'^choose_meta/(?P<criterion_id>\d+)/$', 'dst.views.choose_meta', name='choose_meta'),
     url(r'^help/$', direct_to_template, {'template': 'dst/help.html'}, name='help'),
     url(r'^demo/$', direct_to_template, {'template': 'dst/demo.html'}, name='demo'),
     url(r'^reset_all/$', 'dst.views.reset_all', name='reset_all'),

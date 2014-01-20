@@ -43,27 +43,46 @@
 				href="{% url index %}">&larr;{% trans 'Back to introduction' %}</a>
 		</p>
 		<p class="small"> Use the options below to describe your situation. Click on the items for more help. </p>
-		<p style="text-align:left;">
+		<!--<p style="text-align:left;">
 			<a class="blue_w awesome" style="margin-right:10px; margin-bottom:5px; float:left;"
 				href="{% url reset_all %}">{% trans 'Reset options' %}</a>
-		</p>
+		</p> -->
 	    </div>
 	<!-- create left sidebar with questions -->
 	    <div style="padding:0 10px 0 20px;">
 		{% for form, factor, change in zipped_formlist %}
-		{% if change %}
+		  {%if form.meta_factor%}
+		
+ 			<p style="text-align:left;">
+            <a class="green awesome" style="margin-right:10px; margin-bottom:5px; float:left;"
+                href="{% url choose_meta form.instance.criterion.id %}">
+                {%if form.applicable.value%}
+                  <strong>{{form.instance.criterion|capfirst}}</strong>
+                {%else%}
+                  <span style="color:#618d00">{{form.instance.criterion|capfirst}}</span>
+                {%endif%}
+            </a>
+         	</p>
+			<div style="display:none">{{form.id}}{{form.criterion}}{{form.applicable}}</div>
+
+		  {%else%}
+		  {% if change %}
 		    {% if not forloop.first %}
 		    </ul>
-                {% endif %}
+            {% endif %}
 		    <hr style="margin-bottom:0.5em;"/>
 		    <h5><a href="{% url factor_help 'factor' factor.id %}" class="fancy">{{factor.factor|capfirst}}</a></h5>
 		    <ul style="list-style-type:none;">
-		{% endif %}
+		  {% endif %}
 
 		    <li>
 		   {{form.id}}{{form.criterion}}{{form.applicable}}
 		    <a class="small_choices fancy" href="{% url factor_help 'criterion' form.instance.criterion.id %}" target="_blank">{{form.instance.criterion|capfirst}}</a>
 		</li>
+	  {%endif%}
+
+
+
 		{% endfor %}
 		<hr />
 		</ul>
