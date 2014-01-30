@@ -75,9 +75,10 @@ class HttpResponseNoContent(HttpResponse):
     status_code = 204
     
 def get_session(request):
-    session, created = Session.objects.get_or_create(pk=request.session.session_key)
+    today = datetime.datetime.today()
+    twoWeeks =  today + datetime.timedelta(days=14)
+    session, created = Session.objects.get_or_create(pk=request.session.session_key, defaults={'expire_date':twoWeeks})
     #session = Session.objects.get(pk=request.session.session_key)
-    request.session.set_expiry(864000)
     return session
     
 def render_to(template):
