@@ -138,11 +138,19 @@
 	</div>
 	<!-- start technology grid-->
 	<div class="span-14 last" style="margin-bottom:0; background:#ddd;">
-	    {% for techgroup, techs in all_techs %}
-	    <div class="span-2a  {% if forloop.first %}first{% endif %} {% if not forloop.last %}withborder{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center;">
-		    	<div style="margin-bottom:30px; ">
+ 	{% for techgroup, techs in all_techs %}
+	<div class="span-2a  {% if forloop.first %}first{% endif %} {% if not forloop.last %}withborder{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center;">
+		  <div style="margin-bottom:30px; ">
 			<p style="font-weight:bold;display:block;height:25px;margin-top:5px; color:#222">{{ techgroup|capfirst}}</p>
 		    	</div>
+		    </div>
+		 {% endfor %}
+	</div>	
+
+	<div class="span-14 last" style="margin-bottom:0; background:#ddd; height:800px; overflow:scroll;">
+	    {% for techgroup, techs in all_techs %}
+	    <div class="span-2a  {% if forloop.first %}first{% endif %} {% if not forloop.last %}withborder{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center;">
+		    	
 		{% for tech in techs %}
 		<div class="tech tech_{{tech.usable}}">
 		    <div class="back_{{tech.usable}}">	
