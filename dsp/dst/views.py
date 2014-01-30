@@ -77,6 +77,7 @@ class HttpResponseNoContent(HttpResponse):
 def get_session(request):
     session, created = Session.objects.get_or_create(pk=request.session.session_key)
     #session = Session.objects.get(pk=request.session.session_key)
+    request.session.set_expiry(864000)
     return session
     
 def render_to(template):
@@ -317,7 +318,9 @@ def techs_selected(request, model=None, id=None):
     relevance=[]
     empty=[]
 
-    for tech in chosen_techs:
+
+    for tc in choices:
+        tech = Technology.objects.get(pk=tc.technology.id)
         all_techs.append(tech)
         applicable = tech.applicable(get_session(request))
         relevance_added=False
@@ -333,43 +336,6 @@ def techs_selected(request, model=None, id=None):
                 relevance_added = True
         if not relevance_added:
             relevance.append(empty)
-
-    # for group in groups:
-    #     found_tech = False
-    #     found_relevance=False
-    #     techs = Technology.objects.filter(group=group)
-    #     for tech in techs:
-    #         if tech in chosen_techs:
-    #             chosen_in_group.append(tech)
-    #             found_tech = True
-               
-    #             applicable = tech.applicable(get_session(request))
-    #           #  relevancy_objects = []
-                
-    #             if applicable == tech.TECH_USE_MAYBE:
-    #                 relevancy_objects = list(tech.maybe_relevant(get_session(request)))
-    #                 if len(relevancy_objects)!=0:
-    #                     #for object in relevancy_objects:
-    #                      #   logging.debug(object.note)
-    #                     relevance.append(relevancy_objects)
-    #                     found_relevance=True
-
-    #     if found_tech == False:
-    #         chosen_in_group.append('')
-    #     if found_relevance == False:
-    #         relevance.append(empty)
-
-    # for tech_choice in choices:
-    #     all_techs.append(tech_choice.technology)
-    #     applicable = tech.applicable(get_session(request))
-    #     if applicable == tech_choice.TECH_USE_MAYBE:
-    #         relevancy_objects = list(tech_choice.maybe_relevant(get_session(request)))
-    #         if len(relevancy_objects)!=0:
-    #             relevance.append(relevancy_objects)
-    #     if applicable == tech_choice.TECH_USE_NO:
-    #         relevancy_objects = list(tech_choice.not_relevant(get_session(request)))
-    #         if len(relevancy_objects)!=0:
-    #             relevance.append(relevancy_objects)
         
     all_chosen_techs = zip(all_techs,relevance)
 
@@ -467,6 +433,7 @@ def techs_selected(request, model=None, id=None):
                 'session'       : request.session,
                 'form'          : form,
                 'pdf_file'      :'/pdf/'+s_name_final,
+                'chosen_techs': choices
             }        
                 
                 #HttpResponseRedirect(reverse('techs_selected_download')) # Redirect after POST
@@ -475,7 +442,6 @@ def techs_selected(request, model=None, id=None):
     
     return {
         'techgroups'    : groups,
-        'chosen_techs'    : chosen_techs,
         'session'       : request.session,
         'form'          : form,
         'pdf_file'      :'',

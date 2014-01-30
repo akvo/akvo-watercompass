@@ -6,7 +6,6 @@
 	<meta name="description" content="{% trans 'Water Decision Support Tool' %}" />
 	<meta name="keywords" content="{% trans 'Water,Decision Support Tool' %}" />
 	<title>{% block title %}{% trans 'WaterCompass' %}{% endblock title %}</title>
-	
 	<link rel="stylesheet" href="{{MEDIA_URL}}css/src/style.css" type="text/css" media="screen" title="main">
 	<!--[if IE 6]>
 	<link rel="stylesheet" href="{{MEDIA_URL}}css/ie6.css" type="text/css" media="screen, projection">
@@ -34,15 +33,9 @@
 	{% block maincontainer %}
 	<div id="maincontainer" class="container">
 		<div class="span-11 append-1 first">
-			{% comment %}
-			<a href="http://akvo.org">
-				<img src="{{ MEDIA_URL }}img/logo_akvo.png" width="170" height="63" alt="Akvo.org" style="float:right; margin-top:10px; margin-left:20px;"/>
+			<a href="http://www.watercompass.info">
+				<img src="{{ MEDIA_URL }}img/logos/WaterCompass.png" width="300px" height="40px" alt="Akvo.org" style="margin-left:20px; margin-bottom:10px;"/>
 			</a>
-			<a href="http://www.waste.nl/">
-				<img src="{{ MEDIA_URL }}img/logo_waste.jpg" width="174" height="84" alt="Waste" style="float:right;" />
-			</a>
-			{% endcomment %}
-			<h1 style="margin-left:20px;">WaterCompass</h1>
 			{#<p class="small grey">Factor selection > Appropriate technologies > Build a system</p> #}
 		</div>
 		{% block content %}

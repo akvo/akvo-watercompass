@@ -1,5 +1,5 @@
 .tech {
-	height:165px; 
+	height:160px; 
 	margin-left:5px; 
 	margin-right:5px;
 	padding:4px 4px 4px 4px;
@@ -7,7 +7,7 @@
 	border:1px solid #0b50ae;
 	width:100px;
 	/*border-bottom:1px solid #ccc; */
-	margin-bottom:25px;
+	margin-bottom:15px;
 }
 
 .techs_selected {
