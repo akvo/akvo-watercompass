@@ -13,14 +13,14 @@ from datetime import datetime
 from pyPdf import PdfFileWriter, PdfFileReader
 
 from models import Factor, TechGroup, Technology, Relevancy, Answer, Criterion, TechChoice, PDF_prefs
-from utils import pretty_name
+from django.forms.forms import pretty_name
 from pdf_utils import *
 
 # PROFILING  
 import hotshot
 import os
 import time
-import settings
+from django.conf import settings
 import re
 import markdown2
 
@@ -401,8 +401,8 @@ def techs_selected(request, model=None, id=None):
             # append akvopedia articles if checked.
             THIS_PATH=os.path.dirname(__file__)
             (HOME,HERE)=os.path.split(THIS_PATH)
-        #    akvopedia_pdf_dir=HOME+'/mediaroot/akvopedia_pdf/'
-            output_dir=HOME+'/mediaroot/pdf_tmp/'
+            akvopedia_pdf_dir= settings.STATIC_ROOT + '/akvopedia_pdf/'
+            output_dir=settings.STATIC_ROOT + '/pdf_tmp/'
                
             output = PdfFileWriter()
             outputStream = file(output_dir+s_name_final, "wb")

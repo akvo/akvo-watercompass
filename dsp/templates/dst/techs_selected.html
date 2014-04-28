@@ -1,6 +1,6 @@
 {% extends "dst/base.html" %}
 {% load i18n akvo_filters %}
-
+{% load staticfiles %}
 {% block inline_styles %}
 {{block.super}}
 
@@ -29,7 +29,7 @@
 <div style="clear:both;"></div>
 				<div class="span-2" style="margin-left:20px;margin-bottom:10px;">
 				<p class="small" style="margin-top:5px;margin-bottom:10"> <a class="blue_w awesome" style="margin-right:10px; float:left;"
-				href="{% url technologies %}">{% trans '&larr; back ' %}</a>
+				href="{% url "technologies" %}">{% trans '&larr; back ' %}</a>
 				</p>
 </div>
 
@@ -49,13 +49,13 @@
 		    <div class="tech_top">
 			<div>
 			       <div>	
-				    <a class="fancy" href="{% url technologies_help choice.technology.id %}up/" title="{{choice.technology}}">
+				    <a class="fancy" href="{% url "technologies_help" choice.technology.id %}up/" title="{{choice.technology}}">
 				    <div style="margin-bottom:5px;">
-						<img src="{{ MEDIA_URL}}small/{{ choice.technology.image }}"/>		
+						<img src="/static/small/{{ choice.technology.image }}"/>		
 				    </div>
 				    </a>
 				    <p class="tiny" style="margin-top:5px; display:block; height:45px; overflow:hidden; margin-bottom:5px;">
-				        <a class="fancy" href="{% url technologies_help choice.technology.id %}" title="{{choice.technology.id}}">{{ choice.technology|capfirst|smart_truncate:35 }}</a>
+				        <a class="fancy" href="{% url "technologies_help" choice.technology.id %}" title="{{choice.technology.id}}">{{ choice.technology|capfirst|smart_truncate:35 }}</a>
 				    </p>	                    
 				</div>
 			 </div>
@@ -69,7 +69,7 @@
 </div>	
 	
 <div class="clear"></div>
-<form name="PDf_preference" method="post">
+<form name="PDf_preference" method="post">{% csrf_token %}
 
 <div class="span-18" style="margin-top:30px;">
     <div class="span-5 append-2 first" style="margin-left:20px;">
@@ -79,7 +79,7 @@
  {%ifnotequal pdf_file ''%}
      <p style="font-weight:bold;display:block;color:#555;margin-bottom:5px;"> Downloading your PDF</p>
     <p>Your PDF is ready. Please click on the button below to download it.</p>
-    <a href="{{pdf_file}}" ><img src="{{ MEDIA_URL}}img/extra/pdf-icon-download.png"></a>
+    <a href="{{pdf_file}}" ><img src="{% static "img/extra/pdf-icon-download.png" %}"></a>
 	
 {% endifnotequal %}	    
     </div>
@@ -97,7 +97,7 @@
 	    
 	    <div style="width:420px;margin-bottom:20px;padding:0 0 0 10px;float:left;margin-left:30px;">
 		<a  style="margin-right:10px;" href="javascript:document.PDf_preference.submit();" 
-				onclick="this.blur();" style="float:left;"><img src="{{ MEDIA_URL}}img/extra/pdf-icon.png"></a>
+				onclick="this.blur();" style="float:left;"><img src="{% static "img/extra/pdf-icon.png" %}"></a>
 	    
 	   </div>
 	    
@@ -112,7 +112,7 @@
 
 {% block js %}
 {{block.super}}
-<script type="text/javascript" src="{{MEDIA_URL}}fancybox/fancybox.js"></script>
+<script type="text/javascript" src="{% static "fancybox/fancybox.js" %}"></script>
 {% endblock js %}
 
 

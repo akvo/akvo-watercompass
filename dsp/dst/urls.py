@@ -1,7 +1,6 @@
  # -*- coding: utf-8 -*-
 
-from django.conf.urls.defaults import *
-from django.views.generic.simple import direct_to_template
+from django.conf.urls import patterns, include, url
 import logging
 from datetime import datetime
 
@@ -21,8 +20,8 @@ urlpatterns = patterns('',
     url(r'^pdf/(?P<filename>[a-z0-9A-Z_\-]*\.pdf)$', 'dst.views.pdf'),
     url(r'^solution/$', 'dst.views.solution', name='solution'),
         
-    url(r'^help/$', direct_to_template, {'template': 'dst/help.html'}, name='help'),
-    url(r'^demo/$', direct_to_template, {'template': 'dst/demo.html'}, name='demo'),
+    # url(r'^help/$', direct_to_template, {'template': 'dst/help.html'}, name='help'),
+    # url(r'^demo/$', direct_to_template, {'template': 'dst/demo.html'}, name='demo'),
     url(r'^reset_all/$', 'dst.views.reset_all', name='reset_all'),
     url(r'^reset_techs/$', 'dst.views.reset_techs', name='reset_techs'),
     url(r'^toggle_button/(?P<btn_name>\w+)/$', 'dst.views.toggle_button', name='toggle_button'),

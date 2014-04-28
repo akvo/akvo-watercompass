@@ -11,13 +11,13 @@ from django import forms
 
 import itertools
 import logging
-from utils import pretty_name
+from django.forms.forms import pretty_name
 
 # PROFILING  
 import hotshot
 import os
 import time
-import settings
+from django.conf import settings
 
 try:
     PROFILE_LOG_BASE = settings.PROFILE_LOG_BASE
@@ -168,13 +168,13 @@ class Technology(models.Model):
     image       = models.CharField(_(u'icon image'), max_length=100, help_text=_('Enter the url of the icon image'))
     url_source1 = models.CharField(_(u'source 1'), blank=True,max_length=100, help_text=_('Enter the source of a webpage'))
     url_title1 = models.CharField(_(u'title 1'), blank=True,max_length=100, help_text=_('Enter the webpage title'))
-    url1         = models.URLField(_(u'URL 1'), blank=True, verify_exists = False, help_text=_('Enter the url to the page, starting with http://'))
+    url1         = models.URLField(_(u'URL 1'), blank=True, help_text=_('Enter the url to the page, starting with http://'))
     url_source2 = models.CharField(_(u'source 2'), blank=True,max_length=100)
     url_title2 = models.CharField(_(u'title 2'), blank=True,max_length=100)
-    url2         = models.URLField(_(u'URL 2'),blank=True, verify_exists = False)
+    url2         = models.URLField(_(u'URL 2'),blank=True)
     url_source3 = models.CharField(_(u'source 3'), blank=True,max_length=100)
     url_title3 = models.CharField(_(u'title 3'), blank=True,max_length=100)
-    url3         = models.URLField(_(u'URL 3'),blank=True, verify_exists = False)
+    url3         = models.URLField(_(u'URL 3'),blank=True)
 
     linked_techs = models.ManyToManyField('self',blank=True, related_name='linked_tech',symmetrical=True)
     order       =  models.IntegerField(null=True)

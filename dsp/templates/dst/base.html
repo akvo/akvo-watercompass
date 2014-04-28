@@ -1,4 +1,5 @@
 {% load i18n  %}
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head>
@@ -9,12 +10,12 @@
 	<meta name="description" content="{% trans 'Water Decision Support Tool' %}" />
 	<meta name="keywords" content="{% trans 'Water,Decision Support Tool' %}" />
 	<title>{% block title %}{% trans 'WaterCompass' %}{% endblock title %}</title>
-	<link rel="stylesheet" href="{{MEDIA_URL}}css/src/style.css" type="text/css" media="screen" title="main">
+	<link rel="stylesheet" href="{% static "css/src/style.css" %}" type="text/css" media="screen" title="main">
 	<!--[if IE 6]>
-	<link rel="stylesheet" href="{{MEDIA_URL}}css/ie6.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="{% static "css/ie6.css" %}"type="text/css" media="screen, projection">
 	<![endif]-->
-	
-	<link rel="stylesheet" href="{{MEDIA_URL}}fancybox/fancybox.css" type="text/css" media="screen" title="main">
+
+	<link rel="stylesheet" href="{% static "fancybox/fancybox.css" %}" type="text/css" media="screen" title="main">
 	
 	<style type="text/css" media="screen">
 		
@@ -37,7 +38,7 @@
 	<div id="maincontainer" class="container">
 		<div class="span-11 append-1 first">
 			<a href="http://www.watercompass.info">
-				<img src="{{ MEDIA_URL }}img/logos/WaterCompass.png" width="300px" height="40px" alt="www.watercompass.info" style="margin-left:20px; margin-bottom:10px;"/>
+				<img src="{% static "img/logos/WaterCompass.png" %}" width="300px" height="40px" alt="www.watercompass.info" style="margin-left:20px; margin-bottom:10px;"/>
 			</a>
 			{#<p class="small grey">Factor selection > Appropriate technologies > Build a system</p> #}
 		</div>
@@ -71,7 +72,7 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script type="text/javascript">
 	if (typeof jQuery == 'undefined') {
-		document.write('<script type="text/javascript" src="{{MEDIA_URL}}js/1.4.2.min.js"><'); document.write('/script>');
+		document.write('<script type="text/javascript" src="{% static "js/1.4.2.min.js" %}"><'); document.write('/script>');
 	}
 	var $ = jQ = jQuery.noConflict();
 </script>
