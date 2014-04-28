@@ -1,0 +1,135 @@
+.tech {
+	height:160px; 
+	margin-left:5px; 
+	margin-right:5px;
+	padding:4px 4px 4px 4px;
+	background:#fff;
+	border:1px solid #0b50ae;
+	width:100px;
+	/*border-bottom:1px solid #ccc; */
+	margin-bottom:15px;
+}
+
+.techs_selected {
+	height:165px; 
+	margin-left:0px; 
+	margin-right:30px;
+	padding:4px 4px 4px 4px;
+	background:#fff;
+	border:1px solid #0b50ae;
+	width:110px;
+	/*border-bottom:1px solid #ccc; */
+	margin-bottom:25px;
+}
+.tech_top {
+	height:100px; 
+	margin-left:10px; 
+	margin-right:10px;
+	padding:4px 4px 4px 4px;
+	width:70px;
+	/*border-bottom:1px solid #ccc; */
+	margin-bottom:30px;
+}
+
+.back_yes_img /*, #toggle_yes*/ {
+	background-color:#c7fdbe; 
+}
+
+
+.back_maybe_img /*, #toggle_maybe*/ {
+	background-color:#dab159;
+}
+
+.back_no_img /*, #toggle_no*/ {
+	background-color:#ed6262;
+}
+/* not used
+.back_na_img, #toggle_na {
+	background-color:#C9C299;
+	background-color:#CCFFCC;
+	background-color:#EEEEEE;
+} */
+
+.back_hide, #toggle_hide {
+	/*display: none;*/
+}
+
+.back_hide_img {
+	filter:alpha(opacity=15);
+	-moz-opacity:0.15;
+	-khtml-opacity: 0.15;
+	opacity: 0.;
+}
+
+.back_chosen_img, #toggle_chosen {
+	background-color:#c7fdbe;
+	border:4px solid #0b50ae;
+}
+
+#toggles > a {
+	padding:5px 10px;
+	margin: 10px;
+}
+
+.info-block{
+	height:180px;
+	width: 30%;
+	float:left;
+	overflow:auto;
+	padding: 7px 7px 7px 7px;
+	margin:  5px 5px 5px 5px;
+}
+
+.link-block{
+	height:60px;
+	width: 285px;
+	float:left;
+	overflow:auto;
+	padding: 7px 7px 7px 7px;
+	margin:  5px 5px 5px 5px;
+}
+
+#remarks_col {
+   float:left;
+   width:595px;
+}
+#links_col {
+   float:right;
+   width:300px;
+   padding-right:25px;
+}
+
+.dst-tooltip {
+	font-style: italic;
+}
+
+.info-block h4 {
+	margin: 0 0 0 0;
+	display: inline;
+}
+
+.color-block h4 {
+	color:#9a8602;
+}
+
+.color-block p {
+	color:#000;
+}
+.color-block {
+	background-color:#cee6ff;
+    border-radius: 15px;
+}
+
+.color-block-1 p {
+	color:#000;
+}
+.color-block-1 {
+	background-color:#FEF49C;
+    border-radius: 15px;
+}
+
+.info-block p {
+	display: inline;
+}
+
+
