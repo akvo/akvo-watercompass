@@ -141,7 +141,7 @@
  	{% for techgroup, techs in all_techs %}
 	<div class="span-2a  {% if forloop.first %}first{% endif %} {% if not forloop.last %}withborder{% endif %} {% if forloop.last %}last{% endif %}" style="text-align:center;">
 		  <div style="margin-bottom:30px; ">
-			<p style="font-weight:bold;display:block;height:25px;margin-top:5px; color:#222">{{ techgroup|capfirst}}</p>
+			<p style="font-weight:bold;display:block;height:25px;margin-top:5px; color:#222">{% autoescape off %}{{ techgroup|capfirst}}{% endautoescape %}</p>
 		    	</div>
 		    </div>
 		 {% endfor %}
@@ -155,16 +155,20 @@
 		<div class="tech tech_{{tech.usable}}">
 		    <div class="back_{{tech.usable}}">	
 					<a class="fancy" href="{% url "technologies_help" tech.id %}" title="{{tech}}">
-		        <div class="back_{{tech.usable}}_img" style="margin-bottom:5px;">
+		        
+				<div class="border_{{tech.chosen}}" style="margin-bottom:5px;">
+		        	<div class="back_{{tech.usable}}_img" >
 						<img src="/static/technologies/{{ tech.image }}" />		
+		        	</div>
 		        </div>
+
 		    			</a>
 		    			<p class="small" style="margin-top:5px; display:block; height:35px; overflow:hidden; margin-bottom:5px;">
 		    			<a class="fancy" href="{% url "technologies_help" tech.id %}" title="{{tech.id}}">{{ tech|capfirst|smart_truncate:25 }}</a>
 		    			</p>
 		    			
 		    			
-		    			{% ifequal tech.usable 'chosen'  %}
+		    			{% ifequal tech.chosen 'chosen'  %}
 		    				<a class="white awesome small" href="{% url "tech_choice" tech.id %}">{% trans 'Deselect' %}</a>
 		    			{% else %}
 		    				<a class="white awesome small" href="{% url "tech_choice" tech.id %}">{% trans 'Select' %}</a>

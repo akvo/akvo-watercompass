@@ -279,7 +279,8 @@ def technologies(request, model=None, id=None):
         techs = Technology.objects.filter(group=group).order_by('order')
         for tech in techs:
             tech.usable = tech.usability(get_session(request))
-            if (tech.usable == 'chosen'):
+            tech.chosen = tech.chosen(get_session(request))
+            if (tech.chosen == 'chosen'):
                 one_chosen = True
        #     tech.available = tech.availability(get_session(request))
         group_techs.append(techs)

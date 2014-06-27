@@ -61,10 +61,10 @@
 	opacity: 0.;
 }
 
-.back_chosen_img, #toggle_chosen {
-	background-color:#c7fdbe;
+.border_chosen, #toggle_chosen {
 	border:4px solid #0b50ae;
 }
+
 
 #toggles > a {
 	padding:5px 10px;

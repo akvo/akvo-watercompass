@@ -313,17 +313,28 @@ class Technology(models.Model):
             return self.TECH_USE_NO
         return self.TECH_USE_YES
 
-       
-    def usability(self, session):
+    def chosen(self, session):
         """
-        figure out "usability" status based on Answers and TechChoices
+        figure out if the technology has been chosen
         """
-        # first figure if self is usable based on choices already made
         chosen_techs = Technology.objects.filter(tech_choices__session=session)
         if chosen_techs:
             # among the chosen; return with the good news
             if self in chosen_techs:
                 return self.TECH_USE_CHOSEN
+        else:
+            return ""
+
+    def usability(self, session):
+        """
+        figure out "usability" status based on Answers and TechChoices
+        """
+        # first figure if self is usable based on choices already made
+        #chosen_techs = Technology.objects.filter(tech_choices__session=session)
+        #if chosen_techs:
+            # among the chosen; return with the good news
+         #   if self in chosen_techs:
+         #       return self.TECH_USE_CHOSEN
 
             # self is in a group where the choice is already made and we're not the one
             #if self.group in [t.group for t in chosen_techs]:
