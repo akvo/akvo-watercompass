@@ -1,63 +1,87 @@
 {% extends "dst/base_panel.html" %}
-{% load i18n webdesign %}
+{% load i18n %}
 
 
 {% block panel_title %} {{ technology|capfirst }}{% endblock panel_title %}
 {% block panel_content %}
 
-{% if technology.url %}
-	<div class="span-7 first">
-		<div class="span-2 first" style="float:left;">
-			<div class="back_{{tech.usable}}_img" style="margin-bottom:5px;">
-						<img src="{{ MEDIA_URL}}{{ technology.image }}" />		
-		        </div>
-		</div>
-		<div class="span-4 " style="float:left;">
-			<p>Visit the <a href="{{technology.url}}" target="_blank">Akvopedia article on {{technology}} &rarr;</a>
-		</div>
+<div class="info-block">
+   <h4>Description&nbsp;&nbsp;</h4>
+	{% autoescape off %}{{ technology.description }}{% endautoescape %}
+</div>
+<div class="info-block color-block">
+	<h4>Financial&nbsp;&nbsp;</h4>
+{% autoescape off %}{{ technology.desc_financial }}{% endautoescape %}
+</div>
+<div class="info-block color-block">
+	<h4>Institutional&nbsp;&nbsp;</h4>
+	{% autoescape off %}{{ technology.desc_institutional }}{% endautoescape %}
+</div>
+<div class="info-block color-block">
+	<h4>Environmental&nbsp;&nbsp;</h4>
+	{% autoescape off %}{{ technology.desc_environmental }}{% endautoescape %}
+</div>
+<div class="info-block color-block">
+	<h4>Techical&nbsp;&nbsp;</h4>
+{% autoescape off %}{{ technology.desc_technical }}{% endautoescape %}
+</div>
+<div class="info-block color-block">
+	<h4>Social</h4>
+{% autoescape off %}{{ technology.desc_social }}{% endautoescape %}
+</div>
+<div style="clear:both; height:10px"></div>
+
+<div id="remarks_col">
+			<h4>Relevant remarks:</h4>
+			{% if relevancy_objects %}
+				{% for object in relevancy_objects  %}
+				    {% if object.note %}
+					    <div class="span-13 first" style="margin:10px 0 0 0;">
+							<div class="prepend-1 first" style="float:left; margin-right:15px;">
+			
+								{%ifequal object.get_applicability_display 'No'%}
+									<div style="background:#ed6262; width:10px; height:55px"></div>
+								{% else %}
+									{%ifequal object.get_applicability_display 'Maybe'%}
+										<div style="background:#dab159; width:10px; height:55px"></div>
+									{%endifequal%}
+								{%endifequal%}
+							</div>
+						<div class="span-10" style="float:left;">
+							<div style="color:#005a8b; font-size: 0.875em; margin: 0 0 5px 0;">
+								<strong>{{ object }}</strong> &mdash; selection <strong>{{ object.show_criterion }}</strong>
+							</div>
+							<p>
+								{{ object.note.note }}
+							</p>
+						</div>
+						</div>
+	    		{% endif %}
+			{% endfor %}
+			{% else %}
+				<p>{% trans 'No relevant remarks for ' %} {{ technology }}.</p>
+			{% endif %}
 	</div>
-	<div style="clear:both;"></div>
-{% endif %}
-<div>
-	<p>{{ technology.description }}</p>
+<div id="links_col">
+<h4>External links:</h4>
+			{% if technology.url_source1 %}
+				<div class="link-block color-block-1">
+				<p>{{technology.url_source1}} - <a href="{{technology.url1}}" target="_blank">{{technology.url_title1}}</a></p>
+			</div>
+			{% endif %}
+			{% if technology.url_source2 %}
+			<div class="link-block color-block-1">
+				<p>{{technology.url_source2}} - <a href="{{technology.url2}}" target="_blank">{{technology.url_title2}}</a></p>
+				</div>
+			{% endif %}
+			{% if technology.url_source3 %}
+			<div class="link-block color-block-1">
+				<p>{{technology.url_source3}} - <a href="{{technology.url3}}" target="_blank">{{technology.url_title3}}</a></p>
+				</div>
+			{% endif %}
 </div>
 
-<h4>Relevant options</h4>
-{% if relevancy_objects %}
-	
-	<p>{% trans 'The following options you have chosen are relevant for this technology:' %}</p>	
-	{% for object in relevancy_objects  %}
-	        {% if object.note %}
-	           <div class="span-13 first">
-			<div class="prepend-1 span-1 first" style="float:left;">
-				<p style="color:#2B80AF; font-size:2em; margin:10px 10px 10px 10px;">{{forloop.counter}}</p>
-			</div>
-			<div class="span-10" style="float:left;">
-				<p>
-		                At option <strong>{{ object }}</strong> you have selected <strong>{{ object.show_criterion }}</strong>.<br />
-	                
-				{%ifequal object.get_applicability_display 'No'%}
-					This means that in your situation, {{ technology}} is probably not a suitable technology, because:
-					<strong>{{ object.note.note }}</strong><br/>
-				{% else %}
-					{%ifequal object.get_applicability_display 'Maybe'%}
-						This means that in your situation, {{technology}} might be a suitable technology. This depends on:<br/>
-						<strong>{{ object.note.note }}</strong><br/>
-					{%endifequal%}
-				{%endifequal%}
-		            </p>
-			</div>
-		</div>
-		   
-		    
-	        {% endif %}
-	{% endfor %}
 
-{% else %}
-	<p>{% trans 'None of the options were relevant for ' %} {{ technology }}.</p>
-
-{% endif %}
-<div style="clear:both;"></div>
 <!--
 {% if settings.DEBUG %}
     <h5>DEBUG info; Linked techs:</h5>

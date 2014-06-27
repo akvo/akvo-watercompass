@@ -1,18 +1,21 @@
 {% load i18n  %}
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE }}">
 <head>
+	<link rel="icon" 
+      type="image/png" 
+      href="{{ MEDIA_URL }}img/logos/WaterCompassIcon.png">
 	<meta charset="UTF-8" />
-	<meta name="description" content="{% trans 'Sanitation Decision Support Tool' %}" />
-	<meta name="keywords" content="{% trans 'Sanitation,Decision Support Tool' %}" />
-	<title>{% block title %}{% trans 'Sanitation Decision Support Tool' %}{% endblock title %}</title>
-	
-	<link rel="stylesheet" href="{{MEDIA_URL}}css/src/style.css" type="text/css" media="screen" title="main">
+	<meta name="description" content="{% trans 'Water Decision Support Tool' %}" />
+	<meta name="keywords" content="{% trans 'Water,Decision Support Tool' %}" />
+	<title>{% block title %}{% trans 'WaterCompass' %}{% endblock title %}</title>
+	<link rel="stylesheet" href="{% static "css/src/style.css" %}" type="text/css" media="screen" title="main">
 	<!--[if IE 6]>
-	<link rel="stylesheet" href="{{MEDIA_URL}}css/ie6.css" type="text/css" media="screen, projection">
+	<link rel="stylesheet" href="{% static "css/ie6.css" %}"type="text/css" media="screen, projection">
 	<![endif]-->
-	
-	<link rel="stylesheet" href="{{MEDIA_URL}}fancybox/fancybox.css" type="text/css" media="screen" title="main">
+
+	<link rel="stylesheet" href="{% static "fancybox/fancybox.css" %}" type="text/css" media="screen" title="main">
 	
 	<style type="text/css" media="screen">
 		
@@ -34,15 +37,9 @@
 	{% block maincontainer %}
 	<div id="maincontainer" class="container">
 		<div class="span-11 append-1 first">
-			{% comment %}
-			<a href="http://akvo.org">
-				<img src="{{ MEDIA_URL }}img/logo_akvo.png" width="170" height="63" alt="Akvo.org" style="float:right; margin-top:10px; margin-left:20px;"/>
+			<a href="http://www.watercompass.info">
+				<img src="{% static "img/logos/WaterCompass.png" %}" width="300px" height="40px" alt="www.watercompass.info" style="margin-left:20px; margin-bottom:10px;"/>
 			</a>
-			<a href="http://www.waste.nl/">
-				<img src="{{ MEDIA_URL }}img/logo_waste.jpg" width="174" height="84" alt="Waste" style="float:right;" />
-			</a>
-			{% endcomment %}
-			<h1 style="margin-left:20px;">The Sanitation Decision Support Tool</h1>
 			{#<p class="small grey">Factor selection > Appropriate technologies > Build a system</p> #}
 		</div>
 		{% block content %}
@@ -52,19 +49,11 @@
 			<div class="span-10 first">
 				<div class="space10">
 					<p class="small">
-						Site under <a href="http://akvo.org/web/open_license">Open License</a> | 
-						<a href="http://akvo.org/web/terms_of_use">Terms of use</a>
+						Site under <a href="http://akvo.org/help/akvo-policies-and-terms-2/akvo-licensing-and-copyrights/">Open License</a> | 
+						<a href="http://akvo.org/help/akvo-policies-and-terms-2/akvo-terms-of-use/">Terms of use</a>
 					</p>
 				</div>
-			</div>
-			<div class="span-8 last" style="text-align:right;">
-				<div class="space10">
-					<p class="small" >
-						<a href="https://akvo.tenderapp.com/">Help and Support</a> | 
-						<a href="http://akvo.org/web/contact_us">Contact Us</a>
-					</p>
-				</div>
-			</div>			
+			</div>	
 			{% comment %}
 			<p class="small grey" style="margin-right:10px; float:right;">
 				<a id="grid_toggle">Toggle grid</a>
@@ -83,11 +72,30 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script type="text/javascript">
 	if (typeof jQuery == 'undefined') {
-		document.write('<script type="text/javascript" src="{{MEDIA_URL}}js/1.4.2.min.js"><'); document.write('/script>');
+		document.write('<script type="text/javascript" src="{% static "js/1.4.2.min.js" %}"><'); document.write('/script>');
 	}
 	var $ = jQ = jQuery.noConflict();
 </script>
 {% endblock js %}
+
+<!-- Piwik -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+  _paq.push(["setCookieDomain", "*.watercompass.nl"]);
+  _paq.push(["trackPageView"]);
+  _paq.push(["enableLinkTracking"]);
+
+  (function() {
+    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://analytics.akvo.org/";
+    _paq.push(["setTrackerUrl", u+"piwik.php"]);
+    _paq.push(["setSiteId", "18"]);
+    var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
+    g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Piwik Code -->
+
 
 <script type="text/javascript">
 jQ(document).ready(function(){

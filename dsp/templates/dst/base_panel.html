@@ -1,9 +1,9 @@
-{% load i18n webdesign %}
-<div style="width:700px;min-width:700px;max-width:700px;padding-bottom:20px;border-bottom:1px solid #ccc;">
+{% load i18n %}
+<div style="width:950px;min-width:850px;max-width:950px;padding-bottom:20px;">
 	<h2>{% block panel_title %}Title{% endblock panel_title %}</h2>
 	{% block panel_content %}
 	<p>
-		{% lorem 80 w random %}
+		text.
 	</p>
 	{% endblock panel_content %}
 </div>
