@@ -2,7 +2,7 @@ LICENSE.txt, v1.0, 24 May 2010, tbp
 
 Copyright 2009, 2010 Stichting Akvo (Akvo Foundation)
 
-This file is part of Akvo / WASTE Decision Support Tool (DST)
+This file is part of Akvo Watercompass
 
 Akvo / WASTE DST is free software: you can redistribute it and/or modify 
 it under the terms of the GNU Affero General Public License as 

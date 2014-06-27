@@ -4,7 +4,7 @@ Copyright 2009, 2010 Stichting Akvo (Akvo Foundation)
 
 This file is part of Akvo / WASTE Decision Support Tool (DST)
 
-Akvo / WASTE DST is free software: you can redistribute the database
+Akvo Watercompass is free software: you can redistribute the database
 and its content and/or modify it under the terms of the Creative
 Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License as
 published by the Creative Commons Corporation, either version 3 of the
@@ -18,7 +18,7 @@ also be seen at
 to read version is available here:
 <http://creativecommons.org/licenses/by-nc-sa/3.0/>
 
-The Akvo / WASTE DST software is published under a separate
+The Akvo Watercompass software is published under a separate
 license. See the file LICENSE.txt
 
 ================================================================

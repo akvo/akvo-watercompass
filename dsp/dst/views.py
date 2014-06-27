@@ -13,20 +13,27 @@ from datetime import datetime
 from pyPdf import PdfFileWriter, PdfFileReader
 
 from models import Factor, TechGroup, Technology, Relevancy, Answer, Criterion, TechChoice, PDF_prefs
-from utils import pretty_name
+from django.forms.forms import pretty_name
 from pdf_utils import *
 
 # PROFILING  
 import hotshot
 import os
 import time
-import settings
+from django.conf import settings
+import re
+import markdown2
 
 try:
     PROFILE_LOG_BASE = settings.PROFILE_LOG_BASE
 except:
     PROFILE_LOG_BASE = "/tmp"
 
+# turns markdown to html. changes html links to target _blank
+def markdownToHtml(mdString):
+    result = markdown2.markdown(mdString) 
+    # we should add a target="_blank" to the links, so they open in a new window.
+    return result 
 
 def profile(log_file):
     """Profile some callable.
@@ -68,7 +75,9 @@ class HttpResponseNoContent(HttpResponse):
     status_code = 204
     
 def get_session(request):
-    session, created = Session.objects.get_or_create(pk=request.session.session_key)
+    today = datetime.datetime.today()
+    twoWeeks =  today + datetime.timedelta(days=14)
+    session, created = Session.objects.get_or_create(pk=request.session.session_key, defaults={'expire_date':twoWeeks})
     #session = Session.objects.get(pk=request.session.session_key)
     return session
     
@@ -211,6 +220,7 @@ def factor_help(request, model=None, id=None):
     factors = Factor.objects.all()
     if model:
         help_item = get_model('dst', model).objects.get(id=id)
+        help_item.info_text = markdownToHtml(help_item.info_text)
     else:
         help_item = None
     return {'help_item': help_item}
@@ -262,17 +272,21 @@ def technologies(request, model=None, id=None):
     
     #technology part
     groups = TechGroup.objects.all()
+    choices = TechChoice.objects.filter(session=get_session(request)).order_by('order')
     group_techs = []
+    one_chosen = False;
     for group in groups:
         techs = Technology.objects.filter(group=group).order_by('order')
         for tech in techs:
             tech.usable = tech.usability(get_session(request))
+            tech.chosen = tech.chosen(get_session(request))
+            if (tech.chosen == 'chosen'):
+                one_chosen = True
        #     tech.available = tech.availability(get_session(request))
         group_techs.append(techs)
     # if we want to transpose the data:
     #all_techs = map(None, *group_techs)
     all_techs = zip(groups, group_techs)
-    
     return {
         'techgroups'    : groups,
         'all_techs'     : all_techs,
@@ -280,6 +294,8 @@ def technologies(request, model=None, id=None):
         'formset'           : formset,
         'zipped_formlist'   : zipped_formlist,
         'help_item'         : help_item,
+        'one_chosen'        : one_chosen,
+        'chosen_techs' : choices,
     }
 
 def pdf(request, filename):
@@ -297,59 +313,55 @@ def techs_selected(request, model=None, id=None):
 
     groups = TechGroup.objects.all()
 
-    chosen_techs = Technology.objects.filter(tech_choices__session=get_session(request))    
+    chosen_techs = Technology.objects.filter(tech_choices__session=get_session(request))
+    choices = TechChoice.objects.filter(session=get_session(request)).order_by('order')    
     chosen_in_group = []
+    all_techs =[]
     relevance=[]
     empty=[]
 
-    for group in groups:
-        found_tech = False
-        found_relevance=False
-        techs = Technology.objects.filter(group=group)
-        for tech in techs:
-            if tech in chosen_techs:
-                chosen_in_group.append(tech)
-                found_tech = True
-               
-                applicable = tech.applicable(get_session(request))
-              #  relevancy_objects = []
-                
-                if applicable == tech.TECH_USE_MAYBE:
-                    relevancy_objects = list(tech.maybe_relevant(get_session(request)))
-                    if len(relevancy_objects)!=0:
-                        #for object in relevancy_objects:
-                         #   logging.debug(object.note)
-                        relevance.append(relevancy_objects)
-                        found_relevance=True
 
-        if found_tech == False:
-            chosen_in_group.append('')
-        if found_relevance == False:
+    for tc in choices:
+        tech = Technology.objects.get(pk=tc.technology.id)
+        all_techs.append(tech)
+        applicable = tech.applicable(get_session(request))
+        relevance_added=False
+        if applicable == tech.TECH_USE_MAYBE:
+            relevancy_objects = list(tech.maybe_relevant(get_session(request)))
+            if len(relevancy_objects)!=0:
+                relevance.append(relevancy_objects)
+                relevance_added = True
+        if applicable == tech.TECH_USE_NO:
+            relevancy_objects = list(tech.not_relevant(get_session(request)))
+            if len(relevancy_objects)!=0:
+                relevance.append(relevancy_objects)
+                relevance_added = True
+        if not relevance_added:
             relevance.append(empty)
         
-    all_chosen_techs = zip(groups,chosen_in_group,relevance)
-    
+    all_chosen_techs = zip(all_techs,relevance)
+
     if request.method == 'POST': # If the form has been submitted...
         form = PDF_prefs(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
             
-            incl_selected=form.cleaned_data['incl_selected']
-            incl_short_expl=form.cleaned_data['incl_short_expl']
+         #   incl_selected=form.cleaned_data['incl_selected']
+         #   incl_short_expl=form.cleaned_data['incl_short_expl']
             
-            incl_akvopedia=[]
-            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_1'])
-            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_2'])
-            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_3'])
-            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_4'])
-            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_5'])
-            incl_akvopedia.append(form.cleaned_data['incl_akvopedia_6'])
+         #   incl_akvopedia=[]
+         #   incl_akvopedia.append(form.cleaned_data['incl_akvopedia_1'])
+         #   incl_akvopedia.append(form.cleaned_data['incl_akvopedia_2'])
+         #   incl_akvopedia.append(form.cleaned_data['incl_akvopedia_3'])
+         #   incl_akvopedia.append(form.cleaned_data['incl_akvopedia_4'])
+         #   incl_akvopedia.append(form.cleaned_data['incl_akvopedia_5'])
+         #   incl_akvopedia.append(form.cleaned_data['incl_akvopedia_6'])
             
             # create list of Akvopedia articles to be included
-            Akvopedia_articles_URL=[]
-            for index,incl_akv in enumerate(incl_akvopedia):
-                if (incl_akv==True and chosen_in_group[index]!=''):
-                    if chosen_in_group[index].url!='':
-                        Akvopedia_articles_URL.append(chosen_in_group[index].url)
+         #   Akvopedia_articles_URL=[]
+         #   for index,incl_akv in enumerate(incl_akvopedia):
+         #       if (incl_akv==True and chosen_in_group[index]!=''):
+         #           if chosen_in_group[index].url!='':
+         #               Akvopedia_articles_URL.append(chosen_in_group[index].url)
             
             # create list of factors and criteria
             answers = get_or_create_answers(get_session(request))
@@ -378,20 +390,20 @@ def techs_selected(request, model=None, id=None):
             #create the basic PDF
             today=datetime.datetime.today()
     
-            format_temp = "Akvo-DST-%a-%b-%d-%Y_%H-%M-%S.temp.pdf"
-            format_final= "Akvo-DST-%a-%b-%d-%Y_%H-%M-%S.pdf"
+            format_temp = "watercompass-%a-%b-%d-%Y_%H-%M-%S.temp.pdf"
+            format_final= "watercompass-%a-%b-%d-%Y_%H-%M-%S.pdf"
             
             s_name_temp=today.strftime(format_temp)
             s_name_final=today.strftime(format_final)
             
             #first create first pages
-            pdf_path=create_PDF_selected_techs(all_chosen_techs, zipped_answerlist,incl_selected,incl_short_expl,s_name_temp)
+            pdf_path=create_PDF_selected_techs(all_chosen_techs, zipped_answerlist,True,True,s_name_temp)
             
             # append akvopedia articles if checked.
             THIS_PATH=os.path.dirname(__file__)
             (HOME,HERE)=os.path.split(THIS_PATH)
-            akvopedia_pdf_dir=HOME+'/mediaroot/akvopedia_pdf/'
-            output_dir=HOME+'/mediaroot/pdf_tmp/'
+            akvopedia_pdf_dir= settings.STATIC_ROOT + '/akvopedia_pdf/'
+            output_dir=settings.STATIC_ROOT + '/pdf_tmp/'
                
             output = PdfFileWriter()
             outputStream = file(output_dir+s_name_final, "wb")
@@ -401,17 +413,17 @@ def techs_selected(request, model=None, id=None):
             for i in range(num_pages):
                 output.addPage(input.getPage(i))
             
-            for article_url in Akvopedia_articles_URL:    
-                # create pdf path
-                URL_list=article_url.split("/")
-                article_name=URL_list[-1]
-                full_path=akvopedia_pdf_dir+article_name+'.pdf'
+      #      for article_url in Akvopedia_articles_URL:    
+    #         # create pdf path
+      #          URL_list=article_url.split("/")
+      #          article_name=URL_list[-1]
+      #          full_path=akvopedia_pdf_dir+article_name+'.pdf'
                 
                 # append article
-                input = PdfFileReader(file(full_path, "rb"))
-                num_pages=input.getNumPages()
-                for i in range(num_pages):
-                    output.addPage(input.getPage(i))
+      #          input = PdfFileReader(file(full_path, "rb"))
+      #          num_pages=input.getNumPages()
+      #          for i in range(num_pages):
+      #              output.addPage(input.getPage(i))
             
             output.write(outputStream)
             outputStream.close()       
@@ -423,6 +435,7 @@ def techs_selected(request, model=None, id=None):
                 'session'       : request.session,
                 'form'          : form,
                 'pdf_file'      :'/pdf/'+s_name_final,
+                'chosen_techs': choices
             }        
                 
                 #HttpResponseRedirect(reverse('techs_selected_download')) # Redirect after POST
@@ -431,20 +444,59 @@ def techs_selected(request, model=None, id=None):
     
     return {
         'techgroups'    : groups,
-        'all_chosen_techs'    : all_chosen_techs,
         'session'       : request.session,
         'form'          : form,
         'pdf_file'      :'',
+        'chosen_techs'  : choices
     }
 
 
 
 def tech_choice(request, tech_id):
+    numChoices = TechChoice.objects.filter(session=get_session(request)).count()
     choice, created = TechChoice.objects.get_or_create(session=get_session(request), technology=Technology.objects.get(pk=tech_id))
     if not created:
+        allChoices = TechChoice.objects.filter(session=get_session(request))
+        for ch in allChoices:
+            if (ch.order > choice.order):
+                ch.order = ch.order - 1
+                ch.save()
         choice.delete()
+    else:
+        choice.order = numChoices + 1
+        choice.save()
     return HttpResponseRedirect(reverse('technologies'))
 
+def tech_choice_order_down(request, tech_id):
+    numChoices = TechChoice.objects.filter(session=get_session(request)).count()
+    choice = TechChoice.objects.get(session=get_session(request), technology=Technology.objects.get(pk=tech_id))
+    allChoices = TechChoice.objects.filter(session=get_session(request))
+    if choice.order == 1:
+        return HttpResponseRedirect(reverse('technologies')) 
+
+    for ch in allChoices:
+        if (ch.order == choice.order - 1):
+            ch.order = ch.order + 1
+            ch.save()
+            choice.order = choice.order - 1
+            choice.save()
+    return HttpResponseRedirect(reverse('technologies'))
+
+
+def tech_choice_order_up(request, tech_id):
+    numChoices = TechChoice.objects.filter(session=get_session(request)).count()
+    choice = TechChoice.objects.get(session=get_session(request), technology=Technology.objects.get(pk=tech_id))
+    allChoices = TechChoice.objects.filter(session=get_session(request))
+    if choice.order == numChoices:
+        return HttpResponseRedirect(reverse('technologies')) 
+
+    for ch in allChoices:
+        if (ch.order == choice.order + 1):
+            ch.order = ch.order - 1
+            ch.save()
+            choice.order = choice.order + 1
+            choice.save()
+    return HttpResponseRedirect(reverse('technologies'))
 
 def toggle_button(request, btn_name=''):
     if btn_name:
@@ -463,7 +515,6 @@ def reset_techs(request):
     TechChoice.objects.filter(session=get_session(request)).delete()
     return HttpResponseRedirect(reverse('technologies'))
 
-
 @render_to('dst/technologies_help.html')
 def technologies_help(request,id=None):
     # Needs to be refined to filter on selection
@@ -473,15 +524,17 @@ def technologies_help(request,id=None):
     session = get_session(request)
         
     technology = get_object_or_404(Technology, pk=id)
-    applicable = technology.applicable(session)
     relevancy_objects = []
     
-    if applicable == technology.TECH_USE_MAYBE:
-        relevancy_objects = technology.maybe_relevant(session)
+    # turn links into html links
+    technology.description = markdownToHtml(technology.description)
+    technology.desc_financial = markdownToHtml(technology.desc_financial)
+    technology.desc_institutional = markdownToHtml(technology.desc_institutional)
+    technology.desc_environmental = markdownToHtml(technology.desc_environmental)
+    technology.desc_technical = markdownToHtml(technology.desc_technical)
+    technology.desc_social = markdownToHtml(technology.desc_social)
 
-    elif applicable == technology.TECH_USE_NO:
-        relevancy_objects = technology.not_relevant(session)
-    
+    relevancy_objects = technology.relevancy_notes(session) 
     return { 'technology': technology, 'relevancy_objects':relevancy_objects, 'settings': settings}
 
 

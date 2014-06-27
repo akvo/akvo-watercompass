@@ -11,13 +11,13 @@ from django import forms
 
 import itertools
 import logging
-from utils import pretty_name
+from django.forms.forms import pretty_name
 
 # PROFILING  
 import hotshot
 import os
 import time
-import settings
+from django.conf import settings
 
 try:
     PROFILE_LOG_BASE = settings.PROFILE_LOG_BASE
@@ -159,10 +159,23 @@ class Technology(models.Model):
     factors     = models.ManyToManyField(Factor, verbose_name=_('factors'), blank=True)
     name        = models.CharField(_(u'name'), max_length=50)
     description  = models.TextField(_(u'description'),)
-    #input       = models.ManyToManyField('self', blank=True, related_name='output', symmetrical=False, )
+    desc_financial = models.TextField(_(u'financial'),)
+    desc_institutional = models.TextField(_(u'institutional'),)
+    desc_environmental = models.TextField(_(u'environmental'),)
+    desc_technical = models.TextField(_(u'technical'),)
+    desc_social = models.TextField(_(u'social'),)
     output      = models.ManyToManyField('self', blank=True, related_name='input', symmetrical=False, )
-    image       = models.CharField(_(u'image'), max_length=100)
-    url         = models.URLField(blank=True, verify_exists = False, help_text=_('Enter the url to the corresponding Akvopedia entry, beginning with http://.'))
+    image       = models.CharField(_(u'icon image'), max_length=100, help_text=_('Enter the url of the icon image'))
+    url_source1 = models.CharField(_(u'source 1'), blank=True,max_length=100, help_text=_('Enter the source of a webpage'))
+    url_title1 = models.CharField(_(u'title 1'), blank=True,max_length=100, help_text=_('Enter the webpage title'))
+    url1         = models.URLField(_(u'URL 1'), blank=True, help_text=_('Enter the url to the page, starting with http://'))
+    url_source2 = models.CharField(_(u'source 2'), blank=True,max_length=100)
+    url_title2 = models.CharField(_(u'title 2'), blank=True,max_length=100)
+    url2         = models.URLField(_(u'URL 2'),blank=True)
+    url_source3 = models.CharField(_(u'source 3'), blank=True,max_length=100)
+    url_title3 = models.CharField(_(u'title 3'), blank=True,max_length=100)
+    url3         = models.URLField(_(u'URL 3'),blank=True)
+
     linked_techs = models.ManyToManyField('self',blank=True, related_name='linked_tech',symmetrical=True)
     order       =  models.IntegerField(null=True)
     
@@ -273,38 +286,59 @@ class Technology(models.Model):
         """
         # find the criteria that apply, i.e. get answers where applicable = True
         answers = Answer.objects.filter(session=session, applicable__exact=True)
+
         # given the answers, get the corresponding criteria
         criteria = Criterion.objects.filter(answer__in=answers)
-        
-        # now try to find one or more instances of Relevancy.applicability = CHOICE_NO
-        if len(self.relevancies.filter(applicability=Relevancy.CHOICE_NO, criterion__in=criteria)):
-            return self.TECH_USE_NO
-        
-        # if we found no CHOICE_NO relevanciew try for CHOICE_MAYBE
-        elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_MAYBE, criterion__in=criteria)):
+
+        # given the criteria, find the factors that have a criterion which is selected
+        factors = Factor.objects.filter(criteria__in=criteria)
+
+        result = 0
+        for fac in factors:
+            criteria = Criterion.objects.filter(answer__in=answers, factor=fac)
+            yes_len = len(self.relevancies.filter(applicability=Relevancy.CHOICE_YES, criterion__in=criteria))
+            if yes_len:
+                continue
+            maybe_len = len(self.relevancies.filter(applicability=Relevancy.CHOICE_MAYBE, criterion__in=criteria))
+            if maybe_len:
+                result = max(result,1)
+                continue
+            no_len = len(self.relevancies.filter(applicability=Relevancy.CHOICE_NO, criterion__in=criteria))
+            if no_len:
+                result = max(result,2)
+
+        if (result == 1):
             return self.TECH_USE_MAYBE
-        
-        # if we found no CHOICE_MAYBE relevanciew try for CHOICE_YES
-        elif len(self.relevancies.filter(applicability=Relevancy.CHOICE_YES, criterion__in=criteria)):
-            return self.TECH_USE_YES
-        
-        # this thech was not affected by the environmental factors
+        elif (result == 2):
+            return self.TECH_USE_NO
         return self.TECH_USE_YES
-       
-    def usability(self, session):
+
+    def chosen(self, session):
         """
-        figure out "usability" status based on Answers and TechChoices
+        figure out if the technology has been chosen
         """
-        # first figure if self is usable based on choices already made
         chosen_techs = Technology.objects.filter(tech_choices__session=session)
         if chosen_techs:
             # among the chosen; return with the good news
             if self in chosen_techs:
                 return self.TECH_USE_CHOSEN
+        else:
+            return ""
+
+    def usability(self, session):
+        """
+        figure out "usability" status based on Answers and TechChoices
+        """
+        # first figure if self is usable based on choices already made
+        #chosen_techs = Technology.objects.filter(tech_choices__session=session)
+        #if chosen_techs:
+            # among the chosen; return with the good news
+         #   if self in chosen_techs:
+         #       return self.TECH_USE_CHOSEN
 
             # self is in a group where the choice is already made and we're not the one
-            if self.group in [t.group for t in chosen_techs]:
-                return self.TECH_USE_NOT_ALLOWED
+            #if self.group in [t.group for t in chosen_techs]:
+            #    return self.TECH_USE_NOT_ALLOWED
 
             # self
             #linked = [t for t in chosen_techs.all_linked_techs()]
@@ -312,15 +346,15 @@ class Technology(models.Model):
             #    return self.TECH_USE_NOT_ALLOWED
 
             # find all techs linked to self
-            my_linked = [t for t in self.linked_techs.all()]
+            #my_linked = [t for t in self.linked_techs.all()]
             #my_linked = [t for t in self.all_linked_techs()]
             
-            my_linked  = set(my_linked)
-            chosen = set(chosen_techs)
+            #my_linked  = set(my_linked)
+            #chosen = set(chosen_techs)
             # all techs already chosen must be linked to me;
             # otherwise I'm not compatible with the current choices
-            if not chosen.issubset(my_linked):
-                return self.TECH_USE_NOT_ALLOWED
+            #if not chosen.issubset(my_linked):
+                #return self.TECH_USE_NOT_ALLOWED
         # self is still eligible for selection, find out the applicability
         return self.applicable(session)
 
@@ -338,7 +372,15 @@ class Technology(models.Model):
         # given the answers, get the corresponding criteria
         criteria = Criterion.objects.filter(answer__in=answers)
         # return the relevancy objects that indicate the tech is not applicable
-        return Relevancy.objects.filter(technology=self, applicability=Relevancy.CHOICE_NO, criterion__in=criteria)
+        return Relevancy.objects.filter(technology=self, applicability=Relevancy.CHOICE_NO, criterion__in=criteria) 
+
+    def relevancy_notes(self,session):
+        # find the criteria that apply, i.e. get answers where applicable = True
+        answers = Answer.objects.filter(session=session, applicable__exact=True)
+        # given the answers, get the corresponding criteria
+        criteria = Criterion.objects.filter(answer__in=answers)
+        # return the relevancy objects that indicate the tech is not applicable or maybe applicable
+        return Relevancy.objects.filter(technology=self, applicability=Relevancy.CHOICE_NO, criterion__in=criteria) | Relevancy.objects.filter(technology=self, applicability=Relevancy.CHOICE_MAYBE, criterion__in=criteria)
 
     def maybe_notes(self, session):
         "return the notes for the maybe relevant techs"
@@ -351,6 +393,7 @@ class Technology(models.Model):
 class TechChoice(models.Model):
     session     = models.ForeignKey(Session, verbose_name=_('session'))
     technology  = models.ForeignKey(Technology, verbose_name=_('technology'), related_name='tech_choices' )
+    order = models.IntegerField(null=True)
     
     class Meta:
         verbose_name = _(u'technology choice')
