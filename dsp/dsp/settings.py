@@ -16,15 +16,27 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '#yd^(mrawra46z9)oh3r_gy#8(pm8%@3$#fsl7t+@t6zuspw90'
+# The secret key is used internally by Django for various hashing operations:
+# http://stackoverflow.com/questions/7382149/django-secret-key
+# This should be kept secret and is therefore configured by the server environment
+# rather than hard-coded. If you are developing, simply set an environment
+# variable called "SECRET_KEY", eg
+#
+#  $  export SECRET_KEY='some-dev-value'
+#  $  python manage.py ...
+#
+if 'SECRET_KEY' in os.environ:
+    SECRET_KEY = os.environ['SECRET_KEY']
+else:
+    sys.err.write('The environment variable "SECRET_KEY" must be set')
+    sys.exit(1)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'false').lower() == 'true'
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -61,13 +73,15 @@ WSGI_APPLICATION = 'dsp.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'data/dsp.sqlite3'),
+if 'DATABASE_URL' in os.environ:
+    DATABASES = {'default': dj_database_url.config()}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'data/dsp.sqlite3'),
+        }
     }
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
