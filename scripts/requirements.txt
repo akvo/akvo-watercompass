@@ -9,3 +9,4 @@ reportlab==2.7
 rst2pdf==0.12.2
 wsgiref==0.1.2
 dj-database-url==0.3.0
+django-silk==0.3
