@@ -56,9 +56,9 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
     today=datetime.datetime.today()
     
     format_date = "%a %b %d, %Y"
-    format_time = "%H:%M:%S"
+    #format_time = "%H:%M:%S"
     s_date=today.strftime(format_date)
-    s_time=today.strftime(format_time)
+    #s_time=today.strftime(format_time)
     
     Title = "The WaterCompass"
     Author = "Practica Foundation, Akvo"
@@ -83,7 +83,7 @@ def create_PDF_selected_techs(all_chosen_techs,zipped_answerlist,incl_selected,i
         canvas.setFont('Helvetica',9)
         canvas.drawString(15*cm, PAGE_HEIGHT-6*cm, "Session information")
         canvas.drawString(15*cm, PAGE_HEIGHT-6*cm-LEADING, "Date:  %s" % (s_date))
-        canvas.drawString(15*cm, PAGE_HEIGHT-6*cm-2*LEADING, "Time:  %s" % (s_time))
+        #canvas.drawString(15*cm, PAGE_HEIGHT-6*cm-2*LEADING, "Time:  %s" % (s_time))
         
         COLUMN_HEIGHT=13*cm
         BOTTOM_OPTIONS=7*cm
